@@ -57,39 +57,41 @@ const Navbar = () => {
       >
         <div className="px-3 sm:px-6 lg:px-0">
           <div className="lg:max-w-5xl lg:mx-auto h-14 flex items-center justify-between">
+            <Logo />
 
-          <div className="hidden md:flex items-center gap-0.5">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={cn(
-                  "px-3 py-1.5 text-[13px] transition-colors duration-150",
-                  isActive(link.href)
-                    ? "text-foreground font-medium"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
+            <div className="hidden md:flex items-center gap-0.5">
+              {links.map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className={cn(
+                    "px-3 py-1.5 text-[13px] transition-colors duration-150",
+                    isActive(link.href)
+                      ? "text-foreground font-medium"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-1">
+              <LanguageSwitcher />
+              <ThemeToggle />
+              <button className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 bg-foreground text-background text-[13px] font-medium hover:bg-foreground/90 transition-colors ms-1">
+                {t("nav.join")}
+                <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+              </button>
+
+              <button
+                onClick={() => setOpen(!open)}
+                className="md:hidden p-2 -me-2 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Toggle menu"
               >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-1">
-            <LanguageSwitcher />
-            <ThemeToggle />
-            <button className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 bg-foreground text-background text-[13px] font-medium hover:bg-foreground/90 transition-colors ms-1">
-              {t("nav.join")}
-              <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
-            </button>
-
-            <button
-              onClick={() => setOpen(!open)}
-              className="md:hidden p-2 -me-2 text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="Toggle menu"
-            >
-              {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+                {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
         </div>
       </nav>
