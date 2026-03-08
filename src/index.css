@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Press+Start+2P&display=swap');
 
 @font-face {
-  font-family: 'Monaspace Neon';
+  font-family: 'Monaspace Krypton';
   font-style: normal;
   font-display: swap;
   font-weight: 100 900;
-  src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceNeon-Regular.woff') format('woff');
+  src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Regular.woff') format('woff');
 }
 
 @font-face {
@@ -60,7 +60,7 @@
 
     --radius: 0px;
 
-    --font-sans: 'Monaspace Neon', 'Geist Sans', system-ui, sans-serif;
+    --font-sans: 'Monaspace Krypton', 'Geist Sans', system-ui, sans-serif;
     --font-pixel: 'Geist Pixel', 'Press Start 2P', monospace;
     --font-pixel-alt: 'Press Start 2P', 'Geist Pixel', monospace;
     --font-mono: 'JetBrains Mono', monospace;
