@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,47 +6,47 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 220 20% 10%;
+    --background: 0 0% 99%;
+    --foreground: 240 10% 6%;
 
-    --card: 220 20% 97%;
-    --card-foreground: 220 20% 10%;
+    --card: 240 10% 96%;
+    --card-foreground: 240 10% 6%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 10%;
+    --popover: 0 0% 99%;
+    --popover-foreground: 240 10% 6%;
 
-    --primary: 220 80% 56%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 240 5% 12%;
+    --primary-foreground: 0 0% 99%;
 
-    --secondary: 220 15% 95%;
-    --secondary-foreground: 220 20% 10%;
+    --secondary: 240 5% 94%;
+    --secondary-foreground: 240 10% 6%;
 
-    --muted: 220 15% 95%;
-    --muted-foreground: 220 10% 50%;
+    --muted: 240 5% 94%;
+    --muted-foreground: 240 5% 46%;
 
-    --accent: 220 15% 93%;
-    --accent-foreground: 220 20% 10%;
+    --accent: 240 5% 92%;
+    --accent-foreground: 240 10% 6%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 90%;
-    --input: 220 15% 90%;
-    --ring: 220 80% 56%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 240 5% 12%;
 
-    --radius: 0.75rem;
+    --radius: 0.625rem;
 
     --font-sans: 'DM Sans', system-ui, sans-serif;
     --font-serif: 'Instrument Serif', Georgia, serif;
 
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 220 10% 30%;
-    --sidebar-primary: 220 80% 56%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 15% 95%;
-    --sidebar-accent-foreground: 220 20% 10%;
-    --sidebar-border: 220 15% 90%;
-    --sidebar-ring: 220 80% 56%;
+    --sidebar-foreground: 240 5% 30%;
+    --sidebar-primary: 240 5% 12%;
+    --sidebar-primary-foreground: 0 0% 99%;
+    --sidebar-accent: 240 5% 94%;
+    --sidebar-accent-foreground: 240 10% 6%;
+    --sidebar-border: 240 6% 90%;
+    --sidebar-ring: 240 5% 12%;
   }
 }
 
@@ -59,6 +59,11 @@
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
   }
+
+  ::selection {
+    background: hsl(240 5% 12%);
+    color: hsl(0 0% 99%);
+  }
 }
 
 @layer utilities {
@@ -68,7 +73,7 @@
 }
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -78,9 +83,9 @@
 }
 
 .animate-fade-up {
-  animation: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-fade-in {
-  animation: fade-in 0.6s ease forwards;
+  animation: fade-in 0.5s ease forwards;
 }
