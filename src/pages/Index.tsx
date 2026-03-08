@@ -78,7 +78,7 @@ const Index = () => {
             </h1>
 
             <p
-              className="text-[15px] sm:text-base md:text-lg text-muted-foreground max-w-lg mb-10 leading-relaxed animate-fade-up"
+              className="text-[17px] sm:text-lg md:text-xl text-muted-foreground max-w-lg mb-10 leading-relaxed animate-fade-up"
               style={{ animationDelay: "0.16s", opacity: 0 }}
             >
               {t("hero.desc")}
