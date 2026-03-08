@@ -23,9 +23,9 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="py-20 sm:py-24 px-4 sm:px-6">
+    <section>
       <div className="max-w-5xl mx-auto">
-        <div className="mb-14 px-4 sm:px-6">
+        <div className="px-4 sm:px-10 pt-20 sm:pt-24 pb-14">
           <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">
             What people say
           </p>
@@ -35,11 +35,11 @@ const TestimonialsSection = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border-t border-border">
           {testimonials.map((t, i) => (
             <div
               key={i}
-              className="p-6 bg-background hover:bg-accent/30 transition-colors duration-300"
+              className="p-6 sm:p-8 bg-background hover:bg-accent/30 transition-colors duration-300"
             >
               <p className="text-foreground text-[15px] leading-relaxed mb-5">
                 "{t.quote}"

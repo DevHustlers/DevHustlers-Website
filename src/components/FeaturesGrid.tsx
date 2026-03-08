@@ -35,9 +35,9 @@ const features = [
 
 const FeaturesGrid = () => {
   return (
-    <section id="features" className="py-20 sm:py-24 px-4 sm:px-6">
+    <section id="features">
       <div className="max-w-5xl mx-auto">
-        <div className="mb-14 px-4 sm:px-6">
+        <div className="px-4 sm:px-10 pt-20 sm:pt-24 pb-14">
           <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">
             Everything you need
           </p>
@@ -47,7 +47,7 @@ const FeaturesGrid = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border border border-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border border-t border-border">
           {features.map((feature, i) => (
             <div
               key={i}
