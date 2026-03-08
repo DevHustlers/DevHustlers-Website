@@ -32,7 +32,7 @@ const Index = () => {
 
       {/* Hero */}
       <section className="pt-28 sm:pt-40 px-4 sm:px-6 relative">
-        <div className="max-w-3xl mx-auto pb-20 sm:pb-32">
+        <div className="max-w-3xl mx-auto px-0 sm:px-0 pb-20 sm:pb-32">
           <div className="animate-fade-up">
             <div className="inline-flex items-center gap-2 px-3 py-1 border border-border text-[13px] text-muted-foreground mb-8 font-mono">
               <span className="relative flex h-1.5 w-1.5">
