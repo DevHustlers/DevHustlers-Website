@@ -1,14 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Press+Start+2P&display=swap');
 
 @font-face {
-  font-family: 'Monaspace Xenon';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 100 900;
-  src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceXenon-Regular.woff') format('woff');
-}
-
-@font-face {
   font-family: 'Geist Sans';
   font-style: normal;
   font-display: swap;
@@ -17,11 +9,11 @@
 }
 
 @font-face {
-  font-family: 'Geist Pixel';
+  font-family: 'Geist Mono';
   font-style: normal;
   font-display: swap;
-  font-weight: 400;
-  src: url('https://cdn.jsdelivr.net/npm/geist@1.7.0/dist/fonts/geist-pixel/GeistPixel-Square.woff2') format('woff2');
+  font-weight: 100 900;
+  src: url('https://cdn.jsdelivr.net/npm/geist@1.7.0/dist/fonts/geist-mono/GeistMonoVF.woff2') format('woff2');
 }
 
 @tailwind base;
