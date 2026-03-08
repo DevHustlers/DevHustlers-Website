@@ -177,26 +177,48 @@
 }
 
 /* 
- * 1.5px border overrides — MUST be outside @layer 
- * so they override Tailwind utility classes
+ * 1.5px border overrides — outside @layer with !important
+ * to guarantee override of Tailwind utility classes
  */
+*,
+*::before,
+*::after {
+  --grid-line-width: 1.5px;
+}
+
 .border {
-  border-width: var(--grid-line, 1.5px) !important;
+  border-width: 1.5px !important;
 }
 .border-t {
-  border-top-width: var(--grid-line, 1.5px) !important;
+  border-top-width: 1.5px !important;
 }
 .border-b {
-  border-bottom-width: var(--grid-line, 1.5px) !important;
+  border-bottom-width: 1.5px !important;
 }
 .border-l {
-  border-left-width: var(--grid-line, 1.5px) !important;
+  border-left-width: 1.5px !important;
 }
 .border-r {
-  border-right-width: var(--grid-line, 1.5px) !important;
+  border-right-width: 1.5px !important;
+}
+.border-x {
+  border-left-width: 1.5px !important;
+  border-right-width: 1.5px !important;
+}
+.border-y {
+  border-top-width: 1.5px !important;
+  border-bottom-width: 1.5px !important;
 }
 .gap-px {
-  gap: var(--grid-line, 1.5px) !important;
+  gap: 1.5px !important;
+}
+
+/* Elements that explicitly need 0 border */
+.border-0 {
+  border-width: 0 !important;
+}
+.border-transparent {
+  border-color: transparent !important;
 }
 
 /* Prism theme overrides using CSS variables */
