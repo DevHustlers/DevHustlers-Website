@@ -15,8 +15,9 @@ export const IconTypeScript = ({ className }: { className?: string }) => (
 );
 
 export const IconRust = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
-    <path d="M23.835 11.703a1.12 1.12 0 0 0-.629-.629l-.463-.189.326-.391a1.12 1.12 0 0 0 .166-.87l-.111-.486.486-.111a1.12 1.12 0 0 0 .629-.629l.189-.463.391.326a1.12 1.12 0 0 0 .87.166L24 8.203V12l-1.687-.189.463-.189.326.391-.87-.166-.486-.111.111-.486zM12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.59 14H14v-2.52h-4V16H7.41L12 7.42 16.59 16z"/>
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22A10 10 0 1 0 12 2a10 10 0 0 0 0 20z" />
+    <path d="M9.5 7v10M9.5 11h4a2.5 2.5 0 0 0 0-5h-4M13.5 12 16.5 17" />
   </svg>
 );
 

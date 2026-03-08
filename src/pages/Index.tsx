@@ -134,8 +134,8 @@ const Index = () => {
                 const Icon = pixelIcons[name];
                 return (
                   <div key={name} className="flex flex-col items-center gap-2 group cursor-default">
-                    {Icon && <Icon className="w-7 h-7 text-muted-foreground/40 group-hover:text-muted-foreground/70 transition-colors duration-300" />}
-                    <span className="text-[13px] sm:text-[14px] font-medium text-muted-foreground/40 tracking-tight select-none group-hover:text-muted-foreground/70 transition-colors duration-300">
+                    {Icon && <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-muted-foreground/40 group-hover:text-muted-foreground/70 transition-colors duration-300" />}
+                    <span className="text-[15px] sm:text-[17px] font-bold text-muted-foreground/40 tracking-tight select-none group-hover:text-muted-foreground/70 transition-colors duration-300">
                       {name}
                     </span>
                   </div>
