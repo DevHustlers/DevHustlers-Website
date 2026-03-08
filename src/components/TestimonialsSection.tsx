@@ -26,7 +26,7 @@ const TestimonialsSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border-t border-border">
           {testimonials.map((tItem, i) => (
             <div key={i} className="p-6 sm:p-8 bg-background hover:bg-accent/30 transition-colors duration-300">
-              <p className="text-foreground text-[15px] leading-relaxed mb-5">"{tItem.quote}"</p>
+              <p className="text-foreground text-[17px] leading-relaxed mb-5">"{tItem.quote}"</p>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-accent flex items-center justify-center">
                   <span className="text-xs font-semibold text-muted-foreground">{tItem.name.split(" ").map((n) => n[0]).join("")}</span>
