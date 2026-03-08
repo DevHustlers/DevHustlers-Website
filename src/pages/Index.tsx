@@ -129,12 +129,18 @@ const Index = () => {
             <p className="text-center text-[11px] sm:text-[12px] text-muted-foreground uppercase tracking-[0.25em] mb-10 font-mono">
               {t("social.from")}
             </p>
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-y-6 gap-x-4">
-              {["React", "TypeScript", "Rust", "Go", "Python", "Node.js"].map((name) => (
-                <span key={name} className="text-center text-[13px] sm:text-sm font-medium text-muted-foreground/40 tracking-tight select-none hover:text-foreground/60 transition-colors duration-300">
-                  {name}
-                </span>
-              ))}
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-y-8 gap-x-4">
+              {(["React", "TypeScript", "Rust", "Go", "Python", "Node.js"] as const).map((name) => {
+                const Icon = pixelIcons[name];
+                return (
+                  <div key={name} className="flex flex-col items-center gap-2 group cursor-default">
+                    {Icon && <Icon className="w-6 h-6 text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-colors duration-300" />}
+                    <span className="text-[12px] sm:text-[13px] font-medium text-muted-foreground/40 tracking-tight select-none group-hover:text-muted-foreground/70 transition-colors duration-300 font-pixel" style={{ fontSize: '9px' }}>
+                      {name}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
