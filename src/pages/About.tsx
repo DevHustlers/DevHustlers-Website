@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import TeamSection from "@/components/TeamSection";
 import PageLayout from "@/components/PageLayout";
 import SectionDivider from "@/components/SectionDivider";
+import ScrollReveal from "@/components/ScrollReveal";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const About = () => {
@@ -14,14 +15,18 @@ const About = () => {
       <section className="pt-28 sm:pt-36 pb-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-6">
           <div className="max-w-3xl">
-            <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">{t("about.label")}</p>
-            <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground leading-tight tracking-tight mb-6">
-              {t("about.title.1")}{" "}
-              <span className="font-serif text-muted-foreground font-normal">{t("about.title.2")}</span>{" "}
-              {t("about.title.3")}
-            </h1>
-            <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg leading-relaxed mb-6">{t("about.p1")}</p>
-            <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg leading-relaxed">{t("about.p2")}</p>
+            <ScrollReveal>
+              <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">{t("about.label")}</p>
+              <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground leading-tight tracking-tight mb-6">
+                {t("about.title.1")}{" "}
+                <span className="font-serif text-muted-foreground font-normal">{t("about.title.2")}</span>{" "}
+                {t("about.title.3")}
+              </h1>
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg leading-relaxed mb-6">{t("about.p1")}</p>
+              <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg leading-relaxed">{t("about.p2")}</p>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -33,10 +38,12 @@ const About = () => {
             { value: t("about.stat.2.value"), label: t("about.stat.2.label") },
             { value: t("about.stat.3.value"), label: t("about.stat.3.label") },
           ].map((s, i) => (
-            <div key={i} className="p-6 bg-background text-center">
-              <div className="text-2xl font-bold text-foreground mb-1">{s.value}</div>
-              <div className="text-[13px] text-muted-foreground">{s.label}</div>
-            </div>
+            <ScrollReveal key={i} delay={i * 80}>
+              <div className="p-6 bg-background text-center">
+                <div className="text-2xl font-bold text-foreground mb-1">{s.value}</div>
+                <div className="text-[13px] text-muted-foreground">{s.label}</div>
+              </div>
+            </ScrollReveal>
           ))}
         </div>
       </section>
