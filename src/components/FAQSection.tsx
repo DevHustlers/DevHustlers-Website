@@ -16,7 +16,7 @@ const faqs = [
   },
   {
     q: "Can I find collaborators for my project?",
-    a: "Absolutely. Our project board lets you post ideas and find teammates. Many successful open source projects and startups have started from DevHive collaborations.",
+    a: "Absolutely. Our project board lets you post ideas and find teammates. Many successful open source projects and startups have started from DevHustle collaborations.",
   },
   {
     q: "What programming languages are supported?",
