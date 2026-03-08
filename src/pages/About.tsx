@@ -4,7 +4,7 @@ import TeamSection from "@/components/TeamSection";
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <PageLayout>
       <Navbar />
       <section className="pt-28 sm:pt-36 pb-16 px-4 sm:px-6">
         <div className="max-w-3xl mx-auto">
