@@ -15,7 +15,7 @@ const About = () => {
             developer communities
           </h1>
           <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-6">
-            DevHive started in 2022 as a small Discord server with 50 developers. Today, we're a global
+            DevHustle started in 2022 as a small Discord server with 50 developers. Today, we're a global
             community of 50,000+ programmers collaborating across 120 countries. Our mission is simple:
             make it easier for developers to find their people, build together, and ship real products.
           </p>

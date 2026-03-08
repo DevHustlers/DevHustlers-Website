@@ -7,6 +7,8 @@ import {
   SheetTrigger,
   SheetTitle,
 } from "@/components/ui/sheet";
+import Logo from "@/components/Logo";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const links = [
   { label: "Features", href: "/#features" },
@@ -22,12 +24,7 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/60 backdrop-blur-xl border-b border-border/50">
       <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="w-6 h-6 rounded-md bg-foreground flex items-center justify-center">
-            <span className="text-background font-bold text-[11px] leading-none">D</span>
-          </div>
-          <span className="font-semibold text-foreground tracking-tight">DevHive</span>
-        </Link>
+        <Logo />
 
         <div className="hidden md:flex items-center gap-8 text-[13px]">
           {links.map((link) => (
@@ -41,7 +38,8 @@ const Navbar = () => {
           ))}
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
           <button className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-foreground text-background text-[13px] font-medium hover:bg-foreground/90 transition-colors">
             Join Now
             <ArrowRight className="w-3.5 h-3.5" />

@@ -2,7 +2,7 @@ const testimonials = [
   {
     name: "Sarah Chen",
     role: "Frontend Engineer at Vercel",
-    quote: "DevHive completely changed how I approach side projects. The community feedback loop is incredible.",
+    quote: "DevHustle completely changed how I approach side projects. The community feedback loop is incredible.",
   },
   {
     name: "Marcus Johnson",
@@ -17,7 +17,7 @@ const testimonials = [
   {
     name: "David Park",
     role: "Indie Developer",
-    quote: "Found my co-founder through DevHive. We launched our startup six months later.",
+    quote: "Found my co-founder through DevHustle. We launched our startup six months later.",
   },
 ];
 

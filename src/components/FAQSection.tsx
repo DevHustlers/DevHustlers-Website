@@ -7,8 +7,8 @@ import {
 
 const faqs = [
   {
-    q: "Is DevHive free to join?",
-    a: "Yes! DevHive is completely free for individual developers. We also offer team plans for companies that want to sponsor their employees' participation.",
+    q: "Is DevHustle free to join?",
+    a: "Yes! DevHustle is completely free for individual developers. We also offer team plans for companies that want to sponsor their employees' participation.",
   },
   {
     q: "How do the weekly hackathons work?",
@@ -16,11 +16,11 @@ const faqs = [
   },
   {
     q: "Can I find collaborators for my project?",
-    a: "Absolutely. Our project board lets you post ideas and find teammates. Many successful open source projects and startups have started from DevHive collaborations.",
+    a: "Absolutely. Our project board lets you post ideas and find teammates. Many successful open source projects and startups have started from DevHustle collaborations.",
   },
   {
     q: "What programming languages are supported?",
-    a: "DevHive is language-agnostic. Our community includes developers working with JavaScript, Python, Rust, Go, and many more. Everyone is welcome regardless of their tech stack.",
+    a: "DevHustle is language-agnostic. Our community includes developers working with JavaScript, Python, Rust, Go, and many more. Everyone is welcome regardless of their tech stack.",
   },
   {
     q: "How do I become a mentor?",

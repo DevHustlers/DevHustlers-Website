@@ -11,7 +11,7 @@ const events = [
     status: "upcoming" as const,
   },
   {
-    title: "DevHive Meetup — London",
+    title: "DevHustle Meetup — London",
     date: "Mar 22, 2026",
     location: "London, UK",
     desc: "In-person networking and lightning talks at Shoreditch Works.",
@@ -25,7 +25,7 @@ const events = [
     status: "upcoming" as const,
   },
   {
-    title: "DevHive Conference 2026",
+    title: "DevHustle Conference 2026",
     date: "May 15–16, 2026",
     location: "San Francisco, CA",
     desc: "Our annual conference. Two days of talks, workshops, and community.",
@@ -39,7 +39,7 @@ const events = [
     status: "past" as const,
   },
   {
-    title: "DevHive Meetup — Berlin",
+    title: "DevHustle Meetup — Berlin",
     date: "Feb 20, 2026",
     location: "Berlin, DE",
     desc: "Community meetup with 60+ developers. Talks on Rust and WebAssembly.",
