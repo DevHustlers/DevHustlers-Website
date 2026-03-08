@@ -80,7 +80,7 @@ const Blog = () => {
     <PageLayout>
       <Navbar />
       <section className="pt-28 sm:pt-36 pb-8 sm:pb-12 px-4 sm:px-6">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <p className="text-[12px] sm:text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">Blog</p>
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground leading-tight tracking-tight mb-4">
             Stories &{" "}
@@ -133,35 +133,40 @@ const Blog = () => {
         </div>
       </section>
 
-      <section className="px-4 sm:px-6 pb-24">
-        <div className="max-w-3xl mx-auto">
+      <SectionDivider />
+
+      <section className="px-0 pb-0">
+        <div className="max-w-5xl mx-auto">
           {filtered.length === 0 ? (
             <div className="py-16 text-center">
               <p className="text-muted-foreground text-[14px]">No posts found matching your criteria.</p>
             </div>
           ) : (
-            <div className="divide-y divide-border">
+            <>
               {filtered.map((post, i) => (
                 <ScrollReveal key={post.slug} delay={i * 50}>
-                  <Link to={post.slug} className="block py-6 sm:py-7 group">
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
-                      <span className="text-[11px] sm:text-[12px] text-muted-foreground font-mono">{post.date}</span>
-                      <span className="text-[10px] sm:text-[11px] px-2 py-0.5 border border-border text-muted-foreground">
-                        {post.tag}
-                      </span>
-                      <span className="text-[10px] sm:text-[11px] text-muted-foreground/60">{post.readTime}</span>
+                  <Link to={post.slug} className="block group">
+                    <div className="px-4 sm:px-10 py-8 sm:py-10 hover:bg-accent/30 transition-colors duration-300">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
+                        <span className="text-[11px] sm:text-[12px] text-muted-foreground font-mono">{post.date}</span>
+                        <span className="text-[10px] sm:text-[11px] px-2 py-0.5 border border-border text-muted-foreground">
+                          {post.tag}
+                        </span>
+                        <span className="text-[10px] sm:text-[11px] text-muted-foreground/60">{post.readTime}</span>
+                      </div>
+                      <h2 className="text-base sm:text-lg font-semibold text-foreground group-hover:text-muted-foreground transition-colors mb-1.5 flex items-center gap-2">
+                        {post.title}
+                        <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 shrink-0 hidden sm:block" />
+                      </h2>
+                      <p className="text-[13px] sm:text-[14px] text-muted-foreground leading-relaxed">
+                        {post.excerpt}
+                      </p>
                     </div>
-                    <h2 className="text-base sm:text-lg font-semibold text-foreground group-hover:text-muted-foreground transition-colors mb-1.5 flex items-center gap-2">
-                      {post.title}
-                      <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 shrink-0 hidden sm:block" />
-                    </h2>
-                    <p className="text-[13px] sm:text-[14px] text-muted-foreground leading-relaxed">
-                      {post.excerpt}
-                    </p>
                   </Link>
+                  {i < filtered.length - 1 && <SectionDivider />}
                 </ScrollReveal>
               ))}
-            </div>
+            </>
           )}
         </div>
       </section>
