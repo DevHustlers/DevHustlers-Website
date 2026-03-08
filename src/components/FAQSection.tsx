@@ -20,7 +20,7 @@ const faqs = [
   },
   {
     q: "What programming languages are supported?",
-    a: "DevHive is language-agnostic. Our community includes developers working with JavaScript, Python, Rust, Go, and many more. Everyone is welcome regardless of their tech stack.",
+    a: "DevHustle is language-agnostic. Our community includes developers working with JavaScript, Python, Rust, Go, and many more. Everyone is welcome regardless of their tech stack.",
   },
   {
     q: "How do I become a mentor?",
