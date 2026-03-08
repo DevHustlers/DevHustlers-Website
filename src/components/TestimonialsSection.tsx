@@ -32,8 +32,8 @@ const TestimonialsSection = () => {
                   <span className="text-xs font-semibold text-muted-foreground">{tItem.name.split(" ").map((n) => n[0]).join("")}</span>
                 </div>
                 <div>
-                  <p className="text-[13px] font-medium text-foreground">{tItem.name}</p>
-                  <p className="text-[12px] text-muted-foreground">{tItem.role}</p>
+                  <p className="text-[15px] font-medium text-foreground">{tItem.name}</p>
+                  <p className="text-[13px] text-muted-foreground">{tItem.role}</p>
                 </div>
               </div>
             </div>

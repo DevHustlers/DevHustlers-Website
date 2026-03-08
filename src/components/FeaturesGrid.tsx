@@ -33,8 +33,8 @@ const FeaturesGrid = () => {
               className="bg-background p-6 sm:p-7 hover:bg-accent/40 transition-colors duration-300"
             >
               <feature.icon className="w-5 h-5 text-foreground mb-4" strokeWidth={1.5} />
-              <h3 className="font-semibold text-foreground text-[15px] mb-1.5">{feature.title}</h3>
-              <p className="text-[13px] text-muted-foreground leading-relaxed">{feature.desc}</p>
+              <h3 className="font-semibold text-foreground text-[17px] mb-1.5">{feature.title}</h3>
+              <p className="text-[15px] text-muted-foreground leading-relaxed">{feature.desc}</p>
             </div>
           ))}
         </div>

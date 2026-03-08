@@ -14,11 +14,11 @@ const CTASection = () => {
           </h2>
           <p className="text-muted-foreground mb-8 max-w-md mx-auto text-[17px]">{t("cta.desc")}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-foreground text-background font-medium hover:bg-foreground/90 transition-colors text-[15px]">
+            <button className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-foreground text-background font-medium hover:bg-foreground/90 transition-colors text-[16px]">
               {t("cta.btn.1")}
               <ArrowRight className="w-4 h-4 rtl:rotate-180" />
             </button>
-            <button className="inline-flex items-center justify-center gap-2 px-7 py-3 border border-border text-foreground font-medium hover:bg-accent transition-colors text-[15px]">
+            <button className="inline-flex items-center justify-center gap-2 px-7 py-3 border border-border text-foreground font-medium hover:bg-accent transition-colors text-[16px]">
               {t("cta.btn.2")}
             </button>
           </div>

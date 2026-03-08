@@ -14,10 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Monaspace Xenon', 'Geist Sans', 'system-ui', 'sans-serif'],
-        serif: ['Geist Pixel', 'Press Start 2P', 'monospace'],
-        pixel: ['Geist Pixel', 'Press Start 2P', 'monospace'],
-        'pixel-alt': ['Press Start 2P', 'Geist Pixel', 'monospace'],
+        sans: ['Geist Sans', 'system-ui', 'sans-serif'],
+        serif: ['Geist Mono', 'JetBrains Mono', 'monospace'],
+        pixel: ['Geist Mono', 'JetBrains Mono', 'monospace'],
+        'pixel-alt': ['Geist Mono', 'JetBrains Mono', 'monospace'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {

@@ -19,7 +19,7 @@ const StatsSection = () => {
               <div className="text-3xl md:text-4xl font-bold text-foreground tracking-tight mb-1">
                 {stat.value}
               </div>
-              <div className="text-[13px] text-muted-foreground">{stat.label}</div>
+              <div className="text-[15px] text-muted-foreground">{stat.label}</div>
             </div>
           ))}
         </div>

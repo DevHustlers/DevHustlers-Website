@@ -54,9 +54,9 @@
 
     --radius: 0px;
 
-    --font-sans: 'Monaspace Xenon', 'Geist Sans', system-ui, sans-serif;
-    --font-pixel: 'Geist Pixel', 'Press Start 2P', monospace;
-    --font-pixel-alt: 'Press Start 2P', 'Geist Pixel', monospace;
+    --font-sans: 'Geist Sans', system-ui, sans-serif;
+    --font-pixel: 'Geist Mono', 'JetBrains Mono', monospace;
+    --font-pixel-alt: 'Geist Mono', 'JetBrains Mono', monospace;
     --font-mono: 'JetBrains Mono', monospace;
 
     --sidebar-background: 197 5% 98%;

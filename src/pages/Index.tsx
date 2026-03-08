@@ -126,7 +126,7 @@ const Index = () => {
       <ScrollReveal>
         <section className="py-16 sm:py-20">
           <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
-            <p className="text-center text-[11px] sm:text-[12px] text-muted-foreground uppercase tracking-[0.25em] mb-10 font-mono">
+            <p className="text-center text-[13px] sm:text-[14px] text-muted-foreground uppercase tracking-[0.25em] mb-10 font-mono">
               {t("social.from")}
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-y-8 gap-x-4">

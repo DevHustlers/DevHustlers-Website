@@ -28,8 +28,8 @@ const Footer = () => {
           </div>
         </div>
         <div className="mt-10 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[12px] text-muted-foreground">{t("footer.copyright")}</p>
-          <div className="flex gap-6 text-[12px] text-muted-foreground">
+          <p className="text-[13px] text-muted-foreground">{t("footer.copyright")}</p>
+          <div className="flex gap-6 text-[13px] text-muted-foreground">
             <a href="#" className="hover:text-foreground transition-colors">{t("footer.privacy")}</a>
             <a href="#" className="hover:text-foreground transition-colors">{t("footer.terms")}</a>
           </div>
