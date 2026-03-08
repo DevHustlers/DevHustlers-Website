@@ -11,7 +11,7 @@ const events = [
     status: "upcoming" as const,
   },
   {
-    title: "DevHive Meetup — London",
+    title: "DevHustle Meetup — London",
     date: "Mar 22, 2026",
     location: "London, UK",
     desc: "In-person networking and lightning talks at Shoreditch Works.",
