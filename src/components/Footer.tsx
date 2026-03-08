@@ -12,7 +12,7 @@ const links = [
 
 const Footer = () => {
   return (
-    <footer className="border-t border-border py-12 px-6">
+    <footer className="border-t border-border py-10 sm:py-12 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row items-start justify-between gap-10">
           <div>

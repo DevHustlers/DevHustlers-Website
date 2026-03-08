@@ -9,7 +9,7 @@ const team = [
 
 const TeamSection = () => {
   return (
-    <section className="py-24 px-6 border-t border-border">
+    <section className="py-20 sm:py-24 px-4 sm:px-6 border-t border-border">
       <div className="max-w-5xl mx-auto">
         <div className="mb-14">
           <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">
