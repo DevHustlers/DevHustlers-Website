@@ -30,33 +30,35 @@
 
 @layer base {
   :root {
-    --background: 0 0% 99%;
-    --foreground: 240 10% 6%;
+    --grid-line: 1.5px;
 
-    --card: 240 10% 96%;
-    --card-foreground: 240 10% 6%;
+    --background: 197 5% 99%;
+    --foreground: 217 16% 8%;
 
-    --popover: 0 0% 99%;
-    --popover-foreground: 240 10% 6%;
+    --card: 214 8% 96%;
+    --card-foreground: 217 16% 8%;
 
-    --primary: 240 5% 12%;
-    --primary-foreground: 0 0% 99%;
+    --popover: 197 5% 99%;
+    --popover-foreground: 217 16% 8%;
 
-    --secondary: 240 5% 94%;
-    --secondary-foreground: 240 10% 6%;
+    --primary: 214 16% 50%;
+    --primary-foreground: 197 5% 99%;
 
-    --muted: 240 5% 94%;
-    --muted-foreground: 240 5% 46%;
+    --secondary: 214 8% 94%;
+    --secondary-foreground: 217 16% 8%;
 
-    --accent: 240 5% 92%;
-    --accent-foreground: 240 10% 6%;
+    --muted: 214 8% 94%;
+    --muted-foreground: 214 12% 46%;
+
+    --accent: 214 8% 92%;
+    --accent-foreground: 217 16% 8%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 6% 90%;
-    --input: 240 6% 90%;
-    --ring: 240 5% 12%;
+    --border: 214 8% 88%;
+    --input: 214 8% 88%;
+    --ring: 214 16% 50%;
 
     --radius: 0px;
 
@@ -65,107 +67,82 @@
     --font-pixel-alt: 'Press Start 2P', 'Geist Pixel', monospace;
     --font-mono: 'JetBrains Mono', monospace;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5% 30%;
-    --sidebar-primary: 240 5% 12%;
-    --sidebar-primary-foreground: 0 0% 99%;
-    --sidebar-accent: 240 5% 94%;
-    --sidebar-accent-foreground: 240 10% 6%;
-    --sidebar-border: 240 6% 90%;
-    --sidebar-ring: 240 5% 12%;
+    --sidebar-background: 197 5% 98%;
+    --sidebar-foreground: 214 12% 30%;
+    --sidebar-primary: 214 16% 50%;
+    --sidebar-primary-foreground: 197 5% 99%;
+    --sidebar-accent: 214 8% 94%;
+    --sidebar-accent-foreground: 217 16% 8%;
+    --sidebar-border: 214 8% 88%;
+    --sidebar-ring: 214 16% 50%;
 
     /* Prism light theme tokens */
-    --code-bg: 240 5% 95%;
-    --code-fg: 240 10% 15%;
-    --code-comment: 240 5% 55%;
+    --code-bg: 214 8% 95%;
+    --code-fg: 217 16% 15%;
+    --code-comment: 214 10% 55%;
     --code-keyword: 270 60% 45%;
     --code-string: 150 60% 30%;
-    --code-function: 210 70% 40%;
+    --code-function: 214 70% 40%;
     --code-number: 20 80% 45%;
-    --code-operator: 240 10% 35%;
-    --code-punctuation: 240 5% 50%;
+    --code-operator: 217 10% 35%;
+    --code-punctuation: 214 8% 50%;
   }
 
   .dark {
-    --background: 240 10% 4%;
-    --foreground: 0 0% 95%;
+    --background: 224 14% 7%;
+    --foreground: 197 5% 95%;
 
-    --card: 240 8% 8%;
-    --card-foreground: 0 0% 95%;
+    --card: 217 14% 10%;
+    --card-foreground: 197 5% 95%;
 
-    --popover: 240 10% 4%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 224 14% 7%;
+    --popover-foreground: 197 5% 95%;
 
-    --primary: 0 0% 95%;
-    --primary-foreground: 240 10% 4%;
+    --primary: 214 16% 56%;
+    --primary-foreground: 224 14% 7%;
 
-    --secondary: 240 5% 14%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 216 14% 14%;
+    --secondary-foreground: 197 5% 95%;
 
-    --muted: 240 5% 14%;
-    --muted-foreground: 240 5% 55%;
+    --muted: 216 14% 14%;
+    --muted-foreground: 214 12% 55%;
 
-    --accent: 240 5% 12%;
-    --accent-foreground: 0 0% 95%;
+    --accent: 216 14% 12%;
+    --accent-foreground: 197 5% 95%;
 
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 5% 16%;
-    --input: 240 5% 16%;
-    --ring: 0 0% 80%;
+    --border: 216 14% 18%;
+    --input: 216 14% 18%;
+    --ring: 214 16% 56%;
 
-    --sidebar-background: 240 8% 6%;
-    --sidebar-foreground: 240 5% 60%;
-    --sidebar-primary: 0 0% 95%;
-    --sidebar-primary-foreground: 240 10% 4%;
-    --sidebar-accent: 240 5% 12%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 240 5% 16%;
-    --sidebar-ring: 0 0% 80%;
+    --sidebar-background: 224 14% 8%;
+    --sidebar-foreground: 214 12% 60%;
+    --sidebar-primary: 214 16% 56%;
+    --sidebar-primary-foreground: 224 14% 7%;
+    --sidebar-accent: 216 14% 12%;
+    --sidebar-accent-foreground: 197 5% 95%;
+    --sidebar-border: 216 14% 18%;
+    --sidebar-ring: 214 16% 56%;
 
     /* Prism dark theme tokens */
-    --code-bg: 240 8% 8%;
-    --code-fg: 0 0% 85%;
-    --code-comment: 240 5% 45%;
+    --code-bg: 217 14% 10%;
+    --code-fg: 197 5% 85%;
+    --code-comment: 214 10% 45%;
     --code-keyword: 270 60% 70%;
     --code-string: 150 50% 55%;
-    --code-function: 210 60% 65%;
+    --code-function: 214 60% 65%;
     --code-number: 20 70% 60%;
-    --code-operator: 0 0% 70%;
-    --code-punctuation: 240 5% 55%;
+    --code-operator: 197 5% 70%;
+    --code-punctuation: 214 10% 55%;
   }
 }
 
 @layer base {
-  :root {
-    --grid-line: 1.5px;
-  }
-
   * {
     @apply border-border;
     border-width: 0;
-  }
-
-  .border {
-    border-width: var(--grid-line);
-  }
-  .border-t {
-    border-top-width: var(--grid-line);
-  }
-  .border-b {
-    border-bottom-width: var(--grid-line);
-  }
-  .border-l {
-    border-left-width: var(--grid-line);
-  }
-  .border-r {
-    border-right-width: var(--grid-line);
-  }
-
-  /* Override Tailwind's gap-px to use 1.5px */
-  .gap-px {
-    gap: var(--grid-line);
   }
 
   body {
@@ -174,13 +151,13 @@
   }
 
   ::selection {
-    background: hsl(240 5% 12%);
-    color: hsl(0 0% 99%);
+    background: hsl(217 16% 12%);
+    color: hsl(197 5% 99%);
   }
 
   .dark ::selection {
-    background: hsl(0 0% 90%);
-    color: hsl(240 10% 4%);
+    background: hsl(197 5% 90%);
+    color: hsl(224 14% 7%);
   }
 }
 
@@ -197,6 +174,29 @@
   .font-mono {
     font-family: var(--font-mono);
   }
+}
+
+/* 
+ * 1.5px border overrides — MUST be outside @layer 
+ * so they override Tailwind utility classes
+ */
+.border {
+  border-width: var(--grid-line, 1.5px) !important;
+}
+.border-t {
+  border-top-width: var(--grid-line, 1.5px) !important;
+}
+.border-b {
+  border-bottom-width: var(--grid-line, 1.5px) !important;
+}
+.border-l {
+  border-left-width: var(--grid-line, 1.5px) !important;
+}
+.border-r {
+  border-right-width: var(--grid-line, 1.5px) !important;
+}
+.gap-px {
+  gap: var(--grid-line, 1.5px) !important;
 }
 
 /* Prism theme overrides using CSS variables */
