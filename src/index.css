@@ -144,7 +144,13 @@
 
 @layer utilities {
   .font-serif {
-    font-family: var(--font-serif);
+    font-family: var(--font-pixel);
+  }
+  .font-pixel {
+    font-family: var(--font-pixel);
+  }
+  .font-pixel-alt {
+    font-family: var(--font-pixel-alt);
   }
   .font-mono {
     font-family: var(--font-mono);
