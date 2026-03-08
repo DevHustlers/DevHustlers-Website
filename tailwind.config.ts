@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Geist Sans', 'system-ui', 'sans-serif'],
+        sans: ['Monaspace Neon', 'Geist Sans', 'system-ui', 'sans-serif'],
         serif: ['Geist Pixel', 'Press Start 2P', 'monospace'],
         pixel: ['Geist Pixel', 'Press Start 2P', 'monospace'],
         'pixel-alt': ['Press Start 2P', 'Geist Pixel', 'monospace'],
