@@ -111,8 +111,9 @@ const Events = () => {
         </div>
       </section>
 
+      <SectionDivider />
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 
