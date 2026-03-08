@@ -25,7 +25,7 @@ const events = [
     status: "upcoming" as const,
   },
   {
-    title: "DevHive Conference 2026",
+    title: "DevHustle Conference 2026",
     date: "May 15–16, 2026",
     location: "San Francisco, CA",
     desc: "Our annual conference. Two days of talks, workshops, and community.",
