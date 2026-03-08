@@ -45,7 +45,8 @@
     --radius: 0px;
 
     --font-sans: 'DM Sans', system-ui, sans-serif;
-    --font-serif: 'Instrument Serif', Georgia, serif;
+    --font-pixel: 'Geist Pixel', 'Press Start 2P', monospace;
+    --font-pixel-alt: 'Press Start 2P', 'Geist Pixel', monospace;
     --font-mono: 'JetBrains Mono', monospace;
 
     --sidebar-background: 0 0% 98%;
