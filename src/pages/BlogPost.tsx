@@ -497,8 +497,9 @@ const BlogPost = () => {
           </div>
         </div>
       </article>
+      <SectionDivider />
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 
