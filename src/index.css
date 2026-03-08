@@ -30,7 +30,7 @@
 
 @layer base {
   :root {
-    --grid-line: 1.5px;
+    --grid-line: 2px;
 
     --background: 197 5% 99%;
     --foreground: 217 16% 8%;
