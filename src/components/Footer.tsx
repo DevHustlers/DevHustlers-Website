@@ -1,16 +1,18 @@
 import { Link } from "react-router-dom";
 import Logo from "@/components/Logo";
-
-const links = [
-  { label: "Features", href: "/#features" },
-  { label: "Community", href: "/#community" },
-  { label: "Blog", href: "/blog" },
-  { label: "Events", href: "/events" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
-];
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const Footer = () => {
+  const { t } = useLanguage();
+
+  const links = [
+    { label: t("nav.features"), href: "/#features" },
+    { label: t("nav.blog"), href: "/blog" },
+    { label: t("nav.events"), href: "/events" },
+    { label: t("nav.about"), href: "/about" },
+    { label: t("nav.contact"), href: "/contact" },
+  ];
+
   return (
     <footer className="py-10 sm:py-12 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
@@ -20,14 +22,14 @@ const Footer = () => {
               <Logo size="md" />
             </div>
             <p className="text-[13px] text-muted-foreground max-w-xs leading-relaxed">
-              A modern community for developers who want to collaborate, learn, and ship.
+              {t("footer.desc")}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-x-8 gap-y-2 text-[13px]">
             {links.map((link) => (
               <Link
-                key={link.label}
+                key={link.href}
                 to={link.href}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
@@ -38,10 +40,10 @@ const Footer = () => {
         </div>
 
         <div className="mt-10 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[12px] text-muted-foreground">© 2026 DevHustlers. All rights reserved.</p>
+          <p className="text-[12px] text-muted-foreground">{t("footer.copyright")}</p>
           <div className="flex gap-6 text-[12px] text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
+            <a href="#" className="hover:text-foreground transition-colors">{t("footer.privacy")}</a>
+            <a href="#" className="hover:text-foreground transition-colors">{t("footer.terms")}</a>
           </div>
         </div>
       </div>

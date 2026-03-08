@@ -1,11 +1,15 @@
-const stats = [
-  { value: "50K+", label: "Developers" },
-  { value: "120", label: "Countries" },
-  { value: "2.4K", label: "Projects shipped" },
-  { value: "98%", label: "Would recommend" },
-];
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const StatsSection = () => {
+  const { t } = useLanguage();
+
+  const stats = [
+    { value: t("stats.1.value"), label: t("stats.1.label") },
+    { value: t("stats.2.value"), label: t("stats.2.label") },
+    { value: t("stats.3.value"), label: t("stats.3.label") },
+    { value: t("stats.4.value"), label: t("stats.4.label") },
+  ];
+
   return (
     <section id="community" className="py-16 sm:py-20 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto">

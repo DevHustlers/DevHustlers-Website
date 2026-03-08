@@ -1,4 +1,5 @@
 import ScrollReveal from "@/components/ScrollReveal";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const team = [
   { name: "Hamsa", role: "Founder & CEO", bio: "Software Engineer. Visionary builder leading DevHustlers from idea to impact." },
@@ -7,38 +8,39 @@ const team = [
 ];
 
 const TeamSection = () => {
+  const { t } = useLanguage();
+
   return (
     <section>
       <div className="max-w-5xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-border border-x border-border">
-          {/* Left — Text block spanning full height */}
+          {/* Left — Text block */}
           <div className="bg-background p-8 sm:p-10 flex flex-col justify-center">
             <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">
-              Our team
+              {t("team.label")}
             </p>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground leading-tight mb-5">
-              The people{" "}
-              <span className="font-serif italic text-muted-foreground font-normal">behind DevHustlers</span>
+              {t("team.title.1")}{" "}
+              <span className="font-serif italic text-muted-foreground font-normal">{t("team.title.2")}</span>
             </h2>
             <p className="text-[14px] sm:text-[15px] text-muted-foreground leading-relaxed mb-6">
-              A small, focused crew of engineers and builders who believe developer communities should be built by developers. We ship fast, listen closely, and care deeply about the people in this space.
+              {t("team.desc")}
             </p>
             <div className="flex items-center gap-6 text-muted-foreground/40">
               <div>
-                <p className="text-2xl font-bold text-foreground">3</p>
-                <p className="text-[11px] uppercase tracking-widest font-mono">Founders</p>
+                <p className="text-2xl font-bold text-foreground">{t("team.stat.1.value")}</p>
+                <p className="text-[11px] uppercase tracking-widest font-mono">{t("team.stat.1.label")}</p>
               </div>
               <div className="w-px h-8 bg-border" />
               <div>
-                <p className="text-2xl font-bold text-foreground">2+</p>
-                <p className="text-[11px] uppercase tracking-widest font-mono">Years building</p>
+                <p className="text-2xl font-bold text-foreground">{t("team.stat.2.value")}</p>
+                <p className="text-[11px] uppercase tracking-widest font-mono">{t("team.stat.2.label")}</p>
               </div>
             </div>
           </div>
 
           {/* Right — Bento grid */}
           <div className="grid grid-rows-[1fr_1fr] gap-px bg-border">
-            {/* Top: Hamsa (full width of right column) */}
             <ScrollReveal delay={0}>
               <div className="group p-6 sm:p-8 bg-background hover:bg-accent/30 transition-all duration-300 h-full flex flex-col justify-center">
                 <div className="w-11 h-11 bg-accent flex items-center justify-center mb-4 group-hover:bg-foreground transition-colors duration-300">
@@ -50,7 +52,6 @@ const TeamSection = () => {
               </div>
             </ScrollReveal>
 
-            {/* Bottom: Alaa + Omar side by side */}
             <div className="grid grid-cols-2 gap-px bg-border">
               {team.slice(1).map((member, i) => (
                 <ScrollReveal key={i} delay={(i + 1) * 80}>

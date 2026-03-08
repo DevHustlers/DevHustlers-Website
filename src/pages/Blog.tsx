@@ -7,6 +7,7 @@ import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import PageLayout from "@/components/PageLayout";
 import SectionDivider from "@/components/SectionDivider";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const posts = [
   {
@@ -64,6 +65,7 @@ const allTags = Array.from(new Set(posts.map((p) => p.tag)));
 const Blog = () => {
   const [search, setSearch] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   const filtered = useMemo(() => {
     return posts.filter((post) => {
@@ -81,25 +83,24 @@ const Blog = () => {
       <Navbar />
       <section className="pt-28 sm:pt-36 pb-8 sm:pb-12 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <p className="text-[12px] sm:text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">Blog</p>
+          <p className="text-[12px] sm:text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">{t("blog.label")}</p>
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground leading-tight tracking-tight mb-4">
-            Stories &{" "}
-            <span className="font-serif italic text-muted-foreground font-normal">insights</span>
+            {t("blog.title.1")}{" "}
+            <span className="font-serif italic text-muted-foreground font-normal">{t("blog.title.2")}</span>
           </h1>
           <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg mb-8">
-            Updates, guides, and stories from the DevHustlers community.
+            {t("blog.desc")}
           </p>
 
-          {/* Search + Filters */}
           <div className="space-y-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search posts..."
-                className="w-full pl-10 pr-4 py-2.5 border border-border bg-background text-foreground text-[14px] focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground/50 font-mono"
+                placeholder={t("blog.search")}
+                className="w-full ps-10 pe-4 py-2.5 border border-border bg-background text-foreground text-[14px] focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground/50 font-mono"
               />
             </div>
             <div className="flex flex-wrap gap-2">
@@ -112,7 +113,7 @@ const Blog = () => {
                     : "bg-background text-muted-foreground border-border hover:text-foreground"
                 )}
               >
-                All
+                {t("blog.all")}
               </button>
               {allTags.map((tag) => (
                 <button
@@ -139,7 +140,7 @@ const Blog = () => {
         <div className="max-w-5xl mx-auto">
           {filtered.length === 0 ? (
             <div className="py-16 text-center">
-              <p className="text-muted-foreground text-[14px]">No posts found matching your criteria.</p>
+              <p className="text-muted-foreground text-[14px]">{t("blog.no_results")}</p>
             </div>
           ) : (
             <>
@@ -156,7 +157,7 @@ const Blog = () => {
                       </div>
                       <h2 className="text-base sm:text-lg font-semibold text-foreground group-hover:text-muted-foreground transition-colors mb-1.5 flex items-center gap-2">
                         {post.title}
-                        <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 shrink-0 hidden sm:block" />
+                        <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 shrink-0 hidden sm:block rtl:rotate-180" />
                       </h2>
                       <p className="text-[13px] sm:text-[14px] text-muted-foreground leading-relaxed">
                         {post.excerpt}

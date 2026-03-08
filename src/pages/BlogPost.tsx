@@ -7,6 +7,7 @@ import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import PageLayout from "@/components/PageLayout";
 import SectionDivider from "@/components/SectionDivider";
+import { useLanguage } from "@/i18n/LanguageContext";
 import Prism from "prismjs";
 import "prismjs/components/prism-typescript";
 import "prismjs/components/prism-bash";
@@ -33,7 +34,6 @@ interface BlogPostData {
   content: ContentBlock[];
 }
 
-// Post order for next/prev navigation
 const postSlugs = [
   "scaling-to-50k",
   "open-source-projects",
@@ -305,7 +305,7 @@ const CodeBlock = ({ code, lang }: { code: string; lang?: string }) => {
           <span className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider">{lang}</span>
         </div>
       )}
-      <pre className="p-4 overflow-x-auto bg-code-bg">
+      <pre className="p-4 overflow-x-auto bg-code-bg" dir="ltr">
         <code ref={codeRef} className={`language-${grammar} text-[13px] font-mono leading-relaxed`}>
           {code}
         </code>
@@ -333,7 +333,7 @@ const RenderBlock = ({ block }: { block: ContentBlock }) => {
       );
     case "quote":
       return (
-        <blockquote className="border-l-2 border-foreground/20 pl-5 py-1 my-6">
+        <blockquote className="border-s-2 border-foreground/20 ps-5 py-1 my-6">
           <p className="text-[15px] text-foreground/80 italic leading-[1.8]">"{block.text}"</p>
           {block.author && (
             <cite className="block text-[13px] text-muted-foreground mt-2 not-italic">— {block.author}</cite>
@@ -351,7 +351,7 @@ const RenderBlock = ({ block }: { block: ContentBlock }) => {
       return (
         <div className={cn("border px-5 py-4 my-6", variants[v])}>
           <p className="text-[14px] text-foreground leading-relaxed">
-            <span className="mr-2">{icons[v]}</span>
+            <span className="me-2">{icons[v]}</span>
             {block.text}
           </p>
         </div>
@@ -362,9 +362,9 @@ const RenderBlock = ({ block }: { block: ContentBlock }) => {
     case "list": {
       const ListTag = block.ordered ? "ol" : "ul";
       return (
-        <ListTag className={cn("my-5 space-y-2 pl-5", block.ordered ? "list-decimal" : "list-disc")}>
+        <ListTag className={cn("my-5 space-y-2 ps-5", block.ordered ? "list-decimal" : "list-disc")}>
           {block.items.map((item, i) => (
-            <li key={i} className="text-[14px] text-muted-foreground leading-relaxed pl-1">
+            <li key={i} className="text-[14px] text-muted-foreground leading-relaxed ps-1">
               {item}
             </li>
           ))}
@@ -382,6 +382,7 @@ const BlogPost = () => {
   const { slug } = useParams();
   const post = slug ? blogContent[slug] : null;
   const [activeId, setActiveId] = useState<string>("");
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (!post) return;
@@ -415,7 +416,7 @@ const BlogPost = () => {
         <div className="pt-36 pb-24 px-6 text-center">
           <h1 className="text-2xl font-bold text-foreground mb-4">Post not found</h1>
           <Link to="/blog" className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2">
-            <ArrowLeft className="w-4 h-4" /> Back to blog
+            <ArrowLeft className="w-4 h-4 rtl:rotate-180" /> {t("blog.back")}
           </Link>
         </div>
         <Footer />
@@ -437,21 +438,16 @@ const BlogPost = () => {
 
       <article className="pt-28 sm:pt-36 pb-0">
         <div className="max-w-5xl mx-auto">
-          {/* Back to blog with square dividers */}
+          {/* Back to blog + metadata in one row between dividers */}
           <SectionDivider />
-          <div className="px-4 sm:px-10 py-6">
+          <div className="px-4 sm:px-10 py-4 flex flex-wrap items-center justify-between gap-3">
             <Link
               to="/blog"
               className="inline-flex items-center gap-2 text-[13px] text-muted-foreground hover:text-foreground transition-colors"
             >
-              <ArrowLeft className="w-3.5 h-3.5" /> Back to blog
+              <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-180" /> {t("blog.back")}
             </Link>
-          </div>
-          <SectionDivider />
-
-          {/* Post header */}
-          <div className="px-4 sm:px-10 py-8 sm:py-10">
-            <div className="flex flex-wrap items-center gap-3 mb-4 text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
               <span className="inline-flex items-center gap-1.5 text-[12px] font-mono">
                 <Clock className="w-3 h-3" /> {post.date}
               </span>
@@ -462,7 +458,11 @@ const BlogPost = () => {
                 <BookOpen className="w-3 h-3" /> {post.readTime}
               </span>
             </div>
+          </div>
+          <SectionDivider />
 
+          {/* Post header */}
+          <div className="px-4 sm:px-10 py-8 sm:py-10">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground leading-tight tracking-tight mb-6">
               {post.title}
             </h1>
@@ -482,45 +482,42 @@ const BlogPost = () => {
           </div>
           <SectionDivider />
 
-          {/* Content + TOC layout */}
-          <div className="relative">
-            {/* Main content */}
-            <div className="px-4 sm:px-10 py-10">
-              {post.content.map((block, i) => (
-                <RenderBlock key={i} block={block} />
-              ))}
-            </div>
-
-            {/* TOC sidebar - positioned outside the right vertical line */}
-            {tocItems.length > 0 && (
-              <aside className="hidden lg:block absolute top-0 -right-4 w-52 translate-x-full">
-                <div className="sticky top-24 pl-8">
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-4 font-mono">
-                    On this page
-                  </p>
-                  <nav className="space-y-0.5">
-                    {tocItems.map((item) => (
-                      <a
-                        key={item.id}
-                        href={`#${item.id}`}
-                        className={cn(
-                          "block text-[13px] leading-snug py-1.5 transition-colors duration-150 border-l-2",
-                          item.level === "h3" ? "pl-5" : "pl-3",
-                          activeId === item.id
-                            ? "border-foreground text-foreground font-medium"
-                            : "border-transparent text-muted-foreground/70 hover:text-foreground hover:border-border"
-                        )}
-                      >
-                        {item.text}
-                      </a>
-                    ))}
-                  </nav>
-                </div>
-              </aside>
-            )}
+          {/* Main content */}
+          <div className="px-4 sm:px-10 py-10">
+            {post.content.map((block, i) => (
+              <RenderBlock key={i} block={block} />
+            ))}
           </div>
         </div>
       </article>
+
+      {/* Fixed TOC sidebar - positioned outside the right vertical line */}
+      {tocItems.length > 0 && (
+        <aside className="hidden xl:block fixed top-24 z-40" style={{ left: "calc(50% + 512px + 16px)", width: "208px" }}>
+          <div className="ps-6">
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-4 font-mono">
+              {t("blog.toc")}
+            </p>
+            <nav className="space-y-0.5">
+              {tocItems.map((item) => (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  className={cn(
+                    "block text-[12px] leading-snug py-1.5 transition-colors duration-150 border-s-2",
+                    item.level === "h3" ? "ps-5" : "ps-3",
+                    activeId === item.id
+                      ? "border-foreground text-foreground font-medium"
+                      : "border-transparent text-muted-foreground/60 hover:text-foreground hover:border-border"
+                  )}
+                >
+                  {item.text}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </aside>
+      )}
 
       {/* Next/Prev navigation */}
       <div>
@@ -536,7 +533,7 @@ const BlogPost = () => {
                 className="group p-6 sm:p-8 bg-background hover:bg-accent/30 transition-colors"
               >
                 <span className="text-[11px] text-muted-foreground uppercase tracking-widest font-mono mb-2 block">
-                  ← Previous
+                  {t("blog.prev")}
                 </span>
                 <span className="text-[15px] font-semibold text-foreground group-hover:text-muted-foreground transition-colors">
                   {postTitles[prevSlug]}
@@ -548,11 +545,11 @@ const BlogPost = () => {
                 to={`/blog/${nextSlug}`}
                 className={cn(
                   "group p-6 sm:p-8 bg-background hover:bg-accent/30 transition-colors",
-                  prevSlug ? "text-right" : ""
+                  prevSlug ? "text-end" : ""
                 )}
               >
                 <span className="text-[11px] text-muted-foreground uppercase tracking-widest font-mono mb-2 block">
-                  Next →
+                  {t("blog.next")}
                 </span>
                 <span className="text-[15px] font-semibold text-foreground group-hover:text-muted-foreground transition-colors">
                   {postTitles[nextSlug]}

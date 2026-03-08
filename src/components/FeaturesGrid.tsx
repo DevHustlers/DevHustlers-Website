@@ -1,49 +1,28 @@
 import { Code2, Users, Zap, Globe, MessageSquare, Rocket } from "lucide-react";
-
-const features = [
-  {
-    icon: Code2,
-    title: "Open Source First",
-    desc: "Collaborate on projects that matter. Every contribution counts.",
-  },
-  {
-    icon: Users,
-    title: "Global Community",
-    desc: "Connect with 50K+ developers from 120 countries worldwide.",
-  },
-  {
-    icon: Zap,
-    title: "Weekly Hackathons",
-    desc: "Build, ship, and learn together with structured weekly challenges.",
-  },
-  {
-    icon: Globe,
-    title: "Remote Friendly",
-    desc: "Async-first culture. Collaborate across timezones seamlessly.",
-  },
-  {
-    icon: MessageSquare,
-    title: "Mentorship",
-    desc: "Get guidance from senior engineers at top tech companies.",
-  },
-  {
-    icon: Rocket,
-    title: "Launch Support",
-    desc: "From idea to launch — get feedback, beta testers, and support.",
-  },
-];
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const FeaturesGrid = () => {
+  const { t } = useLanguage();
+
+  const features = [
+    { icon: Code2, title: t("features.1.title"), desc: t("features.1.desc") },
+    { icon: Users, title: t("features.2.title"), desc: t("features.2.desc") },
+    { icon: Zap, title: t("features.3.title"), desc: t("features.3.desc") },
+    { icon: Globe, title: t("features.4.title"), desc: t("features.4.desc") },
+    { icon: MessageSquare, title: t("features.5.title"), desc: t("features.5.desc") },
+    { icon: Rocket, title: t("features.6.title"), desc: t("features.6.desc") },
+  ];
+
   return (
     <section id="features">
       <div className="max-w-5xl mx-auto">
         <div className="px-4 sm:px-10 pt-20 sm:pt-24 pb-14">
           <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">
-            Everything you need
+            {t("features.label")}
           </p>
           <h2 className="text-2xl md:text-3xl font-bold text-foreground leading-tight">
-            Built for developers,{" "}
-            <span className="font-serif italic text-muted-foreground font-normal">by developers</span>
+            {t("features.title.1")}{" "}
+            <span className="font-serif italic text-muted-foreground font-normal">{t("features.title.2")}</span>
           </h2>
         </div>
 

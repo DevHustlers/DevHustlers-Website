@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import { Calendar, MapPin } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import SectionDivider from "@/components/SectionDivider";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const events = [
   {
@@ -50,6 +51,7 @@ const events = [
 ];
 
 const Events = () => {
+  const { t } = useLanguage();
   const upcoming = events.filter((e) => e.status === "upcoming");
   const past = events.filter((e) => e.status === "past");
 
@@ -58,13 +60,13 @@ const Events = () => {
       <Navbar />
       <section className="pt-28 sm:pt-36 pb-16 px-4 sm:px-6">
         <div className="max-w-3xl mx-auto">
-          <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">Events</p>
+          <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">{t("events.label")}</p>
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground leading-tight tracking-tight mb-4">
-            Hackathons, meetups &{" "}
-            <span className="font-serif italic text-muted-foreground font-normal">more</span>
+            {t("events.title.1")}{" "}
+            <span className="font-serif italic text-muted-foreground font-normal">{t("events.title.2")}</span>
           </h1>
           <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg">
-            Join us online or in person. There's always something happening.
+            {t("events.desc")}
           </p>
         </div>
       </section>
@@ -72,7 +74,7 @@ const Events = () => {
       <section className="px-4 sm:px-6 pb-24">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-[13px] font-medium text-muted-foreground mb-6 uppercase tracking-widest">
-            Upcoming
+            {t("events.upcoming")}
           </h2>
           <div className="space-y-3 mb-16">
             {upcoming.map((event, i) => (
@@ -92,7 +94,7 @@ const Events = () => {
           </div>
 
           <h2 className="text-[13px] font-medium text-muted-foreground mb-6 uppercase tracking-widest">
-            Past events
+            {t("events.past")}
           </h2>
           <div className="space-y-3">
             {past.map((event, i) => (
