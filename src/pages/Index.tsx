@@ -6,12 +6,14 @@ import FAQSection from "@/components/FAQSection";
 import TeamSection from "@/components/TeamSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+import PageLayout from "@/components/PageLayout";
+import SectionDivider from "@/components/SectionDivider";
 import ScrollReveal from "@/components/ScrollReveal";
 import { ArrowRight, Terminal, GitBranch, Sparkles } from "lucide-react";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <PageLayout>
       <Navbar />
 
       {/* Hero */}
@@ -79,9 +81,11 @@ const Index = () => {
         </div>
       </section>
 
+      <SectionDivider />
+
       {/* Social proof */}
       <ScrollReveal>
-        <section className="pb-20 px-4 sm:px-6">
+        <section className="py-20 px-4 sm:px-6">
           <div className="max-w-3xl mx-auto">
             <p className="text-center text-[12px] sm:text-[13px] text-muted-foreground/60 uppercase tracking-widest mb-6 sm:mb-8 font-medium">
               Developers from
@@ -97,14 +101,21 @@ const Index = () => {
         </section>
       </ScrollReveal>
 
+      <SectionDivider />
       <ScrollReveal><FeaturesGrid /></ScrollReveal>
+      <SectionDivider />
       <ScrollReveal><StatsSection /></ScrollReveal>
+      <SectionDivider />
       <ScrollReveal><TestimonialsSection /></ScrollReveal>
+      <SectionDivider />
       <ScrollReveal><TeamSection /></ScrollReveal>
+      <SectionDivider />
       <ScrollReveal><FAQSection /></ScrollReveal>
+      <SectionDivider />
       <ScrollReveal><CTASection /></ScrollReveal>
+      <SectionDivider />
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

@@ -1,10 +1,12 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import TeamSection from "@/components/TeamSection";
+import PageLayout from "@/components/PageLayout";
+import SectionDivider from "@/components/SectionDivider";
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <PageLayout>
       <Navbar />
       <section className="pt-28 sm:pt-36 pb-16 px-4 sm:px-6">
         <div className="max-w-3xl mx-auto">
@@ -41,9 +43,11 @@ const About = () => {
         </div>
       </section>
 
+      <SectionDivider />
       <TeamSection />
+      <SectionDivider />
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

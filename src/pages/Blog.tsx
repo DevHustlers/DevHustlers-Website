@@ -5,6 +5,8 @@ import { ArrowRight, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
+import PageLayout from "@/components/PageLayout";
+import SectionDivider from "@/components/SectionDivider";
 
 const posts = [
   {
@@ -75,7 +77,7 @@ const Blog = () => {
   }, [search, activeTag]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <PageLayout>
       <Navbar />
       <section className="pt-28 sm:pt-36 pb-8 sm:pb-12 px-4 sm:px-6">
         <div className="max-w-3xl mx-auto">
@@ -164,8 +166,9 @@ const Blog = () => {
         </div>
       </section>
 
+      <SectionDivider />
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

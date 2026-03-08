@@ -4,6 +4,8 @@ import { ArrowLeft, BookOpen, Clock, Tag } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
+import PageLayout from "@/components/PageLayout";
+import SectionDivider from "@/components/SectionDivider";
 import Prism from "prismjs";
 import "prismjs/components/prism-typescript";
 import "prismjs/components/prism-bash";
@@ -388,7 +390,7 @@ const BlogPost = () => {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-background">
+      <PageLayout>
         <Navbar />
         <div className="pt-36 pb-24 px-6 text-center">
           <h1 className="text-2xl font-bold text-foreground mb-4">Post not found</h1>
@@ -397,14 +399,14 @@ const BlogPost = () => {
           </Link>
         </div>
         <Footer />
-      </div>
+      </PageLayout>
     );
   }
 
   const tocItems = getTocItems(post.content);
 
   return (
-    <div className="min-h-screen bg-background">
+    <PageLayout>
       <Navbar />
       <article className="pt-28 sm:pt-36 pb-24 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
@@ -495,8 +497,9 @@ const BlogPost = () => {
           </div>
         </div>
       </article>
+      <SectionDivider />
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 
