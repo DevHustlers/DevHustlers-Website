@@ -75,7 +75,7 @@ const Blog = () => {
   }, [search, activeTag]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <PageLayout>
       <Navbar />
       <section className="pt-28 sm:pt-36 pb-8 sm:pb-12 px-4 sm:px-6">
         <div className="max-w-3xl mx-auto">
