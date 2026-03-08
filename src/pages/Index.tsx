@@ -12,6 +12,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { ArrowRight, Terminal, GitBranch, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import pixelIcons from "@/components/PixelIcons";
 
 const Index = () => {
   const [wordIndex, setWordIndex] = useState(0);
