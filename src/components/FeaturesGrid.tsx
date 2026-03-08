@@ -14,9 +14,9 @@ const FeaturesGrid = () => {
   ];
 
   return (
-    <section id="features" className="px-3 sm:px-6 lg:px-0">
-      <div className="lg:max-w-5xl lg:mx-auto">
-        <div className="px-4 sm:px-6 pt-20 sm:pt-24 pb-14">
+    <section id="features">
+      <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
+        <div className="px-3 sm:px-4 lg:px-6 pt-20 sm:pt-24 pb-14">
           <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">
             {t("features.label")}
           </p>

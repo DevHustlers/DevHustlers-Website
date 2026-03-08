@@ -36,49 +36,24 @@ const Blog = () => {
   return (
     <PageLayout>
       <Navbar />
-      <section className="pt-28 sm:pt-36 pb-8 sm:pb-12 px-3 sm:px-6 lg:px-0">
-        <div className="lg:max-w-5xl lg:mx-auto px-3 sm:px-4 lg:px-0">
+      <section className="pt-28 sm:pt-36 pb-8 sm:pb-12">
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-6">
           <p className="text-[12px] sm:text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">{t("blog.label")}</p>
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground leading-tight tracking-tight mb-4">
             {t("blog.title.1")}{" "}
             <span className="font-serif text-muted-foreground font-normal">{t("blog.title.2")}</span>
           </h1>
-          <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg mb-8">
-            {t("blog.desc")}
-          </p>
+          <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg mb-8">{t("blog.desc")}</p>
 
           <div className="space-y-4">
             <div className="relative">
               <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={t("blog.search")}
-                className="w-full ps-10 pe-4 py-2.5 border border-border bg-background text-foreground text-[14px] focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground/50 font-mono"
-              />
+              <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("blog.search")} className="w-full ps-10 pe-4 py-2.5 border border-border bg-background text-foreground text-[14px] focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground/50 font-mono" />
             </div>
             <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setActiveTag(null)}
-                className={cn(
-                  "px-3 py-1 text-[12px] font-medium border transition-colors",
-                  !activeTag ? "bg-foreground text-background border-foreground" : "bg-background text-muted-foreground border-border hover:text-foreground"
-                )}
-              >
-                {t("blog.all")}
-              </button>
+              <button onClick={() => setActiveTag(null)} className={cn("px-3 py-1 text-[12px] font-medium border transition-colors", !activeTag ? "bg-foreground text-background border-foreground" : "bg-background text-muted-foreground border-border hover:text-foreground")}>{t("blog.all")}</button>
               {allTags.map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-                  className={cn(
-                    "px-3 py-1 text-[12px] font-medium border transition-colors",
-                    activeTag === tag ? "bg-foreground text-background border-foreground" : "bg-background text-muted-foreground border-border hover:text-foreground"
-                  )}
-                >
-                  {tag}
-                </button>
+                <button key={tag} onClick={() => setActiveTag(activeTag === tag ? null : tag)} className={cn("px-3 py-1 text-[12px] font-medium border transition-colors", activeTag === tag ? "bg-foreground text-background border-foreground" : "bg-background text-muted-foreground border-border hover:text-foreground")}>{tag}</button>
               ))}
             </div>
           </div>
@@ -87,17 +62,15 @@ const Blog = () => {
 
       <SectionDivider />
 
-      <section className="pb-0 px-3 sm:px-6 lg:px-0">
+      <section className="pb-0">
         {filtered.length === 0 ? (
-          <div className="py-16 text-center">
-            <p className="text-muted-foreground text-[14px]">{t("blog.no_results")}</p>
-          </div>
+          <div className="py-16 text-center"><p className="text-muted-foreground text-[14px]">{t("blog.no_results")}</p></div>
         ) : (
           <>
             {filtered.map((post, i) => (
               <ScrollReveal key={post.slug} delay={i * 50}>
                 <Link to={post.slug} className="block group">
-                  <div className="lg:max-w-5xl lg:mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 hover:bg-accent/30 transition-colors duration-300">
+                  <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-10 py-8 sm:py-10 hover:bg-accent/30 transition-colors duration-300">
                     <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
                       <span className="text-[11px] sm:text-[12px] text-muted-foreground font-mono">{post.date}</span>
                       <span className="text-[10px] sm:text-[11px] px-2 py-0.5 border border-border text-muted-foreground">{post.tag}</span>

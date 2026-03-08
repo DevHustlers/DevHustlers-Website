@@ -11,8 +11,8 @@ const StatsSection = () => {
   ];
 
   return (
-    <section id="community" className="py-16 sm:py-20 px-3 sm:px-6 lg:px-0">
-      <div className="lg:max-w-5xl lg:mx-auto">
+    <section id="community" className="py-16 sm:py-20">
+      <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, i) => (
             <div key={i} className="text-center">

@@ -31,9 +31,9 @@ const Index = () => {
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-28 sm:pt-40 px-3 sm:px-6 lg:px-0 relative">
-        <div className="lg:max-w-5xl lg:mx-auto">
-          <div className="max-w-3xl pb-20 sm:pb-32 px-3 sm:px-4 lg:px-0">
+      <section className="pt-28 sm:pt-40 relative">
+        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
+          <div className="max-w-3xl pb-20 sm:pb-32 px-1 sm:px-4 lg:px-6">
             <div className="animate-fade-up">
               <div className="inline-flex items-center gap-2 px-3 py-1 border border-border text-[13px] text-muted-foreground mb-8 font-mono">
                 <span className="relative flex h-1.5 w-1.5">
@@ -69,10 +69,7 @@ const Index = () => {
                   />
                 </svg>
                 <span className="inline-flex h-[1em] items-end overflow-hidden align-baseline leading-[1]">
-                  <span
-                    key={wordIndex}
-                    className="inline-block animate-slide-up"
-                  >
+                  <span key={wordIndex} className="inline-block animate-slide-up">
                     {rotatingWords[wordIndex]}
                   </span>
                 </span>
@@ -126,8 +123,8 @@ const Index = () => {
 
       {/* Social proof */}
       <ScrollReveal>
-        <section className="py-16 sm:py-20 px-3 sm:px-6 lg:px-0">
-          <div className="lg:max-w-5xl lg:mx-auto">
+        <section className="py-16 sm:py-20">
+          <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
             <p className="text-center text-[11px] sm:text-[12px] text-muted-foreground/50 uppercase tracking-[0.2em] mb-8 font-mono">
               {t("social.from")}
             </p>

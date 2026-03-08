@@ -22,27 +22,22 @@ const Events = () => {
   return (
     <PageLayout>
       <Navbar />
-      <section className="pt-28 sm:pt-36 pb-16 px-3 sm:px-6 lg:px-0">
-        <div className="lg:max-w-5xl lg:mx-auto px-3 sm:px-4 lg:px-0">
+      <section className="pt-28 sm:pt-36 pb-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-6">
           <div className="max-w-3xl">
             <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">{t("events.label")}</p>
             <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground leading-tight tracking-tight mb-4">
               {t("events.title.1")}{" "}
               <span className="font-serif text-muted-foreground font-normal">{t("events.title.2")}</span>
             </h1>
-            <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg">
-              {t("events.desc")}
-            </p>
+            <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg">{t("events.desc")}</p>
           </div>
         </div>
       </section>
 
-      {/* Upcoming */}
-      <section className="px-3 sm:px-6 lg:px-0">
-        <div className="lg:max-w-5xl lg:mx-auto">
-          <h2 className="text-[13px] font-medium text-muted-foreground mb-0 uppercase tracking-widest py-4 px-3 sm:px-4 lg:px-0">
-            {t("events.upcoming")}
-          </h2>
+      <section>
+        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
+          <h2 className="text-[13px] font-medium text-muted-foreground mb-0 uppercase tracking-widest py-4 px-1 sm:px-2 lg:px-6">{t("events.upcoming")}</h2>
           <div className="border border-border bg-border">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-px">
               {upcoming.map((event, i) => (
@@ -64,12 +59,9 @@ const Events = () => {
 
       <SectionDivider />
 
-      {/* Past */}
-      <section className="px-3 sm:px-6 lg:px-0">
-        <div className="lg:max-w-5xl lg:mx-auto">
-          <h2 className="text-[13px] font-medium text-muted-foreground mb-0 uppercase tracking-widest py-4 px-3 sm:px-4 lg:px-0">
-            {t("events.past")}
-          </h2>
+      <section>
+        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
+          <h2 className="text-[13px] font-medium text-muted-foreground mb-0 uppercase tracking-widest py-4 px-1 sm:px-2 lg:px-6">{t("events.past")}</h2>
           <div className="border border-border bg-border">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-px opacity-60">
               {past.map((event, i) => (
