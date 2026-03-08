@@ -13,7 +13,7 @@ const TeamSection = () => {
   return (
     <section>
       <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-border border-x border-border">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-border border-t lg:border-x border-border">
           {/* Left — Text block */}
           <div className="bg-background p-8 sm:p-10 flex flex-col justify-center">
             <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">
