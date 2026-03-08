@@ -32,7 +32,7 @@ const Index = () => {
 
       {/* Hero */}
       <section className="pt-28 sm:pt-40 px-4 sm:px-6 relative">
-        <div className="max-w-3xl mx-auto pb-20 sm:pb-32">
+        <div className="max-w-3xl mx-auto px-0 sm:px-0 pb-20 sm:pb-32">
           <div className="animate-fade-up">
             <div className="inline-flex items-center gap-2 px-3 py-1 border border-border text-[13px] text-muted-foreground mb-8 font-mono">
               <span className="relative flex h-1.5 w-1.5">
@@ -44,7 +44,7 @@ const Index = () => {
           </div>
 
           <h1
-            className="text-[clamp(2rem,6vw,4.5rem)] font-bold text-foreground leading-[1.05] tracking-tight mb-6 animate-fade-up"
+            className="text-[clamp(2.25rem,6vw,4.5rem)] font-bold text-foreground leading-[1.05] tracking-tight mb-6 animate-fade-up"
             style={{ animationDelay: "0.08s", opacity: 0 }}
           >
             {t("hero.title.1")}{" "}
@@ -89,11 +89,11 @@ const Index = () => {
             className="flex flex-col sm:flex-row gap-3 animate-fade-up"
             style={{ animationDelay: "0.24s", opacity: 0 }}
           >
-            <button className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-foreground text-background font-medium hover:bg-foreground/90 transition-colors text-[15px]">
+            <button className="inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:py-3 bg-foreground text-background font-medium hover:bg-foreground/90 transition-colors text-[15px] w-full sm:w-auto">
               {t("hero.cta.join")}
               <ArrowRight className="w-4 h-4 rtl:rotate-180" />
             </button>
-            <button className="inline-flex items-center justify-center gap-2 px-7 py-3 border border-border text-foreground font-medium hover:bg-accent transition-colors text-[15px]">
+            <button className="inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:py-3 border border-border text-foreground font-medium hover:bg-accent transition-colors text-[15px] w-full sm:w-auto">
               {t("hero.cta.explore")}
             </button>
           </div>

@@ -16,7 +16,7 @@ const FeaturesGrid = () => {
   return (
     <section id="features">
       <div className="max-w-5xl mx-auto">
-        <div className="px-4 sm:px-10 pt-20 sm:pt-24 pb-14">
+        <div className="px-6 sm:px-10 pt-20 sm:pt-24 pb-14">
           <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">
             {t("features.label")}
           </p>
@@ -30,7 +30,7 @@ const FeaturesGrid = () => {
           {features.map((feature, i) => (
             <div
               key={i}
-              className="bg-background p-7 hover:bg-accent/40 transition-colors duration-300"
+              className="bg-background p-6 sm:p-7 hover:bg-accent/40 transition-colors duration-300"
             >
               <feature.icon className="w-5 h-5 text-foreground mb-4" strokeWidth={1.5} />
               <h3 className="font-semibold text-foreground text-[15px] mb-1.5">{feature.title}</h3>
