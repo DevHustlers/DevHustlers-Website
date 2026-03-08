@@ -136,40 +136,38 @@ const Blog = () => {
 
       <SectionDivider />
 
-      <section className="px-0 pb-0">
-        <div className="max-w-5xl mx-auto">
-          {filtered.length === 0 ? (
-            <div className="py-16 text-center">
-              <p className="text-muted-foreground text-[14px]">{t("blog.no_results")}</p>
-            </div>
-          ) : (
-            <>
-              {filtered.map((post, i) => (
-                <ScrollReveal key={post.slug} delay={i * 50}>
-                  <Link to={post.slug} className="block group">
-                    <div className="px-4 sm:px-10 py-8 sm:py-10 hover:bg-accent/30 transition-colors duration-300">
-                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
-                        <span className="text-[11px] sm:text-[12px] text-muted-foreground font-mono">{post.date}</span>
-                        <span className="text-[10px] sm:text-[11px] px-2 py-0.5 border border-border text-muted-foreground">
-                          {post.tag}
-                        </span>
-                        <span className="text-[10px] sm:text-[11px] text-muted-foreground/60">{post.readTime}</span>
-                      </div>
-                      <h2 className="text-base sm:text-lg font-semibold text-foreground group-hover:text-muted-foreground transition-colors mb-1.5 flex items-center gap-2">
-                        {post.title}
-                        <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 shrink-0 hidden sm:block rtl:rotate-180" />
-                      </h2>
-                      <p className="text-[13px] sm:text-[14px] text-muted-foreground leading-relaxed">
-                        {post.excerpt}
-                      </p>
+      <section className="pb-0">
+        {filtered.length === 0 ? (
+          <div className="py-16 text-center">
+            <p className="text-muted-foreground text-[14px]">{t("blog.no_results")}</p>
+          </div>
+        ) : (
+          <>
+            {filtered.map((post, i) => (
+              <ScrollReveal key={post.slug} delay={i * 50}>
+                <Link to={post.slug} className="block group">
+                  <div className="max-w-5xl mx-auto px-4 sm:px-10 py-8 sm:py-10 hover:bg-accent/30 transition-colors duration-300">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
+                      <span className="text-[11px] sm:text-[12px] text-muted-foreground font-mono">{post.date}</span>
+                      <span className="text-[10px] sm:text-[11px] px-2 py-0.5 border border-border text-muted-foreground">
+                        {post.tag}
+                      </span>
+                      <span className="text-[10px] sm:text-[11px] text-muted-foreground/60">{post.readTime}</span>
                     </div>
-                  </Link>
-                  {i < filtered.length - 1 && <SectionDivider />}
-                </ScrollReveal>
-              ))}
-            </>
-          )}
-        </div>
+                    <h2 className="text-base sm:text-lg font-semibold text-foreground group-hover:text-muted-foreground transition-colors mb-1.5 flex items-center gap-2">
+                      {post.title}
+                      <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 shrink-0 hidden sm:block rtl:rotate-180" />
+                    </h2>
+                    <p className="text-[13px] sm:text-[14px] text-muted-foreground leading-relaxed">
+                      {post.excerpt}
+                    </p>
+                  </div>
+                </Link>
+                {i < filtered.length - 1 && <SectionDivider />}
+              </ScrollReveal>
+            ))}
+          </>
+        )}
       </section>
 
       <SectionDivider />
