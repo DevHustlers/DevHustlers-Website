@@ -14,9 +14,9 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="py-10 sm:py-12 px-4 sm:px-6">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="flex flex-col md:flex-row items-start justify-between gap-10">
+    <footer className="py-10 sm:py-12 px-3 sm:px-6 lg:px-0">
+      <div className="lg:max-w-5xl lg:mx-auto">
+        <div className="flex flex-col md:flex-row items-start justify-between gap-10 px-3 sm:px-4 lg:px-0">
           <div>
             <div className="mb-3">
               <Logo size="md" />
@@ -39,7 +39,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-10 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 px-3 sm:px-4 lg:px-0">
           <p className="text-[12px] text-muted-foreground">{t("footer.copyright")}</p>
           <div className="flex gap-6 text-[12px] text-muted-foreground">
             <a href="#" className="hover:text-foreground transition-colors">{t("footer.privacy")}</a>

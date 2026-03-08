@@ -55,7 +55,7 @@ const Navbar = () => {
             : "bg-background/60 backdrop-blur-xl"
         )}
       >
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+        <div className="px-3 sm:px-6 lg:px-0 lg:max-w-5xl lg:mx-auto h-14 flex items-center justify-between">
           <Logo />
 
           <div className="hidden md:flex items-center gap-0.5">
@@ -98,7 +98,7 @@ const Navbar = () => {
         <div className="fixed inset-0 z-40 md:hidden">
           <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={() => setOpen(false)} />
           <div className="absolute top-14 left-0 right-0 bottom-0 bg-background border-t border-border animate-fade-in overflow-y-auto">
-            <div className="px-4 sm:px-6 py-8">
+            <div className="px-3 sm:px-6 py-8">
               <div className="space-y-1">
                 {links.map((link, i) => (
                   <Link

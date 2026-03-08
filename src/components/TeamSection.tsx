@@ -11,11 +11,11 @@ const TeamSection = () => {
   const { t } = useLanguage();
 
   return (
-    <section>
-      <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-border border-t lg:border-x border-border">
+    <section className="px-3 sm:px-6 lg:px-0">
+      <div className="lg:max-w-5xl lg:mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-border border-t border-border">
           {/* Left — Text block */}
-          <div className="bg-background p-8 sm:p-10 flex flex-col justify-center">
+          <div className="bg-background p-6 sm:p-8 lg:p-10 flex flex-col justify-center">
             <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">
               {t("team.label")}
             </p>

@@ -5,8 +5,8 @@ const CTASection = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="py-20 sm:py-24 px-4 sm:px-6">
-      <div className="max-w-5xl mx-auto">
+    <section className="py-20 sm:py-24 px-3 sm:px-6 lg:px-0">
+      <div className="lg:max-w-5xl lg:mx-auto">
         <div className="border border-border bg-accent/30 px-6 sm:px-8 py-16 md:py-20 text-center">
           <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-4 leading-tight tracking-tight">
             {t("cta.title.1")}{" "}

@@ -11,25 +11,27 @@ const About = () => {
   return (
     <PageLayout>
       <Navbar />
-      <section className="pt-28 sm:pt-36 pb-16 px-4 sm:px-6">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">{t("about.label")}</p>
-          <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground leading-tight tracking-tight mb-6">
-            {t("about.title.1")}{" "}
-            <span className="font-serif text-muted-foreground font-normal">{t("about.title.2")}</span>{" "}
-            {t("about.title.3")}
-          </h1>
-          <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg leading-relaxed mb-6">
-            {t("about.p1")}
-          </p>
-          <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg leading-relaxed">
-            {t("about.p2")}
-          </p>
+      <section className="pt-28 sm:pt-36 pb-16 px-3 sm:px-6 lg:px-0">
+        <div className="lg:max-w-5xl lg:mx-auto px-3 sm:px-4 lg:px-0">
+          <div className="max-w-3xl">
+            <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">{t("about.label")}</p>
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground leading-tight tracking-tight mb-6">
+              {t("about.title.1")}{" "}
+              <span className="font-serif text-muted-foreground font-normal">{t("about.title.2")}</span>{" "}
+              {t("about.title.3")}
+            </h1>
+            <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg leading-relaxed mb-6">
+              {t("about.p1")}
+            </p>
+            <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg leading-relaxed">
+              {t("about.p2")}
+            </p>
+          </div>
         </div>
       </section>
 
-      <section className="px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-px bg-border border border-border">
+      <section className="px-3 sm:px-6 lg:px-0">
+        <div className="lg:max-w-5xl lg:mx-auto grid grid-cols-1 sm:grid-cols-3 gap-px bg-border border border-border">
           {[
             { value: t("about.stat.1.value"), label: t("about.stat.1.label") },
             { value: t("about.stat.2.value"), label: t("about.stat.2.label") },
