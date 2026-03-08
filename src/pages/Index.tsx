@@ -130,17 +130,24 @@ const Index = () => {
               {t("social.from")}
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-y-8 gap-x-4">
-              {(["React", "TypeScript", "Rust", "Go", "Python", "Node.js"] as const).map((name) => {
-                const Icon = pixelIcons[name];
-                return (
-                  <div key={name} className="flex flex-col items-center gap-2 group cursor-default">
-                    {Icon && <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-muted-foreground/40 group-hover:text-muted-foreground/70 transition-colors duration-300" />}
-                    <span className="text-[15px] sm:text-[17px] font-bold text-muted-foreground/40 tracking-tight select-none group-hover:text-muted-foreground/70 transition-colors duration-300">
-                      {name}
-                    </span>
-                  </div>
-                );
-              })}
+              {techStack.map(({ name, Icon, hoverColor }) => (
+                <div key={name} className="flex flex-col items-center gap-2.5 group cursor-default">
+                  <Icon
+                    size={48}
+                    className="text-muted-foreground/40 transition-colors duration-300"
+                    style={{ color: undefined }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = hoverColor; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = ''; }}
+                  />
+                  <span
+                    className="text-[15px] sm:text-[17px] font-bold text-muted-foreground/40 tracking-tight select-none transition-colors duration-300"
+                    onMouseEnter={(e) => { e.currentTarget.style.color = hoverColor; (e.currentTarget.previousElementSibling as HTMLElement).style.color = hoverColor; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = ''; (e.currentTarget.previousElementSibling as HTMLElement).style.color = ''; }}
+                  >
+                    {name}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </section>
