@@ -7,6 +7,16 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { useState } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
+const SquareDivider = () => (
+  <div className="w-full overflow-hidden border-t border-b border-border my-0">
+    <div className="flex w-full h-6">
+      {Array.from({ length: 80 }).map((_, i) => (
+        <div key={i} className="shrink-0 w-6 h-6 border-r border-border" />
+      ))}
+    </div>
+  </div>
+);
+
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
   const { t } = useLanguage();
@@ -56,7 +66,7 @@ const Contact = () => {
                       e.preventDefault();
                       setSubmitted(true);
                     }}
-                    className="space-y-5"
+                    className="space-y-0"
                   >
                     <div>
                       <label className="block text-[12px] font-medium text-muted-foreground mb-2 uppercase tracking-wider">
@@ -69,6 +79,9 @@ const Contact = () => {
                         placeholder={t("contact.name.placeholder")}
                       />
                     </div>
+
+                    <SquareDivider />
+
                     <div>
                       <label className="block text-[12px] font-medium text-muted-foreground mb-2 uppercase tracking-wider">
                         {t("contact.email")}
@@ -80,6 +93,9 @@ const Contact = () => {
                         placeholder={t("contact.email.placeholder")}
                       />
                     </div>
+
+                    <SquareDivider />
+
                     <div>
                       <label className="block text-[12px] font-medium text-muted-foreground mb-2 uppercase tracking-wider">
                         {t("contact.message")}
@@ -91,13 +107,15 @@ const Contact = () => {
                         placeholder={t("contact.message.placeholder")}
                       />
                     </div>
-                    <button
-                      type="submit"
-                      className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-foreground text-background font-medium text-[14px] hover:bg-foreground/90 transition-colors"
-                    >
-                      {t("contact.send")}
-                      <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-                    </button>
+                    <div className="pt-5">
+                      <button
+                        type="submit"
+                        className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-foreground text-background font-medium text-[14px] hover:bg-foreground/90 transition-colors"
+                      >
+                        {t("contact.send")}
+                        <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                      </button>
+                    </div>
                   </form>
                 )}
               </div>
@@ -106,18 +124,41 @@ const Contact = () => {
             {/* Info sidebar */}
             <ScrollReveal delay={100}>
               <div className="bg-background p-6 sm:p-10 flex flex-col justify-between h-full">
-                <div className="space-y-8">
+                <div className="space-y-0">
                   <div>
                     <div className="flex items-center gap-2 text-foreground font-medium text-[13px] mb-2 uppercase tracking-wider">
                       <Mail className="w-4 h-4" /> {t("contact.email")}
                     </div>
                     <p className="text-[14px] text-muted-foreground">hello@devhustlers.community</p>
                   </div>
+
+                  <SquareDivider />
+
                   <div>
                     <div className="flex items-center gap-2 text-foreground font-medium text-[13px] mb-2 uppercase tracking-wider">
                       <MapPin className="w-4 h-4" /> {t("contact.location")}
                     </div>
                     <p className="text-[14px] text-muted-foreground">{t("contact.location.value")}</p>
+                  </div>
+
+                  <SquareDivider />
+
+                  <div>
+                    <div className="flex items-center gap-2 text-foreground font-medium text-[13px] mb-2 uppercase tracking-wider">
+                      <span className="text-[14px]">#</span> Phone
+                    </div>
+                    <p className="text-[14px] text-muted-foreground">+1 (555) 000-0000</p>
+                  </div>
+
+                  <SquareDivider />
+
+                  <div>
+                    <div className="flex items-center gap-2 text-foreground font-medium text-[13px] mb-2 uppercase tracking-wider">
+                      <span className="text-[14px] font-bold">𝕏</span> Twitter / X
+                    </div>
+                    <a href="#" className="text-[14px] text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4 decoration-border">
+                      @devhustlers
+                    </a>
                   </div>
                 </div>
 
