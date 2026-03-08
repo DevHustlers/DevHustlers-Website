@@ -21,7 +21,7 @@ const Footer = () => {
             <div className="mb-3"><Logo size="md" /></div>
             <p className="text-[15px] text-muted-foreground max-w-xs leading-relaxed">{t("footer.desc")}</p>
           </div>
-          <div className="flex flex-wrap gap-x-8 gap-y-2 text-[13px]">
+          <div className="flex flex-wrap gap-x-8 gap-y-2 text-[15px]">
             {links.map((link) => (
               <Link key={link.href} to={link.href} className="text-muted-foreground hover:text-foreground transition-colors">{link.label}</Link>
             ))}
