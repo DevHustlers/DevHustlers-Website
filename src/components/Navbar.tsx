@@ -1,5 +1,6 @@
 import { ArrowRight, Menu } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -8,10 +9,11 @@ import {
 } from "@/components/ui/sheet";
 
 const links = [
-  { label: "Features", href: "#features" },
-  { label: "Community", href: "#community" },
-  { label: "Events", href: "#events" },
-  { label: "Blog", href: "#blog" },
+  { label: "Features", href: "/#features" },
+  { label: "Blog", href: "/blog" },
+  { label: "Events", href: "/events" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const Navbar = () => {
@@ -20,22 +22,22 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/60 backdrop-blur-xl border-b border-border/50">
       <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2.5">
+        <Link to="/" className="flex items-center gap-2.5">
           <div className="w-6 h-6 rounded-md bg-foreground flex items-center justify-center">
             <span className="text-background font-bold text-[11px] leading-none">D</span>
           </div>
           <span className="font-semibold text-foreground tracking-tight">DevHive</span>
-        </a>
+        </Link>
 
         <div className="hidden md:flex items-center gap-8 text-[13px]">
           {links.map((link) => (
-            <a
+            <Link
               key={link.label}
-              href={link.href}
+              to={link.href}
               className="text-muted-foreground hover:text-foreground transition-colors duration-200"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -55,14 +57,14 @@ const Navbar = () => {
               <SheetTitle className="sr-only">Navigation</SheetTitle>
               <div className="flex flex-col gap-1 mt-8">
                 {links.map((link) => (
-                  <a
+                  <Link
                     key={link.label}
-                    href={link.href}
+                    to={link.href}
                     onClick={() => setOpen(false)}
                     className="px-3 py-2.5 rounded-lg text-foreground hover:bg-accent transition-colors text-[15px]"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 ))}
                 <div className="mt-4 px-3">
                   <button className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-foreground text-background text-sm font-medium">

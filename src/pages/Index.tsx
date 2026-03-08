@@ -1,7 +1,11 @@
 import Navbar from "@/components/Navbar";
 import FeaturesGrid from "@/components/FeaturesGrid";
 import StatsSection from "@/components/StatsSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
+import FAQSection from "@/components/FAQSection";
+import TeamSection from "@/components/TeamSection";
 import CTASection from "@/components/CTASection";
+import Footer from "@/components/Footer";
 import { ArrowRight } from "lucide-react";
 
 const Index = () => {
@@ -50,7 +54,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Logos / social proof */}
+      {/* Social proof */}
       <section className="pb-20 px-6">
         <div className="max-w-3xl mx-auto">
           <p className="text-center text-[13px] text-muted-foreground/60 uppercase tracking-widest mb-8 font-medium">
@@ -66,34 +70,13 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features */}
       <FeaturesGrid />
-
-      {/* Stats */}
       <StatsSection />
-
-      {/* CTA */}
+      <TestimonialsSection />
+      <TeamSection />
+      <FAQSection />
       <CTASection />
-
-      {/* Footer */}
-      <footer className="border-t border-border py-10 px-6">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2.5">
-            <div className="w-5 h-5 rounded bg-foreground flex items-center justify-center">
-              <span className="text-background font-bold text-[10px]">D</span>
-            </div>
-            <span className="font-semibold text-foreground text-sm tracking-tight">DevHive</span>
-          </div>
-          <div className="flex gap-8 text-[13px] text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
-            <a href="#" className="hover:text-foreground transition-colors">Contact</a>
-          </div>
-          <div className="text-[13px] text-muted-foreground">
-            © 2026 DevHive
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
