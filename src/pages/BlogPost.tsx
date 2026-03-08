@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowLeft, BookOpen, Clock, Tag } from "lucide-react";
+import FloatingTOC from "@/components/FloatingTOC";
+import { ArrowLeft, ArrowRight, BookOpen, Clock, Tag } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
@@ -31,6 +32,25 @@ interface BlogPostData {
   author: { name: string; role: string };
   content: ContentBlock[];
 }
+
+// Post order for next/prev navigation
+const postSlugs = [
+  "scaling-to-50k",
+  "open-source-projects",
+  "async-mentorship",
+  "building-in-public",
+  "hackathon-winners-feb",
+  "developer-community",
+];
+
+const postTitles: Record<string, string> = {
+  "scaling-to-50k": "How We Scaled to 50K Developers",
+  "open-source-projects": "5 Open Source Projects That Started Here",
+  "async-mentorship": "The Case for Async Mentorship",
+  "building-in-public": "Building in Public: A Guide",
+  "hackathon-winners-feb": "Hackathon Winners: February 2026",
+  "developer-community": "Why Every Developer Needs a Community",
+};
 
 const blogContent: Record<string, BlogPostData> = {
   "scaling-to-50k": {
@@ -404,100 +424,140 @@ const BlogPost = () => {
   }
 
   const tocItems = getTocItems(post.content);
+  const currentIndex = slug ? postSlugs.indexOf(slug) : -1;
+  const prevSlug = currentIndex > 0 ? postSlugs[currentIndex - 1] : null;
+  const nextSlug = currentIndex < postSlugs.length - 1 ? postSlugs[currentIndex + 1] : null;
 
   return (
     <PageLayout>
       <Navbar />
-      <article className="pt-28 sm:pt-36 pb-24 px-4 sm:px-6">
-        <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <div className="max-w-2xl mb-10">
-            <Link
-              to="/blog"
-              className="inline-flex items-center gap-2 text-[13px] text-muted-foreground hover:text-foreground transition-colors mb-8"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" /> Back to blog
-            </Link>
+      
+      {/* Floating TOC for mobile/tablet */}
+      <FloatingTOC items={tocItems} activeId={activeId} />
 
-            <div className="flex flex-wrap items-center gap-3 mb-4 text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5 text-[12px] font-mono">
-                <Clock className="w-3 h-3" /> {post.date}
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-[11px] px-2 py-0.5 border border-border">
-                <Tag className="w-3 h-3" /> {post.tag}
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-[11px]">
-                <BookOpen className="w-3 h-3" /> {post.readTime}
-              </span>
-            </div>
+      <article className="pt-28 sm:pt-36 pb-0 px-4 sm:px-6">
+        <div className="relative max-w-[1400px] mx-auto">
+          {/* Main content constrained to max-w-5xl */}
+          <div className="max-w-5xl mx-auto">
+            {/* Header */}
+            <div className="px-4 sm:px-6 mb-10">
+              <Link
+                to="/blog"
+                className="inline-flex items-center gap-2 text-[13px] text-muted-foreground hover:text-foreground transition-colors mb-8"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Back to blog
+              </Link>
 
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground leading-tight tracking-tight mb-6">
-              {post.title}
-            </h1>
-
-            {/* Author */}
-            <div className="flex items-center gap-3 pb-8 border-b border-border">
-              <div className="w-9 h-9 bg-accent flex items-center justify-center">
-                <span className="text-xs font-semibold text-muted-foreground">
-                  {post.author.name.split(" ").map(n => n[0]).join("")}
+              <div className="flex flex-wrap items-center gap-3 mb-4 text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5 text-[12px] font-mono">
+                  <Clock className="w-3 h-3" /> {post.date}
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-[11px] px-2 py-0.5 border border-border">
+                  <Tag className="w-3 h-3" /> {post.tag}
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-[11px]">
+                  <BookOpen className="w-3 h-3" /> {post.readTime}
                 </span>
               </div>
-              <div>
-                <p className="text-[13px] font-medium text-foreground">{post.author.name}</p>
-                <p className="text-[11px] text-muted-foreground">{post.author.role}</p>
+
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground leading-tight tracking-tight mb-6">
+                {post.title}
+              </h1>
+
+              {/* Author */}
+              <div className="flex items-center gap-3 pb-8 border-b border-border">
+                <div className="w-9 h-9 bg-accent flex items-center justify-center">
+                  <span className="text-xs font-semibold text-muted-foreground">
+                    {post.author.name.split(" ").map(n => n[0]).join("")}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-[13px] font-medium text-foreground">{post.author.name}</p>
+                  <p className="text-[11px] text-muted-foreground">{post.author.role}</p>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Content + TOC layout */}
-          <div className="flex gap-12">
-            {/* Main content */}
-            <div className="max-w-2xl min-w-0 flex-1">
+            {/* Content */}
+            <div className="px-4 sm:px-6">
               {post.content.map((block, i) => (
                 <RenderBlock key={i} block={block} />
               ))}
-
-              <div className="mt-12 pt-8 border-t border-border">
-                <Link
-                  to="/blog"
-                  className="inline-flex items-center gap-2 text-[14px] text-foreground font-medium hover:text-muted-foreground transition-colors"
-                >
-                  <ArrowLeft className="w-4 h-4" /> All posts
-                </Link>
-              </div>
             </div>
+          </div>
 
-            {/* TOC sidebar */}
-            {tocItems.length > 0 && (
-              <aside className="hidden lg:block w-56 shrink-0">
-                <div className="sticky top-24">
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-4 font-mono">
-                    On this page
-                  </p>
-                  <nav className="space-y-0.5">
-                    {tocItems.map((item) => (
-                      <a
-                        key={item.id}
-                        href={`#${item.id}`}
-                        className={cn(
-                          "block text-[13px] leading-snug py-1.5 transition-colors duration-150 border-l-2",
-                          item.level === "h3" ? "pl-5" : "pl-3",
-                          activeId === item.id
-                            ? "border-foreground text-foreground font-medium"
-                            : "border-transparent text-muted-foreground/70 hover:text-foreground hover:border-border"
-                        )}
-                      >
-                        {item.text}
-                      </a>
-                    ))}
-                  </nav>
-                </div>
-              </aside>
+          {/* TOC sidebar - positioned outside the right vertical line */}
+          {tocItems.length > 0 && (
+            <aside className="hidden lg:block absolute top-0 right-0 w-52">
+              <div className="sticky top-24 pl-6">
+                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-4 font-mono">
+                  On this page
+                </p>
+                <nav className="space-y-0.5">
+                  {tocItems.map((item) => (
+                    <a
+                      key={item.id}
+                      href={`#${item.id}`}
+                      className={cn(
+                        "block text-[13px] leading-snug py-1.5 transition-colors duration-150 border-l-2",
+                        item.level === "h3" ? "pl-5" : "pl-3",
+                        activeId === item.id
+                          ? "border-foreground text-foreground font-medium"
+                          : "border-transparent text-muted-foreground/70 hover:text-foreground hover:border-border"
+                      )}
+                    >
+                      {item.text}
+                    </a>
+                  ))}
+                </nav>
+              </div>
+            </aside>
+          )}
+        </div>
+      </article>
+
+      {/* Next/Prev navigation */}
+      <div className="mt-16">
+        <SectionDivider />
+        <div className="max-w-5xl mx-auto">
+          <div className={cn(
+            "grid gap-px bg-border",
+            prevSlug && nextSlug ? "grid-cols-2" : "grid-cols-1"
+          )}>
+            {prevSlug && (
+              <Link
+                to={`/blog/${prevSlug}`}
+                className="group p-6 sm:p-8 bg-background hover:bg-accent/30 transition-colors"
+              >
+                <span className="text-[11px] text-muted-foreground uppercase tracking-widest font-mono mb-2 block">
+                  ← Previous
+                </span>
+                <span className="text-[15px] font-semibold text-foreground group-hover:text-muted-foreground transition-colors">
+                  {postTitles[prevSlug]}
+                </span>
+              </Link>
+            )}
+            {nextSlug && (
+              <Link
+                to={`/blog/${nextSlug}`}
+                className={cn(
+                  "group p-6 sm:p-8 bg-background hover:bg-accent/30 transition-colors",
+                  prevSlug ? "text-right" : ""
+                )}
+              >
+                <span className="text-[11px] text-muted-foreground uppercase tracking-widest font-mono mb-2 block">
+                  Next →
+                </span>
+                <span className="text-[15px] font-semibold text-foreground group-hover:text-muted-foreground transition-colors">
+                  {postTitles[nextSlug]}
+                </span>
+              </Link>
             )}
           </div>
         </div>
-      </article>
-      <SectionDivider />
+        <SectionDivider />
+      </div>
+
       <Footer />
     </PageLayout>
   );
