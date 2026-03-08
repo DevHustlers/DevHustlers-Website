@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['DM Sans', 'system-ui', 'sans-serif'],
-        serif: ['Instrument Serif', 'Georgia', 'serif'],
+        serif: ['Monaspace Radon', 'Georgia', 'serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
