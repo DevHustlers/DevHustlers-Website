@@ -29,8 +29,8 @@ const Index = () => {
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-28 sm:pt-40 pb-20 sm:pb-32 px-4 sm:px-6 relative">
-        <div className="max-w-3xl mx-auto">
+      <section className="pt-28 sm:pt-40 px-4 sm:px-6 relative">
+        <div className="max-w-3xl mx-auto pb-20 sm:pb-32">
           <div className="animate-fade-up">
             <div className="inline-flex items-center gap-2 px-3 py-1 border border-border text-[13px] text-muted-foreground mb-8 font-mono">
               <span className="relative flex h-1.5 w-1.5">
@@ -97,10 +97,12 @@ const Index = () => {
               Explore Projects
             </button>
           </div>
+        </div>
 
-          {/* Mini feature row */}
+        {/* Mini feature row — full width, touching dividers */}
+        <div className="max-w-5xl mx-auto">
           <div
-            className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-px border border-border bg-border animate-fade-up"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-border border-t border-border animate-fade-up"
             style={{ animationDelay: "0.4s", opacity: 0 }}
           >
             {[
@@ -108,11 +110,11 @@ const Index = () => {
               { icon: GitBranch, label: "Open source", sub: "2.4K+ projects" },
               { icon: Sparkles, label: "Level up", sub: "Expert mentorship" },
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-3 p-4 bg-background">
-                <item.icon className="w-4 h-4 text-muted-foreground shrink-0" strokeWidth={1.5} />
+              <div key={i} className="flex items-center gap-4 p-5 sm:p-6 bg-background">
+                <item.icon className="w-5 h-5 text-muted-foreground shrink-0" strokeWidth={1.5} />
                 <div>
-                  <p className="text-[13px] font-semibold text-foreground">{item.label}</p>
-                  <p className="text-[11px] text-muted-foreground">{item.sub}</p>
+                  <p className="text-[14px] font-semibold text-foreground">{item.label}</p>
+                  <p className="text-[12px] text-muted-foreground">{item.sub}</p>
                 </div>
               </div>
             ))}
