@@ -59,40 +59,40 @@ const Blog = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <section className="pt-36 pb-16 px-6">
+      <section className="pt-28 sm:pt-36 pb-12 sm:pb-16 px-4 sm:px-6">
         <div className="max-w-3xl mx-auto">
-          <p className="text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">Blog</p>
-          <h1 className="text-3xl md:text-5xl font-bold text-foreground leading-tight tracking-tight mb-4">
+          <p className="text-[12px] sm:text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">Blog</p>
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground leading-tight tracking-tight mb-4">
             Stories &{" "}
             <span className="font-serif italic text-muted-foreground font-normal">insights</span>
           </h1>
-          <p className="text-muted-foreground text-base md:text-lg">
+          <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg">
             Updates, guides, and stories from the DevHustle community.
           </p>
         </div>
       </section>
 
-      <section className="px-6 pb-24">
+      <section className="px-4 sm:px-6 pb-24">
         <div className="max-w-3xl mx-auto">
           <div className="divide-y divide-border">
             {posts.map((post, i) => (
               <ScrollReveal key={i} delay={i * 50}>
                 <Link
                   to={post.slug}
-                  className="block py-7 group"
+                  className="block py-6 sm:py-7 group"
                 >
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-[12px] text-muted-foreground">{post.date}</span>
-                    <span className="text-[11px] px-2 py-0.5 rounded-full border border-border text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
+                    <span className="text-[11px] sm:text-[12px] text-muted-foreground">{post.date}</span>
+                    <span className="text-[10px] sm:text-[11px] px-2 py-0.5 rounded-full border border-border text-muted-foreground">
                       {post.tag}
                     </span>
-                    <span className="text-[11px] text-muted-foreground/60">{post.readTime}</span>
+                    <span className="text-[10px] sm:text-[11px] text-muted-foreground/60">{post.readTime}</span>
                   </div>
-                  <h2 className="text-lg font-semibold text-foreground group-hover:text-muted-foreground transition-colors mb-1.5 flex items-center gap-2">
+                  <h2 className="text-base sm:text-lg font-semibold text-foreground group-hover:text-muted-foreground transition-colors mb-1.5 flex items-center gap-2">
                     {post.title}
-                    <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
+                    <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 shrink-0 hidden sm:block" />
                   </h2>
-                  <p className="text-[14px] text-muted-foreground leading-relaxed">
+                  <p className="text-[13px] sm:text-[14px] text-muted-foreground leading-relaxed">
                     {post.excerpt}
                   </p>
                 </Link>
