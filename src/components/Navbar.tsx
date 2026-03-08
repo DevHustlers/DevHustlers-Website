@@ -28,6 +28,16 @@ const Navbar = () => {
     setOpen(false);
   }, [location.pathname]);
 
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+
   const isActive = (href: string) => {
     if (href.startsWith("/#")) return location.pathname === "/" && location.hash === href.slice(1);
     return location.pathname === href || location.pathname.startsWith(href + "/");
@@ -37,10 +47,10 @@ const Navbar = () => {
     <>
       <nav
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-200",
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-200 border-b border-border",
           scrolled
-            ? "bg-background/90 backdrop-blur-xl border-b border-border"
-            : "bg-background/60 backdrop-blur-xl border-b border-transparent"
+            ? "bg-background/90 backdrop-blur-xl"
+            : "bg-background/60 backdrop-blur-xl"
         )}
       >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
@@ -83,29 +93,37 @@ const Navbar = () => {
 
       {open && (
         <div className="fixed inset-0 z-40 md:hidden">
-          <div className="absolute inset-0 bg-background/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
-          <div className="absolute top-14 left-0 right-0 bg-background border-b border-border animate-fade-in">
-            <div className="px-4 py-3 space-y-0.5">
-              {links.map((link) => (
-                <Link
-                  key={link.label}
-                  to={link.href}
-                  onClick={() => setOpen(false)}
-                  className={cn(
-                    "block px-3 py-2.5 text-[15px] transition-colors",
-                    isActive(link.href)
-                      ? "text-foreground font-medium bg-accent/50"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <div className="pt-3 px-3 sm:hidden">
-                <button className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 bg-foreground text-background text-sm font-medium">
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <div className="absolute top-14 left-0 right-0 bottom-0 bg-background border-t border-border animate-fade-in overflow-y-auto">
+            <div className="max-w-5xl mx-auto px-6 py-8">
+              <div className="space-y-1">
+                {links.map((link, i) => (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    onClick={() => setOpen(false)}
+                    className={cn(
+                      "block py-4 text-[22px] font-medium transition-colors border-b border-border",
+                      isActive(link.href)
+                        ? "text-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                    style={{ animationDelay: `${i * 0.05}s` }}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+              <div className="mt-10">
+                <button className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-foreground text-background text-[15px] font-medium">
                   Join Now
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-4 h-4" />
                 </button>
+              </div>
+              <div className="mt-8 pt-6 border-t border-border">
+                <p className="text-[11px] text-muted-foreground/50 uppercase tracking-widest font-mono">
+                  © 2026 DevHustlers
+                </p>
               </div>
             </div>
           </div>

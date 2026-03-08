@@ -10,8 +10,20 @@ import PageLayout from "@/components/PageLayout";
 import SectionDivider from "@/components/SectionDivider";
 import ScrollReveal from "@/components/ScrollReveal";
 import { ArrowRight, Terminal, GitBranch, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+
+const rotatingWords = ["build & ship", "learn & grow", "code & create", "hack & deploy"];
 
 const Index = () => {
+  const [wordIndex, setWordIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % rotatingWords.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <PageLayout>
       <Navbar />
@@ -30,13 +42,40 @@ const Index = () => {
           </div>
 
           <h1
-            className="text-[clamp(2.25rem,6vw,5rem)] font-bold text-foreground leading-[1.05] tracking-tight mb-6 animate-fade-up"
+            className="text-[clamp(2.5rem,7vw,5.5rem)] font-bold text-foreground leading-[1.05] tracking-tight mb-6 animate-fade-up"
             style={{ animationDelay: "0.08s", opacity: 0 }}
           >
             Where developers{" "}
             <span className="font-serif italic text-muted-foreground font-normal">come together</span>
             <br className="hidden sm:block" />
-            {" "}to build & ship
+            {" "}to{" "}
+            <span className="relative inline-block">
+              {/* Fixed curved underline */}
+              <svg
+                className="absolute -bottom-1 left-0 w-full"
+                viewBox="0 0 200 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="none"
+              >
+                <path
+                  d="M2 8C30 3 60 2 100 5C140 8 170 4 198 6"
+                  stroke="hsl(var(--foreground))"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  className="opacity-30"
+                />
+              </svg>
+              {/* Sliding text */}
+              <span className="inline-block h-[1.15em] overflow-hidden align-bottom">
+                <span
+                  key={wordIndex}
+                  className="block animate-slide-up"
+                >
+                  {rotatingWords[wordIndex]}
+                </span>
+              </span>
+            </span>
           </h1>
 
           <p

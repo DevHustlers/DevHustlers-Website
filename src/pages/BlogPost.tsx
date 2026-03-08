@@ -435,89 +435,95 @@ const BlogPost = () => {
       {/* Floating TOC for mobile/tablet */}
       <FloatingTOC items={tocItems} activeId={activeId} />
 
-      <article className="pt-28 sm:pt-36 pb-0 px-4 sm:px-6">
-        <div className="relative max-w-[1400px] mx-auto">
-          {/* Main content constrained to max-w-5xl */}
-          <div className="max-w-5xl mx-auto">
-            {/* Header */}
-            <div className="px-4 sm:px-6 mb-10">
-              <Link
-                to="/blog"
-                className="inline-flex items-center gap-2 text-[13px] text-muted-foreground hover:text-foreground transition-colors mb-8"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" /> Back to blog
-              </Link>
+      <article className="pt-28 sm:pt-36 pb-0">
+        <div className="max-w-5xl mx-auto">
+          {/* Back to blog with square dividers */}
+          <SectionDivider />
+          <div className="px-4 sm:px-10 py-6">
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-2 text-[13px] text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" /> Back to blog
+            </Link>
+          </div>
+          <SectionDivider />
 
-              <div className="flex flex-wrap items-center gap-3 mb-4 text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5 text-[12px] font-mono">
-                  <Clock className="w-3 h-3" /> {post.date}
-                </span>
-                <span className="inline-flex items-center gap-1.5 text-[11px] px-2 py-0.5 border border-border">
-                  <Tag className="w-3 h-3" /> {post.tag}
-                </span>
-                <span className="inline-flex items-center gap-1.5 text-[11px]">
-                  <BookOpen className="w-3 h-3" /> {post.readTime}
-                </span>
-              </div>
-
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground leading-tight tracking-tight mb-6">
-                {post.title}
-              </h1>
-
-              {/* Author */}
-              <div className="flex items-center gap-3 pb-8 border-b border-border">
-                <div className="w-9 h-9 bg-accent flex items-center justify-center">
-                  <span className="text-xs font-semibold text-muted-foreground">
-                    {post.author.name.split(" ").map(n => n[0]).join("")}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-[13px] font-medium text-foreground">{post.author.name}</p>
-                  <p className="text-[11px] text-muted-foreground">{post.author.role}</p>
-                </div>
-              </div>
+          {/* Post header */}
+          <div className="px-4 sm:px-10 py-8 sm:py-10">
+            <div className="flex flex-wrap items-center gap-3 mb-4 text-muted-foreground">
+              <span className="inline-flex items-center gap-1.5 text-[12px] font-mono">
+                <Clock className="w-3 h-3" /> {post.date}
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-[11px] px-2 py-0.5 border border-border">
+                <Tag className="w-3 h-3" /> {post.tag}
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-[11px]">
+                <BookOpen className="w-3 h-3" /> {post.readTime}
+              </span>
             </div>
 
-            {/* Content */}
-            <div className="px-4 sm:px-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground leading-tight tracking-tight mb-6">
+              {post.title}
+            </h1>
+
+            {/* Author */}
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 bg-accent flex items-center justify-center">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  {post.author.name.split(" ").map(n => n[0]).join("")}
+                </span>
+              </div>
+              <div>
+                <p className="text-[13px] font-medium text-foreground">{post.author.name}</p>
+                <p className="text-[11px] text-muted-foreground">{post.author.role}</p>
+              </div>
+            </div>
+          </div>
+          <SectionDivider />
+
+          {/* Content + TOC layout */}
+          <div className="relative">
+            {/* Main content */}
+            <div className="px-4 sm:px-10 py-10">
               {post.content.map((block, i) => (
                 <RenderBlock key={i} block={block} />
               ))}
             </div>
-          </div>
 
-          {/* TOC sidebar - positioned outside the right vertical line */}
-          {tocItems.length > 0 && (
-            <aside className="hidden lg:block absolute top-0 right-0 w-52">
-              <div className="sticky top-24 pl-6">
-                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-4 font-mono">
-                  On this page
-                </p>
-                <nav className="space-y-0.5">
-                  {tocItems.map((item) => (
-                    <a
-                      key={item.id}
-                      href={`#${item.id}`}
-                      className={cn(
-                        "block text-[13px] leading-snug py-1.5 transition-colors duration-150 border-l-2",
-                        item.level === "h3" ? "pl-5" : "pl-3",
-                        activeId === item.id
-                          ? "border-foreground text-foreground font-medium"
-                          : "border-transparent text-muted-foreground/70 hover:text-foreground hover:border-border"
-                      )}
-                    >
-                      {item.text}
-                    </a>
-                  ))}
-                </nav>
-              </div>
-            </aside>
-          )}
+            {/* TOC sidebar - positioned outside the right vertical line */}
+            {tocItems.length > 0 && (
+              <aside className="hidden lg:block absolute top-0 -right-4 w-52 translate-x-full">
+                <div className="sticky top-24 pl-8">
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-4 font-mono">
+                    On this page
+                  </p>
+                  <nav className="space-y-0.5">
+                    {tocItems.map((item) => (
+                      <a
+                        key={item.id}
+                        href={`#${item.id}`}
+                        className={cn(
+                          "block text-[13px] leading-snug py-1.5 transition-colors duration-150 border-l-2",
+                          item.level === "h3" ? "pl-5" : "pl-3",
+                          activeId === item.id
+                            ? "border-foreground text-foreground font-medium"
+                            : "border-transparent text-muted-foreground/70 hover:text-foreground hover:border-border"
+                        )}
+                      >
+                        {item.text}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+              </aside>
+            )}
+          </div>
         </div>
       </article>
 
       {/* Next/Prev navigation */}
-      <div className="mt-16">
+      <div>
         <SectionDivider />
         <div className="max-w-5xl mx-auto">
           <div className={cn(
