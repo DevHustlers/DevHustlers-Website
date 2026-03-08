@@ -100,8 +100,9 @@ const Contact = () => {
         </div>
       </section>
 
+      <SectionDivider />
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 
