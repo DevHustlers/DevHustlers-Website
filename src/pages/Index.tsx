@@ -51,9 +51,9 @@ const Index = () => {
             <span className="font-serif text-muted-foreground font-normal">{t("hero.title.2")}</span>
             <br className="hidden sm:block" />
             {" "}{t("hero.title.3")}{" "}
-            <span className="relative inline-block">
+            <span className="relative inline-block align-baseline">
               <svg
-                className="absolute -bottom-1 left-0 w-full z-10 pointer-events-none"
+                className="absolute -bottom-1 left-0 w-full z-20 pointer-events-none"
                 viewBox="0 0 200 12"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -67,10 +67,10 @@ const Index = () => {
                   className="opacity-30"
                 />
               </svg>
-              <span className="inline-block overflow-hidden align-baseline">
+              <span className="inline-flex h-[1em] items-end overflow-hidden align-baseline leading-[1]">
                 <span
                   key={wordIndex}
-                  className="block animate-slide-up"
+                  className="inline-block animate-slide-up"
                 >
                   {rotatingWords[wordIndex]}
                 </span>
