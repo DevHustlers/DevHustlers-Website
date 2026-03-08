@@ -28,7 +28,7 @@ const About = () => {
         </div>
       </section>
 
-      <section className="px-4 sm:px-6 pb-12">
+      <section className="px-4 sm:px-6">
         <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-px bg-border border border-border">
           {[
             { value: t("about.stat.1.value"), label: t("about.stat.1.label") },

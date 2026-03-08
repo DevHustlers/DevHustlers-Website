@@ -71,16 +71,24 @@ const Events = () => {
         </div>
       </section>
 
-      <section className="px-4 sm:px-6 pb-24">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-[13px] font-medium text-muted-foreground mb-6 uppercase tracking-widest">
+      {/* Upcoming — bento grid flush against dividers */}
+      <section>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <h2 className="text-[13px] font-medium text-muted-foreground mb-0 uppercase tracking-widest py-4">
             {t("events.upcoming")}
           </h2>
-          <div className="space-y-3 mb-16">
+        </div>
+        <div className="max-w-5xl mx-auto border border-border bg-border">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-px">
             {upcoming.map((event, i) => (
-              <div key={i} className="p-5 border border-border hover:bg-accent/30 transition-colors duration-300">
-                <h3 className="font-semibold text-foreground text-[15px] mb-2">{event.title}</h3>
-                <p className="text-[13px] text-muted-foreground leading-relaxed mb-3">{event.desc}</p>
+              <div
+                key={i}
+                className="bg-background p-6 sm:p-8 flex flex-col justify-between hover:bg-accent/30 transition-colors duration-300"
+              >
+                <div>
+                  <h3 className="font-semibold text-foreground text-base sm:text-lg mb-2">{event.title}</h3>
+                  <p className="text-[13px] sm:text-sm text-muted-foreground leading-relaxed mb-4">{event.desc}</p>
+                </div>
                 <div className="flex flex-wrap items-center gap-4 text-[12px] text-muted-foreground font-mono">
                   <span className="inline-flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5" /> {event.date}
@@ -92,15 +100,29 @@ const Events = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <h2 className="text-[13px] font-medium text-muted-foreground mb-6 uppercase tracking-widest">
+      <SectionDivider />
+
+      {/* Past events — same grid, muted */}
+      <section>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <h2 className="text-[13px] font-medium text-muted-foreground mb-0 uppercase tracking-widest py-4">
             {t("events.past")}
           </h2>
-          <div className="space-y-3">
+        </div>
+        <div className="max-w-5xl mx-auto border border-border bg-border">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-px opacity-60">
             {past.map((event, i) => (
-              <div key={i} className="p-5 border border-border/60 opacity-60">
-                <h3 className="font-semibold text-foreground text-[15px] mb-2">{event.title}</h3>
-                <p className="text-[13px] text-muted-foreground leading-relaxed mb-3">{event.desc}</p>
+              <div
+                key={i}
+                className="bg-background p-6 sm:p-8 flex flex-col justify-between"
+              >
+                <div>
+                  <h3 className="font-semibold text-foreground text-base sm:text-lg mb-2">{event.title}</h3>
+                  <p className="text-[13px] sm:text-sm text-muted-foreground leading-relaxed mb-4">{event.desc}</p>
+                </div>
                 <div className="flex flex-wrap items-center gap-4 text-[12px] text-muted-foreground font-mono">
                   <span className="inline-flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5" /> {event.date}
