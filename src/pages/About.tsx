@@ -41,7 +41,9 @@ const About = () => {
         </div>
       </section>
 
+      <SectionDivider />
       <TeamSection />
+      <SectionDivider />
       <Footer />
     </div>
   );
