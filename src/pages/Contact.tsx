@@ -1,16 +1,16 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Mail, MapPin, ArrowRight } from "lucide-react";
+import { Mail, MapPin, Phone, ArrowRight } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import SectionDivider from "@/components/SectionDivider";
 import ScrollReveal from "@/components/ScrollReveal";
 import { useState } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-const SquareDivider = () => (
-  <div className="w-full overflow-hidden border-t border-b border-border my-0">
+const InlineSquareDivider = () => (
+  <div className="col-span-1 md:col-span-2 overflow-hidden border-t border-b border-border">
     <div className="flex w-full h-6">
-      {Array.from({ length: 80 }).map((_, i) => (
+      {Array.from({ length: 120 }).map((_, i) => (
         <div key={i} className="shrink-0 w-6 h-6 border-r border-border" />
       ))}
     </div>
@@ -25,7 +25,6 @@ const Contact = () => {
     <PageLayout>
       <Navbar />
 
-      {/* Header */}
       <section className="pt-28 sm:pt-36 pb-16 px-4 sm:px-6">
         <div className="max-w-3xl mx-auto">
           <ScrollReveal>
@@ -45,113 +44,95 @@ const Contact = () => {
 
       <SectionDivider />
 
-      {/* Content */}
       <section className="px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border-t border-border">
-            {/* Form */}
-            <ScrollReveal>
-              <div className="bg-background p-6 sm:p-10">
-                {submitted ? (
-                  <div className="py-12 text-center">
-                    <div className="w-12 h-12 bg-accent flex items-center justify-center mx-auto mb-4">
-                      <Mail className="w-5 h-5 text-muted-foreground" />
-                    </div>
-                    <p className="text-foreground font-semibold mb-2">{t("contact.sent")}</p>
-                    <p className="text-[13px] text-muted-foreground max-w-xs mx-auto">{t("contact.sent.desc")}</p>
-                  </div>
-                ) : (
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      setSubmitted(true);
-                    }}
-                    className="space-y-0"
-                  >
-                    <div>
-                      <label className="block text-[12px] font-medium text-muted-foreground mb-2 uppercase tracking-wider">
-                        {t("contact.name")}
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        className="w-full px-4 py-3 border border-border bg-background text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground/40 transition-colors"
-                        placeholder={t("contact.name.placeholder")}
-                      />
-                    </div>
-
-                    <SquareDivider />
-
-                    <div>
-                      <label className="block text-[12px] font-medium text-muted-foreground mb-2 uppercase tracking-wider">
-                        {t("contact.email")}
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        className="w-full px-4 py-3 border border-border bg-background text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground/40 transition-colors"
-                        placeholder={t("contact.email.placeholder")}
-                      />
-                    </div>
-
-                    <SquareDivider />
-
-                    <div>
-                      <label className="block text-[12px] font-medium text-muted-foreground mb-2 uppercase tracking-wider">
-                        {t("contact.message")}
-                      </label>
-                      <textarea
-                        required
-                        rows={5}
-                        className="w-full px-4 py-3 border border-border bg-background text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground/40 resize-none transition-colors"
-                        placeholder={t("contact.message.placeholder")}
-                      />
-                    </div>
-                    <div className="pt-5">
-                      <button
-                        type="submit"
-                        className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-foreground text-background font-medium text-[14px] hover:bg-foreground/90 transition-colors"
-                      >
-                        {t("contact.send")}
-                        <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-                      </button>
-                    </div>
-                  </form>
-                )}
+        <div className="max-w-5xl mx-auto border-t border-border">
+          {submitted ? (
+            <div className="py-20 text-center">
+              <div className="w-12 h-12 bg-accent flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-5 h-5 text-muted-foreground" />
               </div>
-            </ScrollReveal>
-
-            {/* Info sidebar */}
-            <ScrollReveal delay={100}>
-              <div className="bg-background p-6 sm:p-10 flex flex-col justify-between h-full">
-                <div className="space-y-0">
-                  <div>
-                    <div className="flex items-center gap-2 text-foreground font-medium text-[13px] mb-2 uppercase tracking-wider">
-                      <Mail className="w-4 h-4" /> {t("contact.email")}
-                    </div>
-                    <p className="text-[14px] text-muted-foreground">hello@devhustlers.community</p>
+              <p className="text-foreground font-semibold mb-2">{t("contact.sent")}</p>
+              <p className="text-[13px] text-muted-foreground max-w-xs mx-auto">{t("contact.sent.desc")}</p>
+            </div>
+          ) : (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setSubmitted(true);
+              }}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2">
+                {/* Row 1: Name + Email info */}
+                <div className="p-6 sm:p-8 border-b md:border-b-0 md:border-r border-border">
+                  <label className="block text-[12px] font-medium text-muted-foreground mb-2 uppercase tracking-wider">
+                    {t("contact.name")}
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    className="w-full px-4 py-3 border border-border bg-background text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground/40 transition-colors"
+                    placeholder={t("contact.name.placeholder")}
+                  />
+                </div>
+                <div className="p-6 sm:p-8">
+                  <div className="flex items-center gap-2 text-foreground font-medium text-[13px] mb-2 uppercase tracking-wider">
+                    <Mail className="w-4 h-4" /> {t("contact.email")}
                   </div>
+                  <p className="text-[14px] text-muted-foreground">hello@devhustlers.community</p>
+                </div>
 
-                  <SquareDivider />
+                {/* Square divider spanning both columns */}
+                <InlineSquareDivider />
 
-                  <div>
-                    <div className="flex items-center gap-2 text-foreground font-medium text-[13px] mb-2 uppercase tracking-wider">
-                      <MapPin className="w-4 h-4" /> {t("contact.location")}
-                    </div>
-                    <p className="text-[14px] text-muted-foreground">{t("contact.location.value")}</p>
+                {/* Row 2: Email + Location */}
+                <div className="p-6 sm:p-8 border-b md:border-b-0 md:border-r border-border">
+                  <label className="block text-[12px] font-medium text-muted-foreground mb-2 uppercase tracking-wider">
+                    {t("contact.email")}
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    className="w-full px-4 py-3 border border-border bg-background text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground/40 transition-colors"
+                    placeholder={t("contact.email.placeholder")}
+                  />
+                </div>
+                <div className="p-6 sm:p-8">
+                  <div className="flex items-center gap-2 text-foreground font-medium text-[13px] mb-2 uppercase tracking-wider">
+                    <MapPin className="w-4 h-4" /> {t("contact.location")}
                   </div>
+                  <p className="text-[14px] text-muted-foreground">{t("contact.location.value")}</p>
+                </div>
 
-                  <SquareDivider />
+                <InlineSquareDivider />
 
+                {/* Row 3: Message + Phone & X */}
+                <div className="p-6 sm:p-8 border-b md:border-b-0 md:border-r border-border">
+                  <label className="block text-[12px] font-medium text-muted-foreground mb-2 uppercase tracking-wider">
+                    {t("contact.message")}
+                  </label>
+                  <textarea
+                    required
+                    rows={5}
+                    className="w-full px-4 py-3 border border-border bg-background text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground/40 resize-none transition-colors"
+                    placeholder={t("contact.message.placeholder")}
+                  />
+                  <div className="mt-5">
+                    <button
+                      type="submit"
+                      className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-foreground text-background font-medium text-[14px] hover:bg-foreground/90 transition-colors"
+                    >
+                      {t("contact.send")}
+                      <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                    </button>
+                  </div>
+                </div>
+                <div className="p-6 sm:p-8 space-y-6">
                   <div>
                     <div className="flex items-center gap-2 text-foreground font-medium text-[13px] mb-2 uppercase tracking-wider">
-                      <span className="text-[14px]">#</span> Phone
+                      <Phone className="w-4 h-4" /> Phone
                     </div>
                     <p className="text-[14px] text-muted-foreground">+1 (555) 000-0000</p>
                   </div>
-
-                  <SquareDivider />
-
                   <div>
                     <div className="flex items-center gap-2 text-foreground font-medium text-[13px] mb-2 uppercase tracking-wider">
                       <span className="text-[14px] font-bold">𝕏</span> Twitter / X
@@ -160,27 +141,24 @@ const Contact = () => {
                       @devhustlers
                     </a>
                   </div>
-                </div>
-
-                <div className="mt-10 pt-8 border-t border-border">
-                  <p className="text-[13px] text-muted-foreground leading-relaxed">
-                    {t("contact.social")}{" "}
-                  </p>
-                  <div className="flex items-center gap-4 mt-3">
-                    {["Twitter", "GitHub", "Discord"].map((name) => (
-                      <a
-                        key={name}
-                        href="#"
-                        className="text-[13px] font-medium text-foreground hover:text-muted-foreground transition-colors underline underline-offset-4 decoration-border hover:decoration-foreground"
-                      >
-                        {name}
-                      </a>
-                    ))}
+                  <div className="pt-4 border-t border-border">
+                    <p className="text-[13px] text-muted-foreground mb-3">{t("contact.social")}</p>
+                    <div className="flex items-center gap-4">
+                      {["Twitter", "GitHub", "Discord"].map((name) => (
+                        <a
+                          key={name}
+                          href="#"
+                          className="text-[13px] font-medium text-foreground hover:text-muted-foreground transition-colors underline underline-offset-4 decoration-border hover:decoration-foreground"
+                        >
+                          {name}
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </ScrollReveal>
-          </div>
+            </form>
+          )}
         </div>
       </section>
 
