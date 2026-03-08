@@ -53,7 +53,7 @@ const Index = () => {
             {" "}{t("hero.title.3")}{" "}
             <span className="relative inline-block">
               <svg
-                className="absolute -bottom-1 left-0 w-full"
+                className="absolute -bottom-1 left-0 w-full z-10 pointer-events-none"
                 viewBox="0 0 200 12"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +67,7 @@ const Index = () => {
                   className="opacity-30"
                 />
               </svg>
-              <span className="inline-block h-[1.15em] overflow-hidden align-bottom">
+              <span className="inline-block overflow-hidden align-baseline">
                 <span
                   key={wordIndex}
                   className="block animate-slide-up"
