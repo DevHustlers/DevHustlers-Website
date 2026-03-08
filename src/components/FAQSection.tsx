@@ -7,8 +7,8 @@ import {
 
 const faqs = [
   {
-    q: "Is DevHive free to join?",
-    a: "Yes! DevHive is completely free for individual developers. We also offer team plans for companies that want to sponsor their employees' participation.",
+    q: "Is DevHustle free to join?",
+    a: "Yes! DevHustle is completely free for individual developers. We also offer team plans for companies that want to sponsor their employees' participation.",
   },
   {
     q: "How do the weekly hackathons work?",
