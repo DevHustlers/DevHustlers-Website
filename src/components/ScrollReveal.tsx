@@ -1,4 +1,4 @@
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface ScrollRevealProps {
@@ -8,28 +8,28 @@ interface ScrollRevealProps {
   direction?: "up" | "left" | "right" | "none";
 }
 
+const directionOffsets = {
+  up: { y: 30 },
+  left: { x: 40 },
+  right: { x: -40 },
+  none: {},
+};
+
 const ScrollReveal = ({ children, className, delay = 0, direction = "up" }: ScrollRevealProps) => {
-  const { ref, isVisible } = useScrollAnimation(0.1);
-
-  const directionStyles = {
-    up: "translate-y-8",
-    left: "translate-x-8",
-    right: "-translate-x-8",
-    none: "",
-  };
-
   return (
-    <div
-      ref={ref}
-      className={cn(
-        "transition-all duration-700 ease-out",
-        isVisible ? "opacity-100 translate-x-0 translate-y-0" : `opacity-0 ${directionStyles[direction]}`,
-        className
-      )}
-      style={{ transitionDelay: `${delay}ms` }}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.97, ...directionOffsets[direction] }}
+      whileInView={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+      viewport={{ once: true, amount: 0.08 }}
+      transition={{
+        duration: 0.6,
+        delay: delay / 1000,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className={cn(className)}
     >
       {children}
-    </div>
+    </motion.div>
   );
 };
 
