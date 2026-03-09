@@ -64,8 +64,8 @@ const Challenges = () => {
     <PageLayout>
       <Navbar />
 
-      <section className="pt-28 sm:pt-36 pb-16">
-        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
+      <section className="pt-28 sm:pt-36 pb-8 sm:pb-12">
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-6">
           <p className="text-[11px] text-muted-foreground uppercase tracking-[0.3em] font-mono mb-4">
             {t("challenges.label")}
           </p>
