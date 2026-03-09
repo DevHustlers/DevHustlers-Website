@@ -34,17 +34,24 @@ const Index = () => {
 
       {/* Hero */}
       <section className="pt-28 sm:pt-40 relative overflow-hidden">
-        <LightRays
-          raysOrigin="top-center"
-          raysSpeed={0.8}
-          lightSpread={0.6}
-          rayLength={4}
-          fadeDistance={1.2}
-          saturation={1.2}
-          followMouse
-          mouseInfluence={0.1}
-          className="pointer-events-none opacity-35 dark:opacity-50"
-        />
+        {/* Light mode: Meteors */}
+        <div className="absolute inset-0 pointer-events-none dark:hidden opacity-40">
+          <Meteors count={20} angle={215} />
+        </div>
+        {/* Dark mode: LightRays */}
+        <div className="absolute inset-0 pointer-events-none hidden dark:block">
+          <LightRays
+            raysOrigin="top-center"
+            raysSpeed={0.8}
+            lightSpread={0.6}
+            rayLength={4}
+            fadeDistance={1.2}
+            saturation={1.2}
+            followMouse
+            mouseInfluence={0.1}
+            className="opacity-50"
+          />
+        </div>
         <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0 relative z-10">
           <div className="max-w-3xl pb-20 sm:pb-32 px-1 sm:px-4 lg:px-6">
             <div className="animate-fade-up">
