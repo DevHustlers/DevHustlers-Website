@@ -14,10 +14,10 @@ import {
 } from "@icons-pack/react-simple-icons";
 
 const COMMUNITIES = [
-  { name: "WhatsApp", icon: SiWhatsapp, href: "#", members: "1.2K", color: "hover:text-[#25D366]" },
-  { name: "Discord", icon: SiDiscord, href: "#", members: "2.4K", color: "hover:text-[#5865F2]" },
-  { name: "X (Twitter)", icon: SiX, href: "#", members: "3.1K", color: "hover:text-foreground" },
-  { name: "Facebook", icon: SiFacebook, href: "#", members: "1.8K", color: "hover:text-[#1877F2]" },
+  { name: "WhatsApp", icon: SiWhatsapp, href: "#", members: "1.2K", color: "hover:text-[#25D366]", bg: "hover:bg-[#25D366]/10 hover:border-[#25D366]/30" },
+  { name: "Discord", icon: SiDiscord, href: "#", members: "2.4K", color: "hover:text-[#5865F2]", bg: "hover:bg-[#5865F2]/10 hover:border-[#5865F2]/30" },
+  { name: "X (Twitter)", icon: SiX, href: "#", members: "3.1K", color: "hover:text-foreground", bg: "hover:bg-foreground/5 hover:border-foreground/20" },
+  { name: "Facebook", icon: SiFacebook, href: "#", members: "1.8K", color: "hover:text-[#1877F2]", bg: "hover:bg-[#1877F2]/10 hover:border-[#1877F2]/30" },
 ];
 
 const About = () => {
