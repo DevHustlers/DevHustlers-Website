@@ -1,20 +1,21 @@
 import { Link } from "react-router-dom";
-import { Zap } from "lucide-react";
+import dvhLogo from "@/assets/dvh-logo.png";
 
 interface LogoProps {
   size?: "sm" | "md";
 }
 
 const Logo = ({ size = "sm" }: LogoProps) => {
-  const iconSize = size === "sm" ? "w-4 h-4" : "w-5 h-5";
-  const boxSize = size === "sm" ? "w-6 h-6" : "w-7 h-7";
+  const imgSize = size === "sm" ? "h-7" : "h-9";
   const textSize = size === "sm" ? "text-[15px]" : "text-lg";
 
   return (
     <Link to="/" className="flex items-center gap-2 group">
-      <div className={`${boxSize} bg-foreground flex items-center justify-center group-hover:scale-105 transition-transform duration-200`}>
-        <Zap className={`${iconSize} text-background fill-background`} strokeWidth={2.5} />
-      </div>
+      <img
+        src={dvhLogo}
+        alt="DevHustlers logo"
+        className={`${imgSize} w-auto group-hover:scale-105 transition-transform duration-200`}
+      />
       <span className={`font-bold text-foreground tracking-tight ${textSize}`}>
         Dev<span className="font-serif font-normal text-muted-foreground">Hustlers</span>
       </span>
