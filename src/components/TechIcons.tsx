@@ -1,4 +1,4 @@
-import { SiReact, SiTypescript, SiRust, SiGo, SiPython, SiNodedotjs } from '@icons-pack/react-simple-icons';
+import { SiReact, SiTypescript, SiCsharp, SiGo, SiPython, SiNodedotjs } from '@icons-pack/react-simple-icons';
 
 export const techStack = [
   { name: "React", Icon: SiReact, hoverColor: "#61DAFB" },
