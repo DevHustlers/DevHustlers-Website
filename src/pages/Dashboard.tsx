@@ -455,6 +455,165 @@ const Dashboard = () => {
               </div>
             )}
 
+            {/* BADGES */}
+            {activeTab === "badges" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-[13px] text-muted-foreground">Manage <span className="text-foreground font-medium">{badges.length}</span> badge tiers</p>
+                </div>
+
+                <div className="border border-border divide-y divide-border">
+                  {badges.map((badge) => {
+                    const Icon = badge.icon;
+                    const isEditing = editingBadgeId === badge.id;
+
+                    return (
+                      <div key={badge.id} className="p-5 hover:bg-accent/30 transition-colors">
+                        {isEditing ? (
+                          <div className="space-y-4">
+                            <div className="flex items-start gap-4">
+                              {/* Icon picker trigger */}
+                              <div className="shrink-0">
+                                <button
+                                  onClick={() => setShowIconPicker(showIconPicker === badge.id ? null : badge.id)}
+                                  className={`w-14 h-14 flex items-center justify-center border-2 border-dashed ${badge.borderClass} ${badge.bgClass} hover:border-foreground/40 transition-colors relative`}
+                                >
+                                  <Icon className={`w-7 h-7 ${badge.colorClass}`} />
+                                  <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-foreground text-background flex items-center justify-center">
+                                    <Pencil className="w-2.5 h-2.5" />
+                                  </span>
+                                </button>
+                              </div>
+
+                              <div className="flex-1 space-y-3">
+                                <div>
+                                  <label className="block text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-1.5">Badge Name</label>
+                                  <input
+                                    value={editName}
+                                    onChange={(e) => setEditName(e.target.value)}
+                                    className="w-full h-9 px-3 bg-background border border-border text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-1.5">Min Points</label>
+                                  <input
+                                    type="number"
+                                    value={editMinPoints}
+                                    onChange={(e) => setEditMinPoints(Number(e.target.value))}
+                                    className="w-full h-9 px-3 bg-background border border-border text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Icon picker grid */}
+                            {showIconPicker === badge.id && (
+                              <div className="border border-border p-4">
+                                <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-3">Choose Icon</p>
+                                <div className="grid grid-cols-10 gap-1">
+                                  {AVAILABLE_ICONS.map((iconOption) => {
+                                    const OptionIcon = iconOption.icon;
+                                    const isSelected = badge.iconName === iconOption.name;
+                                    return (
+                                      <button
+                                        key={iconOption.name}
+                                        onClick={() => {
+                                          setBadges(prev => prev.map(b =>
+                                            b.id === badge.id ? { ...b, icon: iconOption.icon, iconName: iconOption.name } : b
+                                          ));
+                                          setShowIconPicker(null);
+                                        }}
+                                        className={`w-9 h-9 flex items-center justify-center border transition-colors ${
+                                          isSelected
+                                            ? "border-foreground bg-accent text-foreground"
+                                            : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/40"
+                                        }`}
+                                      >
+                                        <OptionIcon className="w-4 h-4" />
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
+
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => {
+                                  setBadges(prev => prev.map(b =>
+                                    b.id === badge.id ? { ...b, nameKey: editName, minPoints: editMinPoints } : b
+                                  ));
+                                  setEditingBadgeId(null);
+                                  setShowIconPicker(null);
+                                }}
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-foreground text-background text-[13px] font-medium hover:bg-foreground/90 transition-colors"
+                              >
+                                <Check className="w-3.5 h-3.5" /> Save
+                              </button>
+                              <button
+                                onClick={() => { setEditingBadgeId(null); setShowIconPicker(null); }}
+                                className="inline-flex items-center gap-2 px-4 py-2 border border-border text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                <X className="w-3.5 h-3.5" /> Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <div className={`w-12 h-12 flex items-center justify-center border ${badge.borderClass} ${badge.bgClass}`}>
+                                <Icon className={`w-6 h-6 ${badge.colorClass}`} />
+                              </div>
+                              <div>
+                                <h4 className="text-[14px] font-bold text-foreground">{badge.nameKey}</h4>
+                                <div className="flex items-center gap-3 text-[12px] text-muted-foreground font-mono">
+                                  <span>{badge.minPoints.toLocaleString()} pts minimum</span>
+                                  <span className={`${badge.colorClass}`}>●</span>
+                                  <span className="capitalize">{badge.id}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => {
+                                setEditingBadgeId(badge.id);
+                                setEditName(badge.nameKey);
+                                setEditMinPoints(badge.minPoints);
+                                setShowIconPicker(null);
+                              }}
+                              className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Preview */}
+                <div className="border border-border">
+                  <div className="px-5 py-4 border-b border-border">
+                    <h3 className="text-[14px] font-bold text-foreground">Badge Preview</h3>
+                  </div>
+                  <div className="grid grid-cols-5 gap-px bg-border">
+                    {badges.map((badge) => {
+                      const Icon = badge.icon;
+                      return (
+                        <div key={badge.id} className="bg-background p-5 flex flex-col items-center text-center gap-2">
+                          <div className={`w-10 h-10 flex items-center justify-center border ${badge.borderClass} ${badge.bgClass}`}>
+                            <Icon className={`w-5 h-5 ${badge.colorClass}`} />
+                          </div>
+                          <p className={`text-[11px] font-mono font-medium ${badge.colorClass} uppercase tracking-wider`}>{badge.nameKey}</p>
+                          <p className="text-[10px] text-muted-foreground font-mono">{badge.minPoints.toLocaleString()}+ pts</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* SETTINGS */}
             {activeTab === "settings" && (
               <div className="space-y-6 max-w-2xl">
