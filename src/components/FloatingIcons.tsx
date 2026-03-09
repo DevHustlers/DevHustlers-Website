@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
-import { Globe, Moon, Sun, Atom, Orbit } from "lucide-react";
-import { IconReact, IconTypeScript, IconGo, IconPython, IconNode, IconRust } from "./PixelIcons";
+import {
+  Globe, Moon, Sun, Atom, Orbit,
+  Code, Terminal, Database, Cpu, Binary,
+  Braces, FileCode, Server, Webhook, CircuitBoard,
+} from "lucide-react";
 
-const LUCIDE_ICONS = [Globe, Moon, Sun, Atom, Orbit];
-
-const LANG_ICONS = [IconReact, IconTypeScript, IconGo, IconPython, IconNode, IconRust];
+const ALL_ICONS = [
+  Globe, Moon, Sun, Atom, Orbit,
+  Code, Terminal, Database, Cpu, Binary,
+  Braces, FileCode, Server, Webhook, CircuitBoard,
+];
 
 interface FloatingItem {
   id: number;
-  type: "lucide" | "lang";
-  index: number;
+  iconIndex: number;
   top: number;
   left: number;
   size: number;
@@ -21,67 +25,48 @@ const FloatingIcons = () => {
   const [items, setItems] = useState<FloatingItem[]>([]);
 
   useEffect(() => {
-    const all: FloatingItem[] = [];
-    // 4 per side = 8 total
     const positions = [
       // left side
-      { top: 10, left: 3 }, { top: 35, left: 5 }, { top: 58, left: 2 }, { top: 82, left: 6 },
+      { top: 5, left: 2 }, { top: 18, left: 5 }, { top: 32, left: 3 },
+      { top: 48, left: 6 }, { top: 62, left: 2 }, { top: 78, left: 5 }, { top: 90, left: 3 },
       // right side
-      { top: 12, left: 92 }, { top: 38, left: 94 }, { top: 60, left: 91 }, { top: 85, left: 93 },
+      { top: 8, left: 91 }, { top: 22, left: 94 }, { top: 36, left: 92 },
+      { top: 50, left: 93 }, { top: 65, left: 91 }, { top: 80, left: 94 }, { top: 92, left: 92 },
     ];
 
-    const shuffledLucide = [...LUCIDE_ICONS].sort(() => Math.random() - 0.5);
-    const shuffledLang = [...LANG_ICONS].sort(() => Math.random() - 0.5);
+    const shuffled = [...ALL_ICONS].sort(() => Math.random() - 0.5);
 
-    positions.forEach((pos, i) => {
-      const isLang = i % 2 === 0;
-      all.push({
+    setItems(
+      positions.map((pos, i) => ({
         id: i,
-        type: isLang ? "lang" : "lucide",
-        index: isLang ? i % shuffledLang.length : i % shuffledLucide.length,
-        top: pos.top + Math.random() * 6 - 3,
-        left: pos.left + Math.random() * 4 - 2,
-        size: 28 + Math.random() * 16,
+        iconIndex: i % shuffled.length,
+        top: pos.top + Math.random() * 4 - 2,
+        left: pos.left + Math.random() * 3 - 1.5,
+        size: 32 + Math.random() * 20,
         rotation: Math.random() * 30 - 15,
-        opacity: 0.07 + Math.random() * 0.06,
-      });
-    });
-
-    // Assign actual shuffled indices
-    let lucideIdx = 0, langIdx = 0;
-    all.forEach(item => {
-      if (item.type === "lang") { item.index = langIdx++ % shuffledLang.length; }
-      else { item.index = lucideIdx++ % shuffledLucide.length; }
-    });
-
-    setItems(all);
+        opacity: 0.08 + Math.random() * 0.07,
+      }))
+    );
   }, []);
 
-  const shuffledLucide = LUCIDE_ICONS;
-  const shuffledLang = LANG_ICONS;
-
   return (
-    <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none z-[1] overflow-hidden">
       {items.map((item) => {
-        const style = {
-          top: `${item.top}%`,
-          left: `${item.left}%`,
-          width: item.size,
-          height: item.size,
-          transform: `rotate(${item.rotation}deg)`,
-          opacity: item.opacity,
-        };
-
-        if (item.type === "lucide") {
-          const LucideIcon = shuffledLucide[item.index % shuffledLucide.length];
-          return <LucideIcon key={item.id} className="absolute text-muted-foreground" style={style} strokeWidth={1.2} />;
-        }
-
-        const LangIcon = shuffledLang[item.index % shuffledLang.length];
+        const Icon = ALL_ICONS[item.iconIndex];
         return (
-          <div key={item.id} className="absolute text-muted-foreground" style={style}>
-            <LangIcon className="w-full h-full" />
-          </div>
+          <Icon
+            key={item.id}
+            className="absolute text-muted-foreground"
+            style={{
+              top: `${item.top}%`,
+              left: `${item.left}%`,
+              width: item.size,
+              height: item.size,
+              transform: `rotate(${item.rotation}deg)`,
+              opacity: item.opacity,
+            }}
+            strokeWidth={1.2}
+          />
         );
       })}
     </div>
