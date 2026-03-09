@@ -29,7 +29,7 @@ const About = () => {
 
       {/* Hero */}
       <section className="pt-28 sm:pt-40 pb-16 sm:pb-20">
-        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-6">
           <div className="max-w-3xl">
             <ScrollReveal>
               <p className="text-[13px] font-mono text-muted-foreground mb-4 uppercase tracking-widest">{t("about.label")}</p>
