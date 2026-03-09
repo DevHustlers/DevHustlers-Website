@@ -37,7 +37,7 @@ const Index = () => {
       <section className="pt-28 sm:pt-40 relative overflow-hidden">
         {/* Light mode: Particles */}
         <div className="absolute inset-0 pointer-events-none dark:hidden opacity-60">
-          <Particles quantity={300} size={0.6} color="#374151" staticity={40} ease={60} />
+          <Particles quantity={500} size={0.8} color="#374151" staticity={40} ease={60} />
         </div>
         {/* Dark mode: LightRays */}
         <div className="absolute inset-0 pointer-events-none hidden dark:block">
