@@ -134,6 +134,17 @@ interface PointAward {
 }
 
 // ─── Mock Data ───
+const MOCK_TRACKS: TrackData[] = [
+  { id: "tr-1", name: "Frontend", slug: "frontend", description: "Master the art of building beautiful, responsive user interfaces.", iconName: "Sparkles" },
+  { id: "tr-2", name: "Backend", slug: "backend", description: "Build robust server-side systems, APIs, and microservices.", iconName: "Shield" },
+  { id: "tr-3", name: "AI / ML", slug: "ai-ml", description: "Explore machine learning, deep learning, and AI applications.", iconName: "Lightbulb" },
+  { id: "tr-4", name: "Cybersecurity", slug: "cybersecurity", description: "Defend systems, discover vulnerabilities, and master ethical hacking.", iconName: "Shield" },
+  { id: "tr-5", name: "Data Science", slug: "data-science", description: "Extract insights from data through statistical analysis and modeling.", iconName: "Target" },
+  { id: "tr-6", name: "DevOps", slug: "devops", description: "Automate deployments, CI/CD pipelines, and infrastructure management.", iconName: "Bolt" },
+  { id: "tr-7", name: "Mobile", slug: "mobile", description: "Create native and cross-platform mobile applications.", iconName: "Rocket" },
+  { id: "tr-8", name: "Full Stack", slug: "full-stack", description: "End-to-end development spanning frontend and backend.", iconName: "Crown" },
+];
+
 const MOCK_COMPETITIONS: CompetitionData[] = [
   {
     id: "comp-1",
