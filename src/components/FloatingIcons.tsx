@@ -6,22 +6,30 @@ import {
   SiGnubash, SiZig,
 } from "react-icons/si";
 import { TbBrackets, TbCode } from "react-icons/tb";
+import {
+  GiPlanetCore, GiPlanetConquest, GiMoonOrbit,
+  GiEarthAfricaEurope, GiEarthAmerica, GiRingedPlanet,
+} from "react-icons/gi";
+import { FaGlobeAmericas, FaGlobeEurope } from "react-icons/fa";
 
 const ALL_ICONS: IconType[] = [
-  SiReact, SiRust, SiGo, SiRuby, SiCplusplus,
-  SiC, SiSharp, SiPython, SiTypescript, SiJavascript,
-  SiGnubash, SiZig, TbBrackets, TbCode,
+  SiReact, GiPlanetCore, SiRust, GiRingedPlanet, SiGo, GiMoonOrbit,
+  SiRuby, GiEarthAfricaEurope, SiCplusplus, GiPlanetConquest,
+  SiC, GiEarthAmerica, SiSharp, FaGlobeAmericas, SiPython, FaGlobeEurope,
+  SiTypescript, SiJavascript, SiGnubash, SiZig, TbBrackets, TbCode,
 ];
 
 const POSITIONS = [
-  // left side (10)
-  { top: 3, left: 2 }, { top: 12, left: 5 }, { top: 22, left: 3 },
-  { top: 33, left: 6 }, { top: 43, left: 2 }, { top: 53, left: 5 },
-  { top: 63, left: 3 }, { top: 73, left: 6 }, { top: 83, left: 2 }, { top: 93, left: 5 },
-  // right side (10)
-  { top: 5, left: 91 }, { top: 15, left: 94 }, { top: 25, left: 92 },
-  { top: 35, left: 93 }, { top: 45, left: 91 }, { top: 55, left: 94 },
-  { top: 65, left: 92 }, { top: 75, left: 93 }, { top: 85, left: 91 }, { top: 95, left: 94 },
+  // left side (12)
+  { top: 2, left: 2 }, { top: 10, left: 5 }, { top: 18, left: 3 },
+  { top: 27, left: 6 }, { top: 36, left: 2 }, { top: 45, left: 5 },
+  { top: 54, left: 3 }, { top: 63, left: 6 }, { top: 72, left: 2 },
+  { top: 81, left: 5 }, { top: 90, left: 3 }, { top: 96, left: 6 },
+  // right side (12)
+  { top: 4, left: 91 }, { top: 12, left: 94 }, { top: 20, left: 92 },
+  { top: 29, left: 93 }, { top: 38, left: 91 }, { top: 47, left: 94 },
+  { top: 56, left: 92 }, { top: 65, left: 93 }, { top: 74, left: 91 },
+  { top: 83, left: 94 }, { top: 92, left: 92 }, { top: 98, left: 93 },
 ];
 
 const FloatingIcons = () => {
