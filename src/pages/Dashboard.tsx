@@ -176,6 +176,51 @@ const Dashboard = () => {
   const [editMinPoints, setEditMinPoints] = useState(0);
   const [showIconPicker, setShowIconPicker] = useState<string | null>(null);
 
+  // Competitions management state
+  const [competitions, setCompetitions] = useState<CompetitionData[]>(MOCK_COMPETITIONS);
+  const [showNewComp, setShowNewComp] = useState(false);
+  const [newCompTitle, setNewCompTitle] = useState("");
+  const [newCompDesc, setNewCompDesc] = useState("");
+  const [newCompDate, setNewCompDate] = useState("");
+  const [newCompTime, setNewCompTime] = useState(15);
+  const [newCompPrize, setNewCompPrize] = useState("");
+  const [newCompQuestions, setNewCompQuestions] = useState<CompetitionQuestion[]>([]);
+  const [showAddQuestion, setShowAddQuestion] = useState(false);
+  const [newQ, setNewQ] = useState("");
+  const [newQOptions, setNewQOptions] = useState(["", "", "", ""]);
+  const [newQCorrect, setNewQCorrect] = useState(0);
+
+  const addQuestionToNew = () => {
+    if (!newQ.trim() || newQOptions.some(o => !o.trim())) return;
+    setNewCompQuestions(prev => [
+      ...prev,
+      { id: prev.length + 1, question: newQ, options: [...newQOptions], correctIndex: newQCorrect, timeLimit: newCompTime }
+    ]);
+    setNewQ("");
+    setNewQOptions(["", "", "", ""]);
+    setNewQCorrect(0);
+    setShowAddQuestion(false);
+  };
+
+  const createCompetition = () => {
+    if (!newCompTitle.trim()) return;
+    const comp: CompetitionData = {
+      id: `comp-${Date.now()}`,
+      title: newCompTitle,
+      description: newCompDesc,
+      status: "draft",
+      scheduledDate: newCompDate || "Not scheduled",
+      timePerQuestion: newCompTime,
+      prize: newCompPrize || "TBD",
+      participants: 0,
+      questions: newCompQuestions,
+    };
+    setCompetitions(prev => [comp, ...prev]);
+    setShowNewComp(false);
+    setNewCompTitle(""); setNewCompDesc(""); setNewCompDate("");
+    setNewCompTime(15); setNewCompPrize(""); setNewCompQuestions([]);
+  };
+
   return (
     <PageLayout>
       <div className="min-h-screen flex">
