@@ -10,6 +10,7 @@ import PageLayout from "@/components/PageLayout";
 import SectionDivider from "@/components/SectionDivider";
 import ScrollReveal from "@/components/ScrollReveal";
 import { ArrowRight, Terminal, GitBranch, Sparkles } from "lucide-react";
+import LightRays from "@/components/LightRays";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { techStack } from "@/components/TechIcons";
@@ -32,8 +33,19 @@ const Index = () => {
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-28 sm:pt-40 relative">
-        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
+      <section className="pt-28 sm:pt-40 relative overflow-hidden">
+        <LightRays
+          raysOrigin="top-center"
+          raysSpeed={0.8}
+          lightSpread={0.5}
+          rayLength={3}
+          fadeDistance={1}
+          saturation={1}
+          followMouse
+          mouseInfluence={0.1}
+          className="pointer-events-none opacity-40 dark:opacity-25"
+        />
+        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0 relative z-10">
           <div className="max-w-3xl pb-20 sm:pb-32 px-1 sm:px-4 lg:px-6">
             <div className="animate-fade-up">
               <div className="inline-flex items-center gap-2 px-3 py-1 border border-border text-[15px] text-muted-foreground mb-8 font-mono">
