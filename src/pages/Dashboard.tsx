@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Users, Trophy, Zap, Calendar, Settings, BarChart3,
   Plus, Search, MoreHorizontal, ArrowRight, Clock,
@@ -9,11 +10,12 @@ import {
   Anchor, Lightbulb, Bolt, Medal, BadgeCheck, X, Check,
   Play, StopCircle, Timer, CirclePlus, GripVertical,
   Circle, ArrowLeft, Copy, ChevronDown, ChevronUp, Mail,
-  MapPin, Link, UserPlus, UserMinus
+  MapPin, Link as LinkIcon, UserPlus, UserMinus
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
-import PageLayout from "@/components/PageLayout";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import PageTransition from "@/components/PageTransition";
 import { BADGE_TIERS, type BadgeTier } from "@/components/HonorBadge";
 
 const AVAILABLE_ICONS = [
