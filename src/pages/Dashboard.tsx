@@ -3,11 +3,38 @@ import {
   Users, Trophy, Zap, Calendar, Settings, BarChart3,
   Plus, Search, MoreHorizontal, ArrowRight, Clock,
   TrendingUp, Activity, Eye, ChevronRight, Star,
-  Shield, Globe, Pencil, Trash2, CheckCircle2
+  Shield, Globe, Pencil, Trash2, CheckCircle2, Award,
+  Flame, Rocket, Gem, Crown, Sparkles, Heart, Target,
+  Swords, CircleDot, Diamond, Hexagon, Pentagon, Compass,
+  Anchor, Lightbulb, Bolt, Medal, BadgeCheck, X, Check
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
 import PageLayout from "@/components/PageLayout";
+import { BADGE_TIERS, type BadgeTier } from "@/components/HonorBadge";
+
+const AVAILABLE_ICONS = [
+  { name: "Sparkles", icon: Sparkles },
+  { name: "Flame", icon: Flame },
+  { name: "Rocket", icon: Rocket },
+  { name: "Gem", icon: Gem },
+  { name: "Crown", icon: Crown },
+  { name: "Star", icon: Star },
+  { name: "Heart", icon: Heart },
+  { name: "Trophy", icon: Trophy },
+  { name: "Shield", icon: Shield },
+  { name: "Target", icon: Target },
+  { name: "Swords", icon: Swords },
+  { name: "Diamond", icon: Diamond },
+  { name: "Hexagon", icon: Hexagon },
+  { name: "Compass", icon: Compass },
+  { name: "Anchor", icon: Anchor },
+  { name: "Lightbulb", icon: Lightbulb },
+  { name: "Bolt", icon: Bolt },
+  { name: "Medal", icon: Medal },
+  { name: "BadgeCheck", icon: BadgeCheck },
+  { name: "Zap", icon: Zap },
+];
 
 const SIDEBAR_ITEMS = [
   { label: "Overview", icon: BarChart3, id: "overview" },
@@ -15,6 +42,7 @@ const SIDEBAR_ITEMS = [
   { label: "Challenges", icon: Trophy, id: "challenges" },
   { label: "Events", icon: Calendar, id: "events" },
   { label: "Points", icon: Zap, id: "points" },
+  { label: "Badges", icon: Award, id: "badges" },
   { label: "Settings", icon: Settings, id: "settings" },
 ];
 
