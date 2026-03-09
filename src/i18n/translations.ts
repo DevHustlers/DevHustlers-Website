@@ -470,11 +470,11 @@ export const translations: Record<Locale, Record<string, string>> = {
 
     // Planets page
     "planets.label": "استكشف",
-    "planets.title": "الكواكب",
-    "planets.desc": "كل مسار هو كوكب في عالم DevHustlers. اختر مدارك وابدأ رحلتك.",
+    "planets.title": "المسارات",
+    "planets.desc": "كل مسار هو كوكب في عالم DevHustlers. اختر مسارك وابدأ رحلتك.",
     "planets.members": "أعضاء",
     "planets.challenges": "تحديات",
-    "planets.explore": "استكشف الكوكب",
+    "planets.explore": "استكشف المسار",
 
     // Login page
     "login.label": "المصادقة",
