@@ -16,6 +16,7 @@ const Navbar = () => {
   const links = [
     { label: t("nav.features"), href: "/#features" },
     { label: t("nav.challenges"), href: "/challenges" },
+    { label: t("nav.events"), href: "/events" },
     { label: t("nav.planets"), href: "/planets" },
     { label: t("nav.leaderboard"), href: "/leaderboard" },
     { label: t("nav.blog"), href: "/blog" },
