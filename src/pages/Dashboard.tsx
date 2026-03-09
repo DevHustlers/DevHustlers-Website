@@ -2142,7 +2142,7 @@ const Dashboard = () => {
           </div>
         </main>
       </div>
-    </PageLayout>
+    </PageTransition>
   );
 };
 
