@@ -78,6 +78,13 @@
     --code-number: 20 80% 45%;
     --code-operator: 217 10% 35%;
     --code-punctuation: 214 8% 50%;
+
+    --live: 142 71% 45%;
+    --live-foreground: 142 71% 98%;
+    --upcoming: 25 95% 53%;
+    --upcoming-foreground: 25 95% 98%;
+    --feed: 214 90% 52%;
+    --feed-foreground: 214 90% 98%;
   }
 
   .dark {
@@ -128,6 +135,13 @@
     --code-number: 20 70% 60%;
     --code-operator: 197 5% 70%;
     --code-punctuation: 214 10% 55%;
+
+    --live: 142 71% 45%;
+    --live-foreground: 142 71% 98%;
+    --upcoming: 25 95% 53%;
+    --upcoming-foreground: 25 95% 98%;
+    --feed: 214 80% 60%;
+    --feed-foreground: 214 80% 98%;
   }
 }
 

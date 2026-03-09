@@ -68,6 +68,18 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        live: {
+          DEFAULT: "hsl(var(--live))",
+          foreground: "hsl(var(--live-foreground))",
+        },
+        upcoming: {
+          DEFAULT: "hsl(var(--upcoming))",
+          foreground: "hsl(var(--upcoming-foreground))",
+        },
+        feed: {
+          DEFAULT: "hsl(var(--feed))",
+          foreground: "hsl(var(--feed-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
