@@ -1568,6 +1568,69 @@ const Dashboard = () => {
               </div>
             )}
 
+            {/* TRACKS */}
+            {activeTab === "tracks" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-[13px] text-muted-foreground">Managing <span className="text-foreground font-medium">{tracks.length}</span> tracks</p>
+                  <PrimaryBtn onClick={() => { setTrackFormMode("create"); setEditingTrack(undefined); }}>
+                    <Plus className="w-3.5 h-3.5" /> Add Track
+                  </PrimaryBtn>
+                </div>
+
+                {trackFormMode !== "none" && (
+                  <TrackForm
+                    initial={editingTrack}
+                    isEdit={trackFormMode === "edit"}
+                    onSave={saveTrack}
+                    onCancel={() => { setTrackFormMode("none"); setEditingTrack(undefined); }}
+                  />
+                )}
+
+                <div className="border border-border divide-y divide-border">
+                  {tracks.map((track) => {
+                    const iconData = AVAILABLE_ICONS.find(i => i.name === track.iconName);
+                    const TrackIcon = iconData?.icon || Globe;
+                    return (
+                      <div key={track.id} className="p-5 flex items-center justify-between hover:bg-accent/30 transition-colors">
+                        <div className="flex items-center gap-4 flex-1 min-w-0">
+                          <div className="w-10 h-10 flex items-center justify-center border border-border bg-accent/30 shrink-0">
+                            <TrackIcon className="w-5 h-5 text-foreground" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-3 mb-0.5">
+                              <h4 className="text-[14px] font-bold text-foreground">{track.name}</h4>
+                              <span className="text-[10px] font-mono px-2 py-0.5 border border-border text-muted-foreground uppercase tracking-wider">/{track.slug}</span>
+                            </div>
+                            <p className="text-[12px] text-muted-foreground line-clamp-1">{track.description}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <button
+                            onClick={() => { setTrackFormMode("edit"); setEditingTrack(track); }}
+                            className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => deleteTrack(track.id)}
+                            className="p-2 text-muted-foreground hover:text-red-500 transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {tracks.length === 0 && (
+                    <div className="p-8 text-center">
+                      <p className="text-[13px] text-muted-foreground">No tracks yet. Add one to get started.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* CHALLENGES */}
             {activeTab === "challenges" && (
               <div className="space-y-6">
