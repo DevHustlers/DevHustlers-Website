@@ -201,7 +201,7 @@ const LiveSection = () => {
 
         {/* Row 2: Upcoming card + Upcoming Events */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border-t border-border mt-0">
-          <CompetitionCard comp={LIVE_COMPETITIONS[0]} />
+          <CompetitionCard comp={LIVE_COMPETITIONS[1]} />
 
           {/* Upcoming Events */}
           <div className="bg-background group/events">
