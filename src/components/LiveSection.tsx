@@ -82,7 +82,7 @@ const CompetitionCard = ({ comp }: { comp: typeof LIVE_COMPETITIONS[0] }) => {
 
   return (
     <div className={`bg-background p-6 sm:p-7 transition-all duration-300 h-full flex flex-col justify-between ${
-      isLive ? "group/live hover:bg-live/5 hover:border-live/20" : "group/upcoming hover:bg-upcoming/5 hover:border-upcoming/20"
+      isLive ? "group/live hover:bg-accent/40" : "group/upcoming hover:bg-accent/40"
     }`}>
       <div>
         <div className="flex items-center gap-3 mb-3">
@@ -155,7 +155,7 @@ const LiveSection = () => {
           </h2>
         </div>
 
-        {/* Live Competitions header */}
+        {/* Row 1: Live Now card + Live Feed */}
         <div className="px-3 sm:px-4 lg:px-6 flex items-center justify-between pb-3">
           <h3 className="text-[15px] font-medium text-muted-foreground uppercase tracking-widest flex items-center gap-2">
             <Play className="w-4 h-4" /> Live Competitions
@@ -164,17 +164,10 @@ const LiveSection = () => {
             View all <ChevronRight className="w-3 h-3" />
           </Link>
         </div>
-
-        {/* Competitions grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border-t border-border">
-          {LIVE_COMPETITIONS.map(comp => (
-            <CompetitionCard key={comp.id} comp={comp} />
-          ))}
-        </div>
+          <CompetitionCard comp={LIVE_COMPETITIONS[0]} />
 
-        {/* Feed + Events */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border-t border-border mt-0">
-          {/* Live Feed column — now first */}
+          {/* Live Feed */}
           <div className="bg-background group/feed">
             <div className="px-6 sm:px-7 pt-6 pb-3">
               <h3 className="text-[15px] font-medium text-muted-foreground uppercase tracking-widest flex items-center gap-2 transition-colors duration-300 group-hover/feed:text-feed">
@@ -204,8 +197,13 @@ const LiveSection = () => {
               ))}
             </div>
           </div>
+        </div>
 
-          {/* Upcoming Events column — now second */}
+        {/* Row 2: Upcoming card + Upcoming Events */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border-t border-border mt-0">
+          <CompetitionCard comp={LIVE_COMPETITIONS[1]} />
+
+          {/* Upcoming Events */}
           <div className="bg-background group/events">
             <div className="px-6 sm:px-7 pt-6 pb-3 flex items-center justify-between">
               <h3 className="text-[15px] font-medium text-muted-foreground uppercase tracking-widest flex items-center gap-2 transition-colors duration-300 group-hover/events:text-upcoming">
@@ -217,7 +215,7 @@ const LiveSection = () => {
             </div>
             <div className="divide-y divide-border">
               {UPCOMING_EVENTS.map(event => (
-                <div key={event.id} className="px-6 sm:px-7 py-5 hover:bg-upcoming/5 transition-colors duration-300">
+                <div key={event.id} className="px-6 sm:px-7 py-5 hover:bg-accent/40 transition-colors duration-300">
                   <div className="flex items-center gap-2 mb-1.5">
                     <h4 className="text-[15px] font-semibold text-foreground">{event.title}</h4>
                     <span className="text-[10px] font-mono px-1.5 py-0.5 border border-border text-muted-foreground uppercase tracking-wider">{event.type}</span>
