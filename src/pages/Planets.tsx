@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import PageLayout from "@/components/PageLayout";
 import SectionDivider from "@/components/SectionDivider";
 import ScrollReveal from "@/components/ScrollReveal";
+import OrbitsBackground from "@/components/OrbitsBackground";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const PLANETS = [
@@ -19,7 +20,7 @@ const PLANETS = [
 ];
 
 const Planets = () => {
-  const { t } = useLanguage();
+  const { t, dir } = useLanguage();
 
   return (
     <PageLayout>
@@ -27,15 +28,25 @@ const Planets = () => {
 
       <section className="pt-28 sm:pt-36 pb-16">
         <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
-          <p className="text-[11px] text-muted-foreground uppercase tracking-[0.3em] font-mono mb-4">
-            {t("planets.label")}
-          </p>
-          <h1 className="text-4xl sm:text-5xl font-bold text-foreground tracking-tight mb-4">
-            {t("planets.title")}
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-lg">
-            {t("planets.desc")}
-          </p>
+          <div className={`flex items-center gap-6 ${dir === "rtl" ? "flex-row-reverse" : ""}`}>
+            <OrbitsBackground
+              className="w-40 h-40 sm:w-52 sm:h-52 shrink-0 hidden sm:block"
+              count={4}
+              color="#6b7280"
+              speed={0.6}
+            />
+            <div>
+              <p className="text-[11px] text-muted-foreground uppercase tracking-[0.3em] font-mono mb-4">
+                {t("planets.label")}
+              </p>
+              <h1 className="text-4xl sm:text-5xl font-bold text-foreground tracking-tight mb-4">
+                {t("planets.title")}
+              </h1>
+              <p className="text-muted-foreground text-lg max-w-lg">
+                {t("planets.desc")}
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
