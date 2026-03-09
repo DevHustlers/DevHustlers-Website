@@ -233,3 +233,9 @@ const LiveSection = () => {
             </div>
           </div>
         </div>
+      </div>
+    </section>
+  );
+};
+
+export default LiveSection;
