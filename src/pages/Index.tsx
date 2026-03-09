@@ -175,6 +175,8 @@ const Index = () => {
       </ScrollReveal>
 
       <SectionDivider />
+      <ScrollReveal><LiveSection /></ScrollReveal>
+      <SectionDivider />
       <ScrollReveal><FeaturesGrid /></ScrollReveal>
       <SectionDivider />
       <ScrollReveal><StatsSection /></ScrollReveal>
