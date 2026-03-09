@@ -15,10 +15,11 @@ const Navbar = () => {
 
   const links = [
     { label: t("nav.features"), href: "/#features" },
+    { label: "Challenges", href: "/challenges" },
+    { label: "Planets", href: "/planets" },
+    { label: "Leaderboard", href: "/leaderboard" },
     { label: t("nav.blog"), href: "/blog" },
-    { label: t("nav.events"), href: "/events" },
     { label: t("nav.about"), href: "/about" },
-    { label: t("nav.contact"), href: "/contact" },
   ];
 
   useEffect(() => {
