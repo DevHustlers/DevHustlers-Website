@@ -131,19 +131,14 @@ const Index = () => {
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-y-8 gap-x-4">
               {techStack.map(({ name, Icon, hoverColor }) => (
-                <div key={name} className="flex flex-col items-center gap-2.5 group cursor-default">
-                  <Icon
-                    size={48}
-                    className="text-muted-foreground/40 transition-colors duration-300"
-                    style={{ color: undefined }}
-                    onMouseEnter={(e) => { e.currentTarget.style.color = hoverColor; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.color = ''; }}
-                  />
-                  <span
-                    className="text-[15px] sm:text-[17px] font-bold text-muted-foreground/40 tracking-tight select-none transition-colors duration-300"
-                    onMouseEnter={(e) => { e.currentTarget.style.color = hoverColor; (e.currentTarget.previousElementSibling as HTMLElement).style.color = hoverColor; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.color = ''; (e.currentTarget.previousElementSibling as HTMLElement).style.color = ''; }}
-                  >
+                <div
+                  key={name}
+                  className="flex flex-col items-center gap-2.5 cursor-default transition-colors duration-300"
+                  onMouseEnter={(e) => { e.currentTarget.style.color = hoverColor; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = ''; }}
+                >
+                  <Icon size={48} className="text-muted-foreground/40 transition-colors duration-300" style={{ color: 'inherit' }} />
+                  <span className="text-[15px] sm:text-[17px] font-bold text-muted-foreground/40 tracking-tight select-none transition-colors duration-300" style={{ color: 'inherit' }}>
                     {name}
                   </span>
                 </div>
