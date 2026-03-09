@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import PageLayout from "@/components/PageLayout";
 import SectionDivider from "@/components/SectionDivider";
 import ScrollReveal from "@/components/ScrollReveal";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const TRACKS = [
   "All", "Frontend", "Backend", "Data Science", "AI / ML",
@@ -45,6 +46,7 @@ const statusIndicator = (s: string) => {
 const Challenges = () => {
   const [activeTrack, setActiveTrack] = useState("All");
   const [activeTab, setActiveTab] = useState<"live" | "upcoming" | "ended">("live");
+  const { t } = useLanguage();
 
   const filtered = MOCK_CHALLENGES.filter(c => {
     const trackMatch = activeTrack === "All" || c.track === activeTrack;
@@ -52,31 +54,34 @@ const Challenges = () => {
     return trackMatch && statusMatch;
   });
 
+  const tabLabels: Record<string, string> = {
+    live: t("challenges.live"),
+    upcoming: t("challenges.upcoming"),
+    ended: t("challenges.ended"),
+  };
+
   return (
     <PageLayout>
       <Navbar />
 
-      {/* Header */}
       <section className="pt-28 sm:pt-36 pb-16">
         <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
           <p className="text-[11px] text-muted-foreground uppercase tracking-[0.3em] font-mono mb-4">
-            competitions
+            {t("challenges.label")}
           </p>
           <h1 className="text-4xl sm:text-5xl font-bold text-foreground tracking-tight mb-4">
-            Challenges
+            {t("challenges.title")}
           </h1>
           <p className="text-muted-foreground text-lg max-w-lg">
-            Compete in real-time challenges across different tracks. Earn points, climb the leaderboard.
+            {t("challenges.desc")}
           </p>
         </div>
       </section>
 
       <SectionDivider />
 
-      {/* Filters */}
       <section className="py-6 border-b border-border">
         <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
-          {/* Status tabs */}
           <div className="flex items-center gap-1 mb-6">
             {(["live", "upcoming", "ended"] as const).map(tab => (
               <button
@@ -89,12 +94,11 @@ const Challenges = () => {
                 }`}
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${statusIndicator(tab)}`} />
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {tabLabels[tab]}
               </button>
             ))}
           </div>
 
-          {/* Track filters */}
           <div className="flex flex-wrap gap-1">
             {TRACKS.map(track => (
               <button
@@ -106,21 +110,20 @@ const Challenges = () => {
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {track}
+                {track === "All" ? t("challenges.all") : track}
               </button>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Challenge Cards */}
       <ScrollReveal>
         <section className="py-12">
           <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
             {filtered.length === 0 ? (
               <div className="text-center py-20">
                 <Circle className="w-8 h-8 text-muted-foreground/30 mx-auto mb-4" />
-                <p className="text-muted-foreground text-[15px]">No challenges found for this filter.</p>
+                <p className="text-muted-foreground text-[15px]">{t("challenges.no_results")}</p>
               </div>
             ) : (
               <div className="grid gap-px bg-border">
@@ -150,7 +153,7 @@ const Challenges = () => {
                       <div className="flex sm:flex-col items-center sm:items-end gap-4 sm:gap-2 shrink-0">
                         <div className="flex items-center gap-1.5 text-[13px] text-muted-foreground">
                           <Trophy className="w-3.5 h-3.5" />
-                          <span className="font-mono font-bold text-foreground">{challenge.points}</span> pts
+                          <span className="font-mono font-bold text-foreground">{challenge.points}</span> {t("challenges.pts")}
                         </div>
                         <div className="flex items-center gap-1.5 text-[13px] text-muted-foreground">
                           <Users className="w-3.5 h-3.5" />
@@ -170,10 +173,10 @@ const Challenges = () => {
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                           </span>
-                          <span className="text-[12px] font-mono text-emerald-500 uppercase tracking-wider">Live Now</span>
+                          <span className="text-[12px] font-mono text-emerald-500 uppercase tracking-wider">{t("challenges.live_now")}</span>
                         </div>
                         <button className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground hover:underline">
-                          Enter Challenge <ArrowRight className="w-3.5 h-3.5" />
+                          {t("challenges.enter")} <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
                         </button>
                       </div>
                     )}

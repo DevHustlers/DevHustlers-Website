@@ -15,9 +15,9 @@ const Navbar = () => {
 
   const links = [
     { label: t("nav.features"), href: "/#features" },
-    { label: "Challenges", href: "/challenges" },
-    { label: "Planets", href: "/planets" },
-    { label: "Leaderboard", href: "/leaderboard" },
+    { label: t("nav.challenges"), href: "/challenges" },
+    { label: t("nav.planets"), href: "/planets" },
+    { label: t("nav.leaderboard"), href: "/leaderboard" },
     { label: t("nav.blog"), href: "/blog" },
     { label: t("nav.about"), href: "/about" },
   ];
@@ -104,10 +104,10 @@ const Navbar = () => {
                 ))}
               </div>
               <div className="mt-10">
-                <button className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-foreground text-background text-[15px] font-medium">
+                <Link to="/signup" className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-foreground text-background text-[15px] font-medium">
                   {t("nav.join")}
                   <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-                </button>
+                </Link>
               </div>
               <div className="mt-8 pt-6 border-t border-border">
                 <p className="text-[11px] text-muted-foreground/50 uppercase tracking-widest font-mono">© 2026 DevHustlers</p>
