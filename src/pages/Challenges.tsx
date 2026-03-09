@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Clock, Users, Zap, Trophy, ArrowRight, Circle } from "lucide-react";
+import { Clock, Users, Zap, Trophy, ArrowRight, Circle, Play, Timer } from "lucide-react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageLayout from "@/components/PageLayout";
@@ -77,6 +78,44 @@ const Challenges = () => {
           </p>
         </div>
       </section>
+
+      <SectionDivider />
+      {/* Live Competition Banner */}
+      <ScrollReveal>
+        <section className="py-6">
+          <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-6">
+            <Link to="/competition/comp-1" className="block group">
+              <div className="border-2 border-emerald-500/30 bg-emerald-500/5 p-6 hover:border-emerald-500/50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 flex items-center justify-center border border-emerald-500/30 bg-emerald-500/10">
+                      <Play className="w-6 h-6 text-emerald-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                        </span>
+                        <span className="text-[11px] font-mono text-emerald-500 uppercase tracking-widest">{t("challenges.live_now")}</span>
+                      </div>
+                      <h3 className="text-lg font-bold text-foreground">Frontend Mastery Showdown</h3>
+                      <div className="flex items-center gap-4 text-[12px] text-muted-foreground font-mono mt-1">
+                        <span className="flex items-center gap-1"><Timer className="w-3 h-3" /> 15s per question</span>
+                        <span className="flex items-center gap-1"><Users className="w-3 h-3" /> 128 joined</span>
+                        <span className="flex items-center gap-1"><Trophy className="w-3 h-3" /> 500 pts + Gold Badge</span>
+                      </div>
+                    </div>
+                  </div>
+                  <button className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-500 text-white text-[13px] font-medium hover:bg-emerald-600 transition-colors">
+                    Join Now <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                  </button>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </section>
+      </ScrollReveal>
 
       <SectionDivider />
 
