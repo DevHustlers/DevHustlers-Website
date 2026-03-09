@@ -1123,6 +1123,95 @@ const ChallengeForm = ({
   );
 };
 
+// ─── Track Form ───
+const TrackForm = ({
+  initial,
+  onSave,
+  onCancel,
+  isEdit = false,
+}: {
+  initial?: TrackData;
+  onSave: (data: TrackData) => void;
+  onCancel: () => void;
+  isEdit?: boolean;
+}) => {
+  const [name, setName] = useState(initial?.name || "");
+  const [slug, setSlug] = useState(initial?.slug || "");
+  const [description, setDescription] = useState(initial?.description || "");
+  const [selectedIcon, setSelectedIcon] = useState(
+    AVAILABLE_ICONS.find(i => i.name === initial?.iconName) || AVAILABLE_ICONS[0]
+  );
+
+  const autoSlug = (val: string) => val.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+  const handleNameChange = (val: string) => {
+    setName(val);
+    if (!isEdit) setSlug(autoSlug(val));
+  };
+
+  const handleSave = () => {
+    if (!name.trim()) return;
+    onSave({
+      id: initial?.id || `tr-${Date.now()}`,
+      name: name.trim(),
+      slug: slug.trim() || autoSlug(name),
+      description,
+      iconName: selectedIcon.name,
+    });
+  };
+
+  return (
+    <div className="border-2 border-foreground">
+      <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+        <h3 className="text-[14px] font-bold text-foreground">{isEdit ? "Edit Track" : "Add Track"}</h3>
+        <button onClick={onCancel} className="text-muted-foreground hover:text-foreground"><X className="w-4 h-4" /></button>
+      </div>
+      <div className="p-5 space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <FieldLabel>Name</FieldLabel>
+            <FieldInput value={name} onChange={e => handleNameChange(e.target.value)} placeholder="e.g. Frontend" />
+          </div>
+          <div>
+            <FieldLabel>Slug</FieldLabel>
+            <FieldInput value={slug} onChange={e => setSlug(e.target.value)} placeholder="e.g. frontend" />
+          </div>
+        </div>
+        <div>
+          <FieldLabel>Description</FieldLabel>
+          <FieldTextarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Short description of the track..." />
+        </div>
+        <div>
+          <FieldLabel>Icon</FieldLabel>
+          <div className="grid grid-cols-10 gap-1">
+            {AVAILABLE_ICONS.map(iconOption => {
+              const OptionIcon = iconOption.icon;
+              const isSelected = selectedIcon.name === iconOption.name;
+              return (
+                <button
+                  key={iconOption.name}
+                  onClick={() => setSelectedIcon(iconOption)}
+                  className={`w-9 h-9 flex items-center justify-center border transition-colors ${
+                    isSelected ? "border-foreground bg-accent text-foreground" : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/40"
+                  }`}
+                >
+                  <OptionIcon className="w-4 h-4" />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div className="flex items-center gap-2 pt-2">
+          <PrimaryBtn onClick={handleSave} disabled={!name.trim()}>
+            <Check className="w-3.5 h-3.5" /> {isEdit ? "Save Changes" : "Add Track"}
+          </PrimaryBtn>
+          <SecondaryBtn onClick={onCancel}>Cancel</SecondaryBtn>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ─── Main Dashboard ───
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
