@@ -36,8 +36,8 @@ const Blog = () => {
   return (
     <PageLayout>
       <Navbar />
-      <section className="pt-28 sm:pt-36 pb-8 sm:pb-12">
-        <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-6">
+      <section className="pt-28 sm:pt-40 pb-8 sm:pb-12">
+        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
           <p className="text-[12px] sm:text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">{t("blog.label")}</p>
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground leading-tight tracking-tight mb-4">
             {t("blog.title.1")}{" "}
