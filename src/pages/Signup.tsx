@@ -4,6 +4,8 @@ import { ArrowRight, Eye, EyeOff, Check } from "lucide-react";
 import Logo from "@/components/Logo";
 import PageLayout from "@/components/PageLayout";
 import ThemeToggle from "@/components/ThemeToggle";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const TRACKS = [
   "Frontend", "Backend", "Data Science", "AI / ML",
@@ -14,6 +16,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [selectedTracks, setSelectedTracks] = useState<string[]>([]);
   const [step, setStep] = useState<1 | 2>(1);
+  const { t } = useLanguage();
 
   const toggleTrack = (track: string) => {
     setSelectedTracks(prev =>
@@ -24,17 +27,18 @@ const Signup = () => {
   return (
     <PageLayout>
       <div className="min-h-screen flex flex-col">
-        {/* Top bar */}
         <div className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
           <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-2 h-14 flex items-center justify-between">
             <Logo />
-            <ThemeToggle />
+            <div className="flex items-center gap-1">
+              <LanguageSwitcher />
+              <ThemeToggle />
+            </div>
           </div>
         </div>
 
         <div className="flex-1 flex items-center justify-center pt-14">
           <div className="w-full max-w-md mx-auto px-4 sm:px-6 py-16">
-            {/* Progress */}
             <div className="flex items-center gap-2 mb-10">
               <div className={`h-1 flex-1 ${step >= 1 ? "bg-foreground" : "bg-border"} transition-colors`} />
               <div className={`h-1 flex-1 ${step >= 2 ? "bg-foreground" : "bg-border"} transition-colors`} />
@@ -44,13 +48,13 @@ const Signup = () => {
               <>
                 <div className="mb-10">
                   <p className="text-[11px] text-muted-foreground uppercase tracking-[0.3em] font-mono mb-3">
-                    step 1 — credentials
+                    {t("signup.step1")}
                   </p>
                   <h1 className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight mb-2">
-                    Create account
+                    {t("signup.title")}
                   </h1>
                   <p className="text-muted-foreground text-[15px]">
-                    Join the DevHustlers community
+                    {t("signup.desc")}
                   </p>
                 </div>
 
@@ -58,7 +62,7 @@ const Signup = () => {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[13px] font-medium text-foreground mb-2 font-mono uppercase tracking-wider">
-                        First name
+                        {t("signup.first_name")}
                       </label>
                       <input
                         type="text"
@@ -68,7 +72,7 @@ const Signup = () => {
                     </div>
                     <div>
                       <label className="block text-[13px] font-medium text-foreground mb-2 font-mono uppercase tracking-wider">
-                        Last name
+                        {t("signup.last_name")}
                       </label>
                       <input
                         type="text"
@@ -80,7 +84,7 @@ const Signup = () => {
 
                   <div>
                     <label className="block text-[13px] font-medium text-foreground mb-2 font-mono uppercase tracking-wider">
-                      Username
+                      {t("signup.username")}
                     </label>
                     <input
                       type="text"
@@ -91,7 +95,7 @@ const Signup = () => {
 
                   <div>
                     <label className="block text-[13px] font-medium text-foreground mb-2 font-mono uppercase tracking-wider">
-                      Email
+                      {t("signup.email")}
                     </label>
                     <input
                       type="email"
@@ -102,18 +106,18 @@ const Signup = () => {
 
                   <div>
                     <label className="block text-[13px] font-medium text-foreground mb-2 font-mono uppercase tracking-wider">
-                      Password
+                      {t("signup.password")}
                     </label>
                     <div className="relative">
                       <input
                         type={showPassword ? "text" : "password"}
-                        placeholder="Min 8 characters"
-                        className="w-full h-12 px-4 pr-12 bg-background border border-border text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                        placeholder={t("signup.password_hint")}
+                        className="w-full h-12 px-4 pe-12 bg-background border border-border text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        className="absolute end-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                       >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -124,8 +128,8 @@ const Signup = () => {
                     onClick={() => setStep(2)}
                     className="w-full h-12 flex items-center justify-center gap-2 bg-foreground text-background font-medium text-[15px] hover:bg-foreground/90 transition-colors mt-2"
                   >
-                    Continue
-                    <ArrowRight className="w-4 h-4" />
+                    {t("signup.continue")}
+                    <ArrowRight className="w-4 h-4 rtl:rotate-180" />
                   </button>
                 </div>
               </>
@@ -135,13 +139,13 @@ const Signup = () => {
               <>
                 <div className="mb-10">
                   <p className="text-[11px] text-muted-foreground uppercase tracking-[0.3em] font-mono mb-3">
-                    step 2 — interests
+                    {t("signup.step2")}
                   </p>
                   <h1 className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight mb-2">
-                    Choose your tracks
+                    {t("signup.choose_tracks")}
                   </h1>
                   <p className="text-muted-foreground text-[15px]">
-                    Select the planets you want to explore
+                    {t("signup.choose_desc")}
                   </p>
                 </div>
 
@@ -159,7 +163,7 @@ const Signup = () => {
                         }`}
                       >
                         {selected && <Check className="w-4 h-4 shrink-0" />}
-                        <span className={selected ? "" : "ml-7"}>{track}</span>
+                        <span className={selected ? "" : "ms-7"}>{track}</span>
                       </button>
                     );
                   })}
@@ -170,22 +174,21 @@ const Signup = () => {
                     onClick={() => setStep(1)}
                     className="h-12 px-6 flex items-center justify-center border border-border text-foreground font-medium text-[15px] hover:bg-accent transition-colors"
                   >
-                    Back
+                    {t("signup.back")}
                   </button>
                   <button className="flex-1 h-12 flex items-center justify-center gap-2 bg-foreground text-background font-medium text-[15px] hover:bg-foreground/90 transition-colors">
-                    Create Account
-                    <ArrowRight className="w-4 h-4" />
+                    {t("signup.create")}
+                    <ArrowRight className="w-4 h-4 rtl:rotate-180" />
                   </button>
                 </div>
               </>
             )}
 
-            {/* Divider */}
             {step === 1 && (
               <>
                 <div className="flex items-center gap-4 my-8">
                   <div className="flex-1 h-px bg-border" />
-                  <span className="text-[11px] text-muted-foreground font-mono uppercase tracking-widest">or</span>
+                  <span className="text-[11px] text-muted-foreground font-mono uppercase tracking-widest">{t("signup.or")}</span>
                   <div className="flex-1 h-px bg-border" />
                 </div>
 
@@ -201,9 +204,9 @@ const Signup = () => {
                 </div>
 
                 <p className="text-center text-[14px] text-muted-foreground mt-10">
-                  Already have an account?{" "}
+                  {t("signup.has_account")}{" "}
                   <Link to="/login" className="text-foreground font-medium hover:underline">
-                    Sign in
+                    {t("signup.signin_link")}
                   </Link>
                 </p>
               </>

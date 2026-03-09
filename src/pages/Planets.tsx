@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import PageLayout from "@/components/PageLayout";
 import SectionDivider from "@/components/SectionDivider";
 import ScrollReveal from "@/components/ScrollReveal";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const PLANETS = [
   { name: "Frontend", icon: Code, members: 342, challenges: 28, color: "text-blue-500", borderColor: "border-blue-500/20", description: "Master the art of building beautiful, responsive user interfaces with modern frameworks and tools." },
@@ -18,6 +19,8 @@ const PLANETS = [
 ];
 
 const Planets = () => {
+  const { t } = useLanguage();
+
   return (
     <PageLayout>
       <Navbar />
@@ -25,13 +28,13 @@ const Planets = () => {
       <section className="pt-28 sm:pt-36 pb-16">
         <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
           <p className="text-[11px] text-muted-foreground uppercase tracking-[0.3em] font-mono mb-4">
-            explore
+            {t("planets.label")}
           </p>
           <h1 className="text-4xl sm:text-5xl font-bold text-foreground tracking-tight mb-4">
-            Planets
+            {t("planets.title")}
           </h1>
           <p className="text-muted-foreground text-lg max-w-lg">
-            Each track is a planet in the DevHustlers universe. Choose your orbit and start your journey.
+            {t("planets.desc")}
           </p>
         </div>
       </section>
@@ -47,7 +50,6 @@ const Planets = () => {
                   key={planet.name}
                   className="bg-background p-8 hover:bg-accent/30 transition-all cursor-pointer group relative"
                 >
-                  {/* Planet icon */}
                   <div className={`w-14 h-14 flex items-center justify-center border ${planet.borderColor} mb-6`}>
                     <planet.icon className={`w-7 h-7 ${planet.color}`} strokeWidth={1.5} />
                   </div>
@@ -60,21 +62,20 @@ const Planets = () => {
                     {planet.description}
                   </p>
 
-                  {/* Stats */}
                   <div className="flex items-center gap-6 mb-6">
                     <div>
                       <p className="font-mono font-bold text-foreground text-[18px]">{planet.members}</p>
-                      <p className="text-[11px] text-muted-foreground font-mono uppercase tracking-wider">members</p>
+                      <p className="text-[11px] text-muted-foreground font-mono uppercase tracking-wider">{t("planets.members")}</p>
                     </div>
                     <div className="w-px h-8 bg-border" />
                     <div>
                       <p className="font-mono font-bold text-foreground text-[18px]">{planet.challenges}</p>
-                      <p className="text-[11px] text-muted-foreground font-mono uppercase tracking-wider">challenges</p>
+                      <p className="text-[11px] text-muted-foreground font-mono uppercase tracking-wider">{t("planets.challenges")}</p>
                     </div>
                   </div>
 
                   <button className="inline-flex items-center gap-2 text-[13px] font-medium text-muted-foreground group-hover:text-foreground transition-colors">
-                    Explore Planet <ArrowRight className="w-3.5 h-3.5" />
+                    {t("planets.explore")} <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
                   </button>
                 </div>
               ))}
