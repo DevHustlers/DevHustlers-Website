@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useLanguage } from "@/i18n/LanguageContext";
 import { Link } from "react-router-dom";
 import {
   Play, Clock, Users, Trophy, Calendar, ArrowRight,
@@ -10,7 +9,7 @@ const LIVE_COMPETITIONS = [
   {
     id: "comp-1",
     title: "Frontend Mastery Showdown",
-    description: "Test your frontend knowledge in this fast-paced quiz battle",
+    description: "Test your frontend knowledge in this fast-paced quiz battle. Compete against the best developers in real-time.",
     startsAt: new Date("2026-03-09T20:00:00"),
     participants: 128,
     prize: "500 pts + Gold Badge",
@@ -20,7 +19,7 @@ const LIVE_COMPETITIONS = [
   {
     id: "comp-2",
     title: "Backend Brain Battle",
-    description: "API and server-side knowledge quiz",
+    description: "API and server-side knowledge quiz. Prove your backend expertise across databases, APIs and architecture.",
     startsAt: new Date("2026-03-15T19:00:00"),
     participants: 0,
     prize: "750 pts + Silver Badge",
@@ -36,12 +35,12 @@ const UPCOMING_EVENTS = [
 ];
 
 const NEWS_FEED = [
-  { id: 1, text: "Frontend Mastery Showdown is LIVE now!", time: "Just now", icon: Play },
-  { id: 2, text: "Sarah Chen earned the Titan badge 🏆", time: "5m ago", icon: Trophy },
-  { id: 3, text: "New challenge: Build a Real-Time Chat UI", time: "1h ago", icon: Flame },
-  { id: 4, text: "Ahmed Hassan reached 11,000 points", time: "2h ago", icon: Zap },
-  { id: 5, text: "Frontend Hackathon registrations open", time: "3h ago", icon: Calendar },
-  { id: 6, text: "Leaderboard updated — new #1 this week", time: "4h ago", icon: Star },
+  { id: 1, text: "Frontend Mastery Showdown is LIVE now!", time: "Just now", icon: Play, color: "text-live" },
+  { id: 2, text: "Sarah Chen earned the Titan badge 🏆", time: "5m ago", icon: Trophy, color: "text-upcoming" },
+  { id: 3, text: "New challenge: Build a Real-Time Chat UI", time: "1h ago", icon: Flame, color: "text-destructive" },
+  { id: 4, text: "Ahmed Hassan reached 11,000 points", time: "2h ago", icon: Zap, color: "text-feed" },
+  { id: 5, text: "Frontend Hackathon registrations open", time: "3h ago", icon: Calendar, color: "text-upcoming" },
+  { id: 6, text: "Leaderboard updated — new #1 this week", time: "4h ago", icon: Star, color: "text-feed" },
 ];
 
 const useCountdown = (targetDate: Date) => {
@@ -70,7 +69,7 @@ const useCountdown = (targetDate: Date) => {
 
 const CountdownUnit = ({ value, label }: { value: number; label: string }) => (
   <div className="flex flex-col items-center">
-    <span className="text-2xl sm:text-3xl font-bold font-mono text-foreground leading-none tabular-nums">
+    <span className="text-2xl sm:text-3xl font-bold font-mono text-foreground leading-none tabular-nums transition-colors duration-300 group-hover/upcoming:text-upcoming">
       {String(value).padStart(2, "0")}
     </span>
     <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mt-1">{label}</span>
@@ -82,19 +81,21 @@ const CompetitionCard = ({ comp }: { comp: typeof LIVE_COMPETITIONS[0] }) => {
   const isLive = comp.status === "live" || countdown.expired;
 
   return (
-    <div className="bg-background p-6 sm:p-7 hover:bg-accent/40 transition-colors duration-300 h-full flex flex-col justify-between">
+    <div className={`bg-background p-6 sm:p-7 transition-all duration-300 h-full flex flex-col justify-between ${
+      isLive ? "group/live hover:bg-live/5 hover:border-live/20" : "group/upcoming hover:bg-upcoming/5 hover:border-upcoming/20"
+    }`}>
       <div>
         <div className="flex items-center gap-3 mb-3">
           {isLive ? (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono font-bold uppercase tracking-wider text-foreground border border-border bg-accent">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono font-bold uppercase tracking-wider text-foreground border border-border bg-accent transition-colors duration-300 group-hover/live:text-live group-hover/live:border-live/40 group-hover/live:bg-live/10">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-foreground opacity-75" />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-foreground" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-foreground opacity-75 group-hover/live:bg-live" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-foreground group-hover/live:bg-live" />
               </span>
               Live Now
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono font-bold uppercase tracking-wider text-muted-foreground border border-border bg-accent/50">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono font-bold uppercase tracking-wider text-muted-foreground border border-border bg-accent/50 transition-colors duration-300 group-hover/upcoming:text-upcoming group-hover/upcoming:border-upcoming/40 group-hover/upcoming:bg-upcoming/10">
               <Clock className="w-3 h-3" /> Upcoming
             </span>
           )}
@@ -104,7 +105,7 @@ const CompetitionCard = ({ comp }: { comp: typeof LIVE_COMPETITIONS[0] }) => {
         <p className="text-[15px] text-muted-foreground leading-relaxed mb-4">{comp.description}</p>
 
         {!isLive && (
-          <div className="flex items-center gap-4 sm:gap-6 mb-4 py-3 px-4 border border-border bg-accent/30">
+          <div className="flex items-center gap-4 sm:gap-6 mb-4 py-3 px-4 border border-border bg-accent/30 transition-colors duration-300 group-hover/upcoming:border-upcoming/30 group-hover/upcoming:bg-upcoming/5">
             <CountdownUnit value={countdown.days} label="Days" />
             <span className="text-muted-foreground/30 text-xl font-mono">:</span>
             <CountdownUnit value={countdown.hours} label="Hrs" />
@@ -125,7 +126,11 @@ const CompetitionCard = ({ comp }: { comp: typeof LIVE_COMPETITIONS[0] }) => {
       <div>
         <Link
           to={`/competition/${comp.id}`}
-          className="inline-flex items-center gap-2 px-7 py-3 font-medium text-[16px] transition-colors bg-foreground text-background hover:bg-foreground/90"
+          className={`inline-flex items-center gap-2 px-7 py-3 font-medium text-[16px] transition-colors duration-300 bg-foreground text-background ${
+            isLive
+              ? "group-hover/live:bg-live group-hover/live:text-live-foreground"
+              : "group-hover/upcoming:bg-upcoming group-hover/upcoming:text-upcoming-foreground"
+          }`}
         >
           {isLive ? "Join Now" : "Register"}
           <ArrowRight className="w-4 h-4" />
@@ -139,7 +144,7 @@ const LiveSection = () => {
   return (
     <section>
       <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
-        {/* Section header — matches FeaturesGrid / TestimonialsSection */}
+        {/* Section header */}
         <div className="px-3 sm:px-4 lg:px-6 pt-20 sm:pt-24 pb-14">
           <p className="text-[15px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">
             Happening Now
@@ -150,7 +155,7 @@ const LiveSection = () => {
           </h2>
         </div>
 
-        {/* Competitions grid — border-t + gap-px pattern */}
+        {/* Live Competitions header */}
         <div className="px-3 sm:px-4 lg:px-6 flex items-center justify-between pb-3">
           <h3 className="text-[15px] font-medium text-muted-foreground uppercase tracking-widest flex items-center gap-2">
             <Play className="w-4 h-4" /> Live Competitions
@@ -159,18 +164,40 @@ const LiveSection = () => {
             View all <ChevronRight className="w-3 h-3" />
           </Link>
         </div>
+
+        {/* Competitions grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border-t border-border">
           {LIVE_COMPETITIONS.map(comp => (
             <CompetitionCard key={comp.id} comp={comp} />
           ))}
         </div>
 
-        {/* Events + Feed — same grid pattern */}
+        {/* Feed + Events */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border-t border-border mt-0">
-          {/* Upcoming Events column */}
-          <div className="bg-background">
+          {/* Live Feed column — now first */}
+          <div className="bg-background group/feed">
+            <div className="px-6 sm:px-7 pt-6 pb-3">
+              <h3 className="text-[15px] font-medium text-muted-foreground uppercase tracking-widest flex items-center gap-2 transition-colors duration-300 group-hover/feed:text-feed">
+                <Sparkles className="w-4 h-4" /> Live Feed
+              </h3>
+            </div>
+            <div className="divide-y divide-border">
+              {NEWS_FEED.map(item => (
+                <div key={item.id} className="group/feeditem px-6 sm:px-7 py-4 flex items-start gap-3 hover:bg-accent/40 transition-colors duration-300">
+                  <item.icon className={`w-4 h-4 mt-0.5 shrink-0 text-muted-foreground transition-colors duration-300 group-hover/feeditem:${item.color}`} strokeWidth={1.5} />
+                  <div className="min-w-0">
+                    <p className="text-[15px] text-foreground leading-snug">{item.text}</p>
+                    <p className="text-[13px] text-muted-foreground font-mono mt-0.5">{item.time}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Upcoming Events column — now second */}
+          <div className="bg-background group/events">
             <div className="px-6 sm:px-7 pt-6 pb-3 flex items-center justify-between">
-              <h3 className="text-[15px] font-medium text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+              <h3 className="text-[15px] font-medium text-muted-foreground uppercase tracking-widest flex items-center gap-2 transition-colors duration-300 group-hover/events:text-upcoming">
                 <Calendar className="w-4 h-4" /> Upcoming Events
               </h3>
               <Link to="/events" className="text-[13px] text-muted-foreground hover:text-foreground font-mono flex items-center gap-1 transition-colors">
@@ -179,7 +206,7 @@ const LiveSection = () => {
             </div>
             <div className="divide-y divide-border">
               {UPCOMING_EVENTS.map(event => (
-                <div key={event.id} className="px-6 sm:px-7 py-5 hover:bg-accent/40 transition-colors duration-300">
+                <div key={event.id} className="px-6 sm:px-7 py-5 hover:bg-upcoming/5 transition-colors duration-300">
                   <div className="flex items-center gap-2 mb-1.5">
                     <h4 className="text-[15px] font-semibold text-foreground">{event.title}</h4>
                     <span className="text-[10px] font-mono px-1.5 py-0.5 border border-border text-muted-foreground uppercase tracking-wider">{event.type}</span>
@@ -191,26 +218,6 @@ const LiveSection = () => {
                   <div className="flex flex-wrap items-center gap-3 text-[13px] text-muted-foreground font-mono mt-1">
                     <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {event.location}</span>
                     <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {event.registered}/{event.capacity}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Live Feed column */}
-          <div className="bg-background">
-            <div className="px-6 sm:px-7 pt-6 pb-3">
-              <h3 className="text-[15px] font-medium text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                <Sparkles className="w-4 h-4" /> Live Feed
-              </h3>
-            </div>
-            <div className="divide-y divide-border">
-              {NEWS_FEED.map(item => (
-                <div key={item.id} className="px-6 sm:px-7 py-4 flex items-start gap-3 hover:bg-accent/40 transition-colors duration-300">
-                  <item.icon className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground" strokeWidth={1.5} />
-                  <div className="min-w-0">
-                    <p className="text-[15px] text-foreground leading-snug">{item.text}</p>
-                    <p className="text-[13px] text-muted-foreground font-mono mt-0.5">{item.time}</p>
                   </div>
                 </div>
               ))}
