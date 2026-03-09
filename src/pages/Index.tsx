@@ -134,11 +134,17 @@ const Index = () => {
                 <div
                   key={name}
                   className="flex flex-col items-center gap-2.5 cursor-default transition-colors duration-300"
-                  onMouseEnter={(e) => { e.currentTarget.style.color = hoverColor; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = ''; }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.querySelector('svg')!.style.color = hoverColor;
+                    e.currentTarget.querySelector('span')!.style.color = hoverColor;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.querySelector('svg')!.style.color = '';
+                    e.currentTarget.querySelector('span')!.style.color = '';
+                  }}
                 >
-                  <Icon size={48} className="text-muted-foreground/40 transition-colors duration-300" style={{ color: 'inherit' }} />
-                  <span className="text-[15px] sm:text-[17px] font-bold text-muted-foreground/40 tracking-tight select-none transition-colors duration-300" style={{ color: 'inherit' }}>
+                  <Icon size={48} className="text-muted-foreground/40 transition-colors duration-300" />
+                  <span className="text-[15px] sm:text-[17px] font-bold text-muted-foreground/40 tracking-tight select-none transition-colors duration-300">
                     {name}
                   </span>
                 </div>
