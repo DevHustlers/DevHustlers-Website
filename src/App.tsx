@@ -17,6 +17,7 @@ import Challenges from "./pages/Challenges";
 import Leaderboard from "./pages/Leaderboard";
 import Planets from "./pages/Planets";
 import Dashboard from "./pages/Dashboard";
+import Competition from "./pages/Competition";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const AnimatedRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/challenges" element={<Challenges />} />
+        <Route path="/competition/:id" element={<Competition />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/planets" element={<Planets />} />
         <Route path="/dashboard" element={<Dashboard />} />

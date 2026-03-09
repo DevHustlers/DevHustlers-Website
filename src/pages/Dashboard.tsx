@@ -41,10 +41,72 @@ const SIDEBAR_ITEMS = [
   { label: "Overview", icon: BarChart3, id: "overview" },
   { label: "Users", icon: Users, id: "users" },
   { label: "Challenges", icon: Trophy, id: "challenges" },
+  { label: "Competitions", icon: Play, id: "competitions" },
   { label: "Events", icon: Calendar, id: "events" },
   { label: "Points", icon: Zap, id: "points" },
   { label: "Badges", icon: Award, id: "badges" },
   { label: "Settings", icon: Settings, id: "settings" },
+];
+
+interface CompetitionQuestion {
+  id: number;
+  question: string;
+  options: string[];
+  correctIndex: number;
+  timeLimit: number;
+}
+
+interface CompetitionData {
+  id: string;
+  title: string;
+  description: string;
+  status: "draft" | "scheduled" | "live" | "ended";
+  scheduledDate: string;
+  timePerQuestion: number;
+  prize: string;
+  questions: CompetitionQuestion[];
+  participants: number;
+}
+
+const MOCK_COMPETITIONS: CompetitionData[] = [
+  {
+    id: "comp-1",
+    title: "Frontend Mastery Showdown",
+    description: "Test your frontend knowledge",
+    status: "live",
+    scheduledDate: "Mar 9, 2026 — 8:00 PM",
+    timePerQuestion: 15,
+    prize: "500 pts + Gold Badge",
+    participants: 128,
+    questions: [
+      { id: 1, question: "Which CSS property is used to create a flexible box layout?", options: ["display: grid", "display: flex", "display: block", "display: inline"], correctIndex: 1, timeLimit: 15 },
+      { id: 2, question: "What does the 'useEffect' hook do in React?", options: ["Manages state", "Creates a component", "Performs side effects after render", "Optimizes re-renders"], correctIndex: 2, timeLimit: 15 },
+    ],
+  },
+  {
+    id: "comp-2",
+    title: "Backend Brain Battle",
+    description: "API and server-side quiz",
+    status: "scheduled",
+    scheduledDate: "Mar 15, 2026 — 7:00 PM",
+    timePerQuestion: 20,
+    prize: "750 pts + Silver Badge",
+    participants: 0,
+    questions: [
+      { id: 1, question: "Which HTTP method is idempotent?", options: ["POST", "PATCH", "PUT", "DELETE"], correctIndex: 2, timeLimit: 20 },
+    ],
+  },
+  {
+    id: "comp-3",
+    title: "JS Fundamentals Sprint",
+    description: "Core JavaScript knowledge",
+    status: "ended",
+    scheduledDate: "Mar 1, 2026 — 6:00 PM",
+    timePerQuestion: 10,
+    prize: "300 pts",
+    participants: 95,
+    questions: [],
+  },
 ];
 
 const MOCK_STATS = [
