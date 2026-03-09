@@ -70,7 +70,7 @@ const Blog = () => {
             {filtered.map((post, i) => (
               <ScrollReveal key={post.slug} delay={i * 50}>
                 <Link to={post.slug} className="block group">
-                  <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-10 py-8 sm:py-10 hover:bg-accent/30 transition-colors duration-300">
+                  <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0 py-8 sm:py-10 hover:bg-accent/30 transition-colors duration-300">
                     <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
                       <span className="text-[11px] sm:text-[12px] text-muted-foreground font-mono">{post.date}</span>
                       <span className="text-[10px] sm:text-[11px] px-2 py-0.5 border border-border text-muted-foreground">{post.tag}</span>

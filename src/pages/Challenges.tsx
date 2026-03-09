@@ -83,7 +83,7 @@ const Challenges = () => {
       {/* Live Competition Banner */}
       <ScrollReveal>
         <section className="py-6">
-          <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-6">
+          <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
             <Link to="/competition/comp-1" className="block group">
               <div className="border-2 border-emerald-500/30 bg-emerald-500/5 p-6 hover:border-emerald-500/50 transition-colors">
                 <div className="flex items-center justify-between">
