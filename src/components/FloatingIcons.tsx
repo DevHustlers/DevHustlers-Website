@@ -50,7 +50,7 @@ const FloatingIcons = () => {
       {items.map(({ id, Icon, top, left, size, rotation, opacity }) => (
         <Icon
           key={id}
-          className="absolute text-muted-foreground"
+          className="absolute text-muted-foreground dark:text-muted-foreground/70"
           style={{
             top: `${top}%`,
             left: `${left}%`,
