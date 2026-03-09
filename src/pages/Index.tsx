@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import PageLayout from "@/components/PageLayout";
 import SectionDivider from "@/components/SectionDivider";
 import ScrollReveal from "@/components/ScrollReveal";
+import LiveSection from "@/components/LiveSection";
 import { ArrowRight, Terminal, GitBranch, Sparkles } from "lucide-react";
 import LightRays from "@/components/LightRays";
 import { Particles } from "@/components/Particles";
@@ -173,6 +174,8 @@ const Index = () => {
         </section>
       </ScrollReveal>
 
+      <SectionDivider />
+      <ScrollReveal><LiveSection /></ScrollReveal>
       <SectionDivider />
       <ScrollReveal><FeaturesGrid /></ScrollReveal>
       <SectionDivider />
