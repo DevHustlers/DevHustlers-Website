@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Clock, Users, Zap, Trophy, ArrowRight, Circle } from "lucide-react";
+import { Clock, Users, Zap, Trophy, ArrowRight, Circle, Play, Timer } from "lucide-react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageLayout from "@/components/PageLayout";
