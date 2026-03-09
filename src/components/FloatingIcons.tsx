@@ -78,7 +78,11 @@ const FloatingIcons = () => {
         }
 
         const LangIcon = shuffledLang[item.index % shuffledLang.length];
-        return <LangIcon key={item.id} className="absolute text-muted-foreground" style={style} />;
+        return (
+          <div key={item.id} className="absolute text-muted-foreground" style={style}>
+            <LangIcon className="w-full h-full" />
+          </div>
+        );
       })}
     </div>
   );
