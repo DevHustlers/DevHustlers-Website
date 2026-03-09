@@ -11,7 +11,7 @@ import SectionDivider from "@/components/SectionDivider";
 import ScrollReveal from "@/components/ScrollReveal";
 import { ArrowRight, Terminal, GitBranch, Sparkles } from "lucide-react";
 import LightRays from "@/components/LightRays";
-import { Meteors } from "@/components/Meteors";
+import { Particles } from "@/components/Particles";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { techStack } from "@/components/TechIcons";
@@ -35,9 +35,9 @@ const Index = () => {
 
       {/* Hero */}
       <section className="pt-28 sm:pt-40 relative overflow-hidden">
-        {/* Light mode: Meteors */}
-        <div className="absolute inset-0 pointer-events-none dark:hidden opacity-40">
-          <Meteors count={20} angle={215} />
+        {/* Light mode: Particles */}
+        <div className="absolute inset-0 pointer-events-none dark:hidden opacity-60">
+          <Particles quantity={120} size={0.5} color="#374151" staticity={40} ease={60} />
         </div>
         {/* Dark mode: LightRays */}
         <div className="absolute inset-0 pointer-events-none hidden dark:block">
