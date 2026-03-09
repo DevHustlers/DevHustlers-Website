@@ -82,7 +82,7 @@ const CompetitionCard = ({ comp }: { comp: typeof LIVE_COMPETITIONS[0] }) => {
 
   return (
     <div className={`bg-background p-6 sm:p-7 transition-all duration-300 h-full flex flex-col justify-between ${
-      isLive ? "group/live hover:bg-live/5 hover:border-live/20" : "group/upcoming hover:bg-upcoming/5 hover:border-upcoming/20"
+      isLive ? "group/live hover:bg-accent/40" : "group/upcoming hover:bg-accent/40"
     }`}>
       <div>
         <div className="flex items-center gap-3 mb-3">
