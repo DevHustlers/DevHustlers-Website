@@ -42,6 +42,7 @@ const AVAILABLE_ICONS = [
 const SIDEBAR_ITEMS = [
   { label: "Overview", icon: BarChart3, id: "overview" },
   { label: "Users", icon: Users, id: "users" },
+  { label: "Tracks", icon: Globe, id: "tracks" },
   { label: "Challenges", icon: Trophy, id: "challenges" },
   { label: "Competitions", icon: Play, id: "competitions" },
   { label: "Events", icon: Calendar, id: "events" },
@@ -95,6 +96,14 @@ interface UserData {
   bio: string;
 }
 
+interface TrackData {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  iconName: string;
+}
+
 interface EventData {
   id: string;
   title: string;
@@ -125,6 +134,17 @@ interface PointAward {
 }
 
 // ─── Mock Data ───
+const MOCK_TRACKS: TrackData[] = [
+  { id: "tr-1", name: "Frontend", slug: "frontend", description: "Master the art of building beautiful, responsive user interfaces.", iconName: "Sparkles" },
+  { id: "tr-2", name: "Backend", slug: "backend", description: "Build robust server-side systems, APIs, and microservices.", iconName: "Shield" },
+  { id: "tr-3", name: "AI / ML", slug: "ai-ml", description: "Explore machine learning, deep learning, and AI applications.", iconName: "Lightbulb" },
+  { id: "tr-4", name: "Cybersecurity", slug: "cybersecurity", description: "Defend systems, discover vulnerabilities, and master ethical hacking.", iconName: "Shield" },
+  { id: "tr-5", name: "Data Science", slug: "data-science", description: "Extract insights from data through statistical analysis and modeling.", iconName: "Target" },
+  { id: "tr-6", name: "DevOps", slug: "devops", description: "Automate deployments, CI/CD pipelines, and infrastructure management.", iconName: "Bolt" },
+  { id: "tr-7", name: "Mobile", slug: "mobile", description: "Create native and cross-platform mobile applications.", iconName: "Rocket" },
+  { id: "tr-8", name: "Full Stack", slug: "full-stack", description: "End-to-end development spanning frontend and backend.", iconName: "Crown" },
+];
+
 const MOCK_COMPETITIONS: CompetitionData[] = [
   {
     id: "comp-1",
@@ -1103,6 +1123,95 @@ const ChallengeForm = ({
   );
 };
 
+// ─── Track Form ───
+const TrackForm = ({
+  initial,
+  onSave,
+  onCancel,
+  isEdit = false,
+}: {
+  initial?: TrackData;
+  onSave: (data: TrackData) => void;
+  onCancel: () => void;
+  isEdit?: boolean;
+}) => {
+  const [name, setName] = useState(initial?.name || "");
+  const [slug, setSlug] = useState(initial?.slug || "");
+  const [description, setDescription] = useState(initial?.description || "");
+  const [selectedIcon, setSelectedIcon] = useState(
+    AVAILABLE_ICONS.find(i => i.name === initial?.iconName) || AVAILABLE_ICONS[0]
+  );
+
+  const autoSlug = (val: string) => val.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+  const handleNameChange = (val: string) => {
+    setName(val);
+    if (!isEdit) setSlug(autoSlug(val));
+  };
+
+  const handleSave = () => {
+    if (!name.trim()) return;
+    onSave({
+      id: initial?.id || `tr-${Date.now()}`,
+      name: name.trim(),
+      slug: slug.trim() || autoSlug(name),
+      description,
+      iconName: selectedIcon.name,
+    });
+  };
+
+  return (
+    <div className="border-2 border-foreground">
+      <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+        <h3 className="text-[14px] font-bold text-foreground">{isEdit ? "Edit Track" : "Add Track"}</h3>
+        <button onClick={onCancel} className="text-muted-foreground hover:text-foreground"><X className="w-4 h-4" /></button>
+      </div>
+      <div className="p-5 space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <FieldLabel>Name</FieldLabel>
+            <FieldInput value={name} onChange={e => handleNameChange(e.target.value)} placeholder="e.g. Frontend" />
+          </div>
+          <div>
+            <FieldLabel>Slug</FieldLabel>
+            <FieldInput value={slug} onChange={e => setSlug(e.target.value)} placeholder="e.g. frontend" />
+          </div>
+        </div>
+        <div>
+          <FieldLabel>Description</FieldLabel>
+          <FieldTextarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Short description of the track..." />
+        </div>
+        <div>
+          <FieldLabel>Icon</FieldLabel>
+          <div className="grid grid-cols-10 gap-1">
+            {AVAILABLE_ICONS.map(iconOption => {
+              const OptionIcon = iconOption.icon;
+              const isSelected = selectedIcon.name === iconOption.name;
+              return (
+                <button
+                  key={iconOption.name}
+                  onClick={() => setSelectedIcon(iconOption)}
+                  className={`w-9 h-9 flex items-center justify-center border transition-colors ${
+                    isSelected ? "border-foreground bg-accent text-foreground" : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/40"
+                  }`}
+                >
+                  <OptionIcon className="w-4 h-4" />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div className="flex items-center gap-2 pt-2">
+          <PrimaryBtn onClick={handleSave} disabled={!name.trim()}>
+            <Check className="w-3.5 h-3.5" /> {isEdit ? "Save Changes" : "Add Track"}
+          </PrimaryBtn>
+          <SecondaryBtn onClick={onCancel}>Cancel</SecondaryBtn>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ─── Main Dashboard ───
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -1142,6 +1251,11 @@ const Dashboard = () => {
   const [competitions, setCompetitions] = useState<CompetitionData[]>(MOCK_COMPETITIONS);
   const [compFormMode, setCompFormMode] = useState<"none" | "create" | "edit">("none");
   const [editingComp, setEditingComp] = useState<CompetitionData | undefined>();
+
+  // Tracks state
+  const [tracks, setTracks] = useState<TrackData[]>(MOCK_TRACKS);
+  const [trackFormMode, setTrackFormMode] = useState<"none" | "create" | "edit">("none");
+  const [editingTrack, setEditingTrack] = useState<TrackData | undefined>();
 
   // Challenges state
   const [challenges, setChallenges] = useState<ChallengeData[]>(MOCK_CHALLENGES);
@@ -1216,6 +1330,18 @@ const Dashboard = () => {
     };
     setCompetitions(prev => [dup, ...prev]);
   };
+
+  const saveTrack = (track: TrackData) => {
+    if (trackFormMode === "edit") {
+      setTracks(prev => prev.map(t => t.id === track.id ? track : t));
+    } else {
+      setTracks(prev => [track, ...prev]);
+    }
+    setTrackFormMode("none");
+    setEditingTrack(undefined);
+  };
+
+  const deleteTrack = (id: string) => setTracks(prev => prev.filter(t => t.id !== id));
 
   const saveChallenge = (chal: ChallengeData) => {
     if (chalFormMode === "edit") {
@@ -1438,6 +1564,69 @@ const Dashboard = () => {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* TRACKS */}
+            {activeTab === "tracks" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-[13px] text-muted-foreground">Managing <span className="text-foreground font-medium">{tracks.length}</span> tracks</p>
+                  <PrimaryBtn onClick={() => { setTrackFormMode("create"); setEditingTrack(undefined); }}>
+                    <Plus className="w-3.5 h-3.5" /> Add Track
+                  </PrimaryBtn>
+                </div>
+
+                {trackFormMode !== "none" && (
+                  <TrackForm
+                    initial={editingTrack}
+                    isEdit={trackFormMode === "edit"}
+                    onSave={saveTrack}
+                    onCancel={() => { setTrackFormMode("none"); setEditingTrack(undefined); }}
+                  />
+                )}
+
+                <div className="border border-border divide-y divide-border">
+                  {tracks.map((track) => {
+                    const iconData = AVAILABLE_ICONS.find(i => i.name === track.iconName);
+                    const TrackIcon = iconData?.icon || Globe;
+                    return (
+                      <div key={track.id} className="p-5 flex items-center justify-between hover:bg-accent/30 transition-colors">
+                        <div className="flex items-center gap-4 flex-1 min-w-0">
+                          <div className="w-10 h-10 flex items-center justify-center border border-border bg-accent/30 shrink-0">
+                            <TrackIcon className="w-5 h-5 text-foreground" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-3 mb-0.5">
+                              <h4 className="text-[14px] font-bold text-foreground">{track.name}</h4>
+                              <span className="text-[10px] font-mono px-2 py-0.5 border border-border text-muted-foreground uppercase tracking-wider">/{track.slug}</span>
+                            </div>
+                            <p className="text-[12px] text-muted-foreground line-clamp-1">{track.description}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <button
+                            onClick={() => { setTrackFormMode("edit"); setEditingTrack(track); }}
+                            className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => deleteTrack(track.id)}
+                            className="p-2 text-muted-foreground hover:text-red-500 transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {tracks.length === 0 && (
+                    <div className="p-8 text-center">
+                      <p className="text-[13px] text-muted-foreground">No tracks yet. Add one to get started.</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
