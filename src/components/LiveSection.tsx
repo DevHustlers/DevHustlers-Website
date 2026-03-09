@@ -165,7 +165,7 @@ const LiveSection = () => {
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border-t border-border">
-          <CompetitionCard comp={LIVE_COMPETITIONS[0]} />
+          <CompetitionCard comp={LIVE_COMPETITIONS[1]} />
 
           {/* Live Feed */}
           <div className="bg-background group/feed">
