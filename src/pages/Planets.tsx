@@ -58,9 +58,10 @@ const Planets = () => {
           <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border border border-border">
               {PLANETS.map((planet) => (
-                <div
-                  key={planet.name}
-                  className="bg-background p-8 hover:bg-accent/30 transition-all cursor-pointer group relative"
+                <Link
+                  key={planet.slug}
+                  to={`/planets/${planet.slug}`}
+                  className="bg-background p-8 hover:bg-accent/30 transition-all group relative block"
                 >
                   <div className={`w-14 h-14 flex items-center justify-center border ${planet.borderColor} mb-6`}>
                     <planet.icon className={`w-7 h-7 ${planet.color}`} strokeWidth={1.5} />
@@ -86,10 +87,10 @@ const Planets = () => {
                     </div>
                   </div>
 
-                  <button className="inline-flex items-center gap-2 text-[13px] font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+                  <span className="inline-flex items-center gap-2 text-[13px] font-medium text-muted-foreground group-hover:text-foreground transition-colors">
                     {t("planets.explore")} <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
-                  </button>
-                </div>
+                  </span>
+                </Link>
               ))}
             </div>
           </div>
