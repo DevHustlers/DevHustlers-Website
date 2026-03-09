@@ -83,7 +83,7 @@ const Index = () => {
                 >
                   <path
                     d="M2 8C30 3 60 2 100 5C140 8 170 4 198 6"
-                    stroke="hsl(var(--foreground))"
+                    stroke="hsl(var(--muted-foreground))"
                     strokeWidth="2.5"
                     strokeLinecap="round"
                   />
