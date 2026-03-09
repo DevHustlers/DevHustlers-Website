@@ -423,6 +423,202 @@ const Dashboard = () => {
               </div>
             )}
 
+            {/* COMPETITIONS */}
+            {activeTab === "competitions" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-[13px] text-muted-foreground">
+                    Managing <span className="text-foreground font-medium">{competitions.length}</span> competitions
+                  </p>
+                  <button
+                    onClick={() => setShowNewComp(true)}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-foreground text-background text-[13px] font-medium hover:bg-foreground/90 transition-colors"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> New Competition
+                  </button>
+                </div>
+
+                {/* Create new competition form */}
+                {showNewComp && (
+                  <div className="border-2 border-foreground">
+                    <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+                      <h3 className="text-[14px] font-bold text-foreground">Create Competition</h3>
+                      <button onClick={() => setShowNewComp(false)} className="text-muted-foreground hover:text-foreground">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="p-5 space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-1.5">Title</label>
+                          <input value={newCompTitle} onChange={e => setNewCompTitle(e.target.value)} placeholder="e.g. Frontend Mastery Showdown" className="w-full h-9 px-3 bg-background border border-border text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground/40" />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-1.5">Prize</label>
+                          <input value={newCompPrize} onChange={e => setNewCompPrize(e.target.value)} placeholder="e.g. 500 pts + Gold Badge" className="w-full h-9 px-3 bg-background border border-border text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground/40" />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-1.5">Description</label>
+                        <input value={newCompDesc} onChange={e => setNewCompDesc(e.target.value)} placeholder="Brief description..." className="w-full h-9 px-3 bg-background border border-border text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground/40" />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-1.5">Scheduled Date</label>
+                          <input value={newCompDate} onChange={e => setNewCompDate(e.target.value)} placeholder="e.g. Mar 15, 2026 — 8:00 PM" className="w-full h-9 px-3 bg-background border border-border text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground/40" />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-1.5">Time per Question (s)</label>
+                          <input type="number" value={newCompTime} onChange={e => setNewCompTime(Number(e.target.value))} className="w-full h-9 px-3 bg-background border border-border text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring" />
+                        </div>
+                      </div>
+
+                      {/* Questions list */}
+                      <div className="border border-border">
+                        <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+                          <h4 className="text-[13px] font-bold text-foreground">
+                            Questions <span className="text-muted-foreground font-normal">({newCompQuestions.length})</span>
+                          </h4>
+                          <button
+                            onClick={() => setShowAddQuestion(true)}
+                            className="inline-flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            <CirclePlus className="w-3.5 h-3.5" /> Add Question
+                          </button>
+                        </div>
+
+                        {newCompQuestions.length === 0 && !showAddQuestion && (
+                          <div className="px-4 py-8 text-center">
+                            <p className="text-[13px] text-muted-foreground">No questions added yet</p>
+                          </div>
+                        )}
+
+                        {newCompQuestions.map((q, i) => (
+                          <div key={q.id} className="px-4 py-3 border-b border-border last:border-b-0 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <span className="text-[11px] font-mono text-muted-foreground w-6">Q{i + 1}</span>
+                              <div>
+                                <p className="text-[13px] font-medium text-foreground">{q.question}</p>
+                                <p className="text-[11px] text-muted-foreground font-mono">
+                                  Correct: {q.options[q.correctIndex]} · {q.timeLimit}s
+                                </p>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => setNewCompQuestions(prev => prev.filter((_, idx) => idx !== i))}
+                              className="p-1.5 text-muted-foreground hover:text-red-500 transition-colors"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ))}
+
+                        {/* Add question form */}
+                        {showAddQuestion && (
+                          <div className="p-4 bg-accent/20 space-y-3">
+                            <div>
+                              <label className="block text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-1.5">Question</label>
+                              <input value={newQ} onChange={e => setNewQ(e.target.value)} placeholder="Enter question..." className="w-full h-9 px-3 bg-background border border-border text-foreground text-[14px] focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground/40" />
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                              {newQOptions.map((opt, i) => (
+                                <div key={i} className="flex items-center gap-2">
+                                  <button
+                                    onClick={() => setNewQCorrect(i)}
+                                    className={`w-7 h-7 shrink-0 flex items-center justify-center border text-[11px] font-mono font-bold ${
+                                      newQCorrect === i
+                                        ? "border-emerald-500 bg-emerald-500 text-white"
+                                        : "border-border text-muted-foreground hover:border-foreground/40"
+                                    }`}
+                                  >
+                                    {["A", "B", "C", "D"][i]}
+                                  </button>
+                                  <input
+                                    value={opt}
+                                    onChange={e => {
+                                      const updated = [...newQOptions];
+                                      updated[i] = e.target.value;
+                                      setNewQOptions(updated);
+                                    }}
+                                    placeholder={`Option ${["A", "B", "C", "D"][i]}`}
+                                    className="w-full h-9 px-3 bg-background border border-border text-foreground text-[13px] focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground/40"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                            <p className="text-[10px] text-muted-foreground">Click A/B/C/D to mark correct answer (green = correct)</p>
+                            <div className="flex items-center gap-2">
+                              <button onClick={addQuestionToNew} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-foreground text-background text-[12px] font-medium hover:bg-foreground/90 transition-colors">
+                                <Check className="w-3 h-3" /> Add
+                              </button>
+                              <button onClick={() => setShowAddQuestion(false)} className="px-3 py-1.5 border border-border text-[12px] text-muted-foreground hover:text-foreground transition-colors">
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-2 pt-2">
+                        <button onClick={createCompetition} className="inline-flex items-center gap-2 px-6 py-2.5 bg-foreground text-background text-[13px] font-medium hover:bg-foreground/90 transition-colors">
+                          <Check className="w-3.5 h-3.5" /> Create Competition
+                        </button>
+                        <button onClick={() => setShowNewComp(false)} className="px-4 py-2.5 border border-border text-[13px] text-muted-foreground hover:text-foreground transition-colors">
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Competition list */}
+                <div className="border border-border divide-y divide-border">
+                  {competitions.map((comp) => (
+                    <div key={comp.id} className="p-5 hover:bg-accent/30 transition-colors">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-1">
+                            <h4 className="text-[14px] font-bold text-foreground">{comp.title}</h4>
+                            <span className={`text-[10px] font-mono px-2 py-0.5 border uppercase tracking-wider ${statusBadge(comp.status)}`}>
+                              {comp.status}
+                            </span>
+                          </div>
+                          <p className="text-[12px] text-muted-foreground mb-2">{comp.description}</p>
+                          <div className="flex items-center gap-4 text-[12px] text-muted-foreground font-mono">
+                            <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {comp.scheduledDate}</span>
+                            <span className="flex items-center gap-1"><Timer className="w-3 h-3" /> {comp.timePerQuestion}s/q</span>
+                            <span className="flex items-center gap-1"><Trophy className="w-3 h-3" /> {comp.prize}</span>
+                            <span>{comp.questions.length} questions</span>
+                            {comp.participants > 0 && <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {comp.participants}</span>}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {comp.status === "draft" && (
+                            <button className="p-2 text-muted-foreground hover:text-emerald-500 transition-colors" title="Go Live">
+                              <Play className="w-4 h-4" />
+                            </button>
+                          )}
+                          {comp.status === "live" && (
+                            <button className="p-2 text-muted-foreground hover:text-red-500 transition-colors" title="Stop">
+                              <StopCircle className="w-4 h-4" />
+                            </button>
+                          )}
+                          <button className="p-2 text-muted-foreground hover:text-foreground transition-colors"><Pencil className="w-4 h-4" /></button>
+                          <button className="p-2 text-muted-foreground hover:text-foreground transition-colors"><Eye className="w-4 h-4" /></button>
+                          <button
+                            onClick={() => setCompetitions(prev => prev.filter(c => c.id !== comp.id))}
+                            className="p-2 text-muted-foreground hover:text-red-500 transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* EVENTS */}
             {activeTab === "events" && (
               <div className="space-y-6">
