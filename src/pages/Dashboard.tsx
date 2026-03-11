@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
+import type { User } from "@supabase/supabase-js";
 import {
   Users, Trophy, Zap, Calendar, Settings, BarChart3,
   Plus, Search, MoreHorizontal, ArrowRight, Clock,
@@ -1216,6 +1218,44 @@ const TrackForm = ({
 
 // ─── Main Dashboard ───
 const Dashboard = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      const user = session?.user;
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+      
+      const email = user.email;
+      const role = user.user_metadata?.role;
+      
+      if (email === "o.ahmed3688@gmail.com" || role === "admin") {
+        // If it's this specific user, we still grant access. You can also run the provided SQL script to make them admin in the DB.
+        setIsAdmin(true);
+        setLoading(false);
+      } else {
+        navigate("/");
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      const user = session?.user;
+      if (!user) {
+        navigate("/login");
+      } else if (user.email !== "o.ahmed3688@gmail.com" && user.user_metadata?.role !== "admin") {
+        navigate("/");
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [navigate]);
+
   const [activeTab, setActiveTab] = useState("overview");
 
   // Users state
@@ -1354,6 +1394,15 @@ const Dashboard = () => {
     setChalFormMode("none");
     setEditingChal(undefined);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-2 border-foreground border-r-transparent animate-spin mb-4" />
+        <p className="text-[13px] font-mono text-muted-foreground uppercase tracking-widest">Verifying access</p>
+      </div>
+    );
+  }
 
   return (
     <PageTransition>

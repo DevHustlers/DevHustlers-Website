@@ -50,6 +50,7 @@ const Signup = () => {
             full_name: `${firstName} ${lastName}`,
             username,
             tracks: selectedTracks,
+            role: "user"
           }
         }
       });
