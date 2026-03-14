@@ -52,16 +52,37 @@ const Leaderboard = () => {
 
       {/* Header */}
       <section className="pt-28 sm:pt-36 pb-8 sm:pb-12">
-        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
-          <p className="text-[11px] text-muted-foreground uppercase tracking-[0.3em] font-mono mb-4">
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-6">
+          <p className="text-[12px] sm:text-[13px] font-medium text-muted-foreground mb-3 uppercase tracking-widest">
             {t("leaderboard.label")}
           </p>
-          <h1 className="text-4xl sm:text-5xl font-bold text-foreground tracking-tight mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground leading-tight tracking-tight mb-4">
             {t("leaderboard.title")}
           </h1>
-          <p className="text-muted-foreground text-lg max-w-lg">
+          <p className="text-muted-foreground text-[15px] sm:text-base md:text-lg max-w-lg">
             {t("leaderboard.desc")}
           </p>
+
+          {/* Filters */}
+          <div className="flex flex-wrap gap-2 mt-8">
+            {FILTERS.map(f => (
+              <button
+                key={f.key}
+                onClick={() => setTimeFilter(f.key)}
+                className={`px-3 py-1 text-[12px] font-medium border transition-colors ${
+                  timeFilter === f.key
+                    ? "bg-foreground text-background border-foreground"
+                    : "bg-background text-muted-foreground border-border hover:text-foreground"
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+            <div className="flex items-center gap-2 text-[11px] text-muted-foreground font-mono ms-auto">
+              <TrendingUp className="w-3.5 h-3.5" />
+              {t("leaderboard.updated")}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -70,8 +91,8 @@ const Leaderboard = () => {
       {/* Badge Tiers Legend */}
       <ScrollReveal>
         <section className="py-12 sm:py-16">
-          <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
-            <p className="text-[13px] font-mono text-muted-foreground mb-4 uppercase tracking-widest">
+          <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-6">
+            <p className="text-[12px] sm:text-[13px] font-mono text-muted-foreground mb-4 uppercase tracking-widest">
               {t("badge.title")}
             </p>
             <div className="grid grid-cols-5 gap-px bg-border border border-border">
@@ -91,28 +112,31 @@ const Leaderboard = () => {
 
       <SectionDivider />
 
-      {/* Top 3 podium */}
+      {/* Top 3 Podium */}
       <ScrollReveal>
         <section className="py-12 sm:py-16">
-          <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
+          <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-6">
+            <p className="text-[12px] sm:text-[13px] font-mono text-muted-foreground mb-4 uppercase tracking-widest">
+              {t("leaderboard.label")}
+            </p>
             <div className="grid grid-cols-3 gap-px bg-border border border-border">
               {[1, 0, 2].map((order, i) => {
                 const u = MOCK_USERS[order];
-                const heights = ["h-32", "h-40", "h-24"];
+                const heights = ["h-28", "h-36", "h-20"];
                 return (
-                  <div key={u.rank} className="bg-background p-6 flex flex-col items-center text-center">
+                  <div key={u.rank} className="bg-background p-5 sm:p-6 flex flex-col items-center text-center">
                     <RankBadge rank={u.rank} />
-                    <div className={`w-full ${heights[i]} bg-accent/50 border border-border mt-4 mb-4 flex items-end justify-center pb-3`}>
-                      <span className="font-mono text-2xl font-bold text-foreground">{u.points.toLocaleString()}</span>
+                    <div className={`w-full ${heights[i]} bg-accent/30 border border-border mt-4 mb-4 flex items-end justify-center pb-3`}>
+                      <span className="font-mono text-lg sm:text-2xl font-bold text-foreground">{u.points.toLocaleString()}</span>
                     </div>
-                    <p className="font-bold text-foreground text-[15px]">{u.name}</p>
-                    <p className="text-[12px] text-muted-foreground font-mono">{u.username}</p>
+                    <p className="font-bold text-foreground text-[14px] sm:text-[15px]">{u.name}</p>
+                    <p className="text-[11px] sm:text-[12px] text-muted-foreground font-mono">{u.username}</p>
                     <div className="mt-2">
                       <HonorBadge points={u.points} size="sm" />
                     </div>
                     <div className="flex items-center gap-1 mt-2">
                       <Star className="w-3 h-3 text-amber-500" />
-                      <span className="text-[11px] text-muted-foreground font-mono">{u.streak}d {t("leaderboard.streak")}</span>
+                      <span className="text-[10px] sm:text-[11px] text-muted-foreground font-mono">{u.streak}d {t("leaderboard.streak")}</span>
                     </div>
                   </div>
                 );
@@ -124,48 +148,21 @@ const Leaderboard = () => {
 
       <SectionDivider />
 
-      {/* Filters */}
-      <div className="border-b border-border">
-        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0 flex items-center justify-between">
-          <div className="flex items-center">
-            {FILTERS.map(f => (
-              <button
-                key={f.key}
-                onClick={() => setTimeFilter(f.key)}
-                className={`px-4 py-3 text-[13px] font-medium transition-colors ${
-                  timeFilter === f.key
-                    ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
-          <div className="flex items-center gap-2 text-[12px] text-muted-foreground font-mono">
-            <TrendingUp className="w-3.5 h-3.5" />
-            {t("leaderboard.updated")}
-          </div>
-        </div>
-      </div>
-
-      <SectionDivider />
-
       {/* Full Rankings */}
-      <ScrollReveal>
-        <section className="py-0">
-          <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-0">
-            {MOCK_USERS.map((user) => (
-              <div key={user.rank}>
-                <div className="flex items-center gap-4 sm:gap-6 py-5 px-2 hover:bg-accent/30 transition-colors cursor-pointer group bg-background">
+      <section className="pb-0">
+        {MOCK_USERS.map((user, i) => (
+          <ScrollReveal key={user.rank} delay={i * 30}>
+            <div className="group">
+              <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-6 py-5 sm:py-6 hover:bg-accent/30 transition-colors duration-300 cursor-pointer">
+                <div className="flex items-center gap-4 sm:gap-6">
                   <RankBadge rank={user.rank} />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3">
-                      <p className="font-bold text-foreground text-[15px] truncate">{user.name}</p>
+                    <div className="flex items-center gap-3 mb-0.5">
+                      <p className="font-semibold text-foreground text-[14px] sm:text-[15px] truncate">{user.name}</p>
                       <ChangeIndicator change={user.change} />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-[12px] text-muted-foreground font-mono">{user.username}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="text-[11px] sm:text-[12px] text-muted-foreground font-mono">{user.username}</p>
                       <HonorBadge points={user.points} size="sm" showLabel={true} />
                     </div>
                   </div>
@@ -177,17 +174,18 @@ const Leaderboard = () => {
                     ))}
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="font-mono font-bold text-foreground text-[16px]">{user.points.toLocaleString()}</p>
-                    <p className="text-[11px] text-muted-foreground font-mono">{user.challenges} {t("leaderboard.challenges")}</p>
+                    <p className="font-mono font-bold text-foreground text-[15px] sm:text-[16px]">{user.points.toLocaleString()}</p>
+                    <p className="text-[10px] sm:text-[11px] text-muted-foreground font-mono">{user.challenges} {t("leaderboard.challenges")}</p>
                   </div>
                 </div>
-                <SectionDivider />
               </div>
-            ))}
-          </div>
-        </section>
-      </ScrollReveal>
+              {i < MOCK_USERS.length - 1 && <SectionDivider />}
+            </div>
+          </ScrollReveal>
+        ))}
+      </section>
 
+      <SectionDivider />
       <Footer />
     </PageLayout>
   );
