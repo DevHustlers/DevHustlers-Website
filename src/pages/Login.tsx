@@ -1,17 +1,53 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import Logo from "@/components/Logo";
 import PageLayout from "@/components/PageLayout";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { supabase } from "@/lib/supabase";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const { t } = useLanguage();
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) return;
+
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error: loginError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (loginError) throw loginError;
+
+      if (data?.session) {
+         navigate('/');
+      } else {
+         setError('Login failed unexpectedly');
+      }
+    } catch (err: any) {
+      if (err.message?.toLowerCase().includes('rate limit')) {
+        setError('Email rate limit exceeded. Please wait or use a different email address. (Admins: Disable "Confirm Email" in Supabase Auth settings to bypass this during testing).');
+      } else if (err.message?.toLowerCase().includes('api key') || err.message?.toLowerCase().includes('apikey')) {
+        setError('No API key found in request. Please check your Supabase configuration and .env variables.');
+      } else {
+        setError(err.message || 'An error occurred during login');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <PageLayout>
@@ -28,7 +64,7 @@ const Login = () => {
 
         <div className="flex-1 flex items-center justify-center pt-14">
           <div className="w-full max-w-md mx-auto px-4 sm:px-6 py-16">
-            <div className="mb-10">
+            <div className="mb-8">
               <p className="text-[11px] text-muted-foreground uppercase tracking-[0.3em] font-mono mb-3">
                 {t("login.label")}
               </p>
@@ -40,7 +76,13 @@ const Login = () => {
               </p>
             </div>
 
-            <div className="space-y-5">
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-sm rounded">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleLogin} className="space-y-5">
               <div>
                 <label className="block text-[13px] font-medium text-foreground mb-2 font-mono uppercase tracking-wider">
                   {t("login.email")}
@@ -81,11 +123,11 @@ const Login = () => {
                 </div>
               </div>
 
-              <button className="w-full h-12 flex items-center justify-center gap-2 bg-foreground text-background font-medium text-[15px] hover:bg-foreground/90 transition-colors mt-2">
-                {t("login.signin")}
-                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+              <button disabled={loading} type="submit" className="w-full h-12 flex items-center justify-center gap-2 bg-foreground text-background font-medium text-[15px] hover:bg-foreground/90 transition-colors mt-2 disabled:opacity-50">
+                {loading ? "Signing in..." : t("login.signin")}
+                {!loading && <ArrowRight className="w-4 h-4 rtl:rotate-180" />}
               </button>
-            </div>
+            </form>
 
             <div className="flex items-center gap-4 my-8">
               <div className="flex-1 h-px bg-border" />

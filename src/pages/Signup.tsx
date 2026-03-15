@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Eye, EyeOff, Check } from "lucide-react";
 import Logo from "@/components/Logo";
 import PageLayout from "@/components/PageLayout";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { supabase } from "@/lib/supabase";
 
 const TRACKS = [
   "Frontend", "Backend", "Data Science", "AI / ML",
@@ -16,7 +17,63 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [selectedTracks, setSelectedTracks] = useState<string[]>([]);
   const [step, setStep] = useState<1 | 2>(1);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  
   const { t } = useLanguage();
+  const navigate = useNavigate();
+
+  const handleSignup = async () => {
+    if (!email || !password || !confirmPassword || !firstName || !lastName || !username) {
+      setError("Please fill in all fields before continuing.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    setError(null);
+    setLoading(true);
+
+    try {
+      const { data, error: signupError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: `${firstName} ${lastName}`,
+            username,
+            tracks: selectedTracks,
+            role: "user"
+          }
+        }
+      });
+
+      if (signupError) throw signupError;
+
+      if (data?.user) {
+        navigate('/');
+      } else {
+        setError('Signup failed unexpectedly');
+      }
+    } catch (err: any) {
+      if (err.message?.toLowerCase().includes('rate limit')) {
+        setError('Email rate limit exceeded. Please wait or use a different email address. (Admins: Disable "Confirm Email" in Supabase Auth settings to bypass this during testing).');
+      } else if (err.message?.toLowerCase().includes('api key') || err.message?.toLowerCase().includes('apikey')) {
+        setError('No API key found in request. Please check your Supabase configuration and .env variables.');
+      } else {
+        setError(err.message || 'An error occurred during signup');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const toggleTrack = (track: string) => {
     setSelectedTracks(prev =>
@@ -46,7 +103,7 @@ const Signup = () => {
 
             {step === 1 && (
               <>
-                <div className="mb-10">
+                <div className="mb-8">
                   <p className="text-[11px] text-muted-foreground uppercase tracking-[0.3em] font-mono mb-3">
                     {t("signup.step1")}
                   </p>
@@ -58,6 +115,12 @@ const Signup = () => {
                   </p>
                 </div>
 
+                {error && step === 1 && (
+                  <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-sm rounded">
+                    {error}
+                  </div>
+                )}
+
                 <div className="space-y-5">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -66,6 +129,8 @@ const Signup = () => {
                       </label>
                       <input
                         type="text"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
                         placeholder="John"
                         className="w-full h-12 px-4 bg-background border border-border text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
                       />
@@ -76,6 +141,8 @@ const Signup = () => {
                       </label>
                       <input
                         type="text"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                         placeholder="Doe"
                         className="w-full h-12 px-4 bg-background border border-border text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
                       />
@@ -88,6 +155,8 @@ const Signup = () => {
                     </label>
                     <input
                       type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
                       placeholder="johndoe"
                       className="w-full h-12 px-4 bg-background border border-border text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
                     />
@@ -99,6 +168,8 @@ const Signup = () => {
                     </label>
                     <input
                       type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
                       className="w-full h-12 px-4 bg-background border border-border text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
                     />
@@ -111,6 +182,8 @@ const Signup = () => {
                     <div className="relative">
                       <input
                         type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         placeholder={t("signup.password_hint")}
                         className="w-full h-12 px-4 pe-12 bg-background border border-border text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
                       />
@@ -121,6 +194,21 @@ const Signup = () => {
                       >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[13px] font-medium text-foreground mb-2 font-mono uppercase tracking-wider">
+                      Confirm Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Re-enter your password"
+                        className="w-full h-12 px-4 pe-12 bg-background border border-border text-foreground text-[15px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                      />
                     </div>
                   </div>
 
@@ -137,7 +225,7 @@ const Signup = () => {
 
             {step === 2 && (
               <>
-                <div className="mb-10">
+                <div className="mb-8">
                   <p className="text-[11px] text-muted-foreground uppercase tracking-[0.3em] font-mono mb-3">
                     {t("signup.step2")}
                   </p>
@@ -148,6 +236,12 @@ const Signup = () => {
                     {t("signup.choose_desc")}
                   </p>
                 </div>
+
+                {error && step === 2 && (
+                  <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-sm rounded">
+                    {error}
+                  </div>
+                )}
 
                 <div className="grid grid-cols-2 gap-2 mb-8">
                   {TRACKS.map((track) => {
@@ -176,9 +270,13 @@ const Signup = () => {
                   >
                     {t("signup.back")}
                   </button>
-                  <button className="flex-1 h-12 flex items-center justify-center gap-2 bg-foreground text-background font-medium text-[15px] hover:bg-foreground/90 transition-colors">
-                    {t("signup.create")}
-                    <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                  <button 
+                    disabled={loading}
+                    onClick={handleSignup} 
+                    className="flex-1 h-12 flex items-center justify-center gap-2 bg-foreground text-background font-medium text-[15px] hover:bg-foreground/90 transition-colors disabled:opacity-50"
+                  >
+                    {loading ? "Creating..." : t("signup.create")}
+                    {!loading && <ArrowRight className="w-4 h-4 rtl:rotate-180" />}
                   </button>
                 </div>
               </>
