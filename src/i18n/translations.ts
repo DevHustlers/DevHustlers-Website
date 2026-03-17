@@ -75,7 +75,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     "team.stat.1.value": "3",
     "team.stat.1.label": "Founders",
     "team.stat.2.value": "2+",
-    "team.stat.2.label": "Years building",
+    "team.stat.2.label": "Years Experience",
 
     // FAQ
     "faq.label": "FAQ",
@@ -93,12 +93,12 @@ export const translations: Record<Locale, Record<string, string>> = {
     "faq.5.a": "Senior developers with 5+ years of experience can apply to our mentorship program. We'll match you with mentees based on your expertise and availability.",
 
     // CTA
-    "cta.title.1": "Ready to build",
-    "cta.title.2": "something great",
+    "cta.title.1": "Ready For Our ",
+    "cta.title.2": "great Activities",
     "cta.desc": "Join a community of developers who care about craft, collaboration, and shipping real products.",
-    "cta.btn.1": "Get Started Free",
+    "cta.btn.1": "Get Started ",
     "cta.btn.2": "View Projects",
-    "cta.note": "No credit card required · Free forever for individuals",
+    "cta.note": "Welcome to DevHustlers",
 
     // Footer
     "footer.desc": "A modern community for developers who want to collaborate, learn, and ship.",

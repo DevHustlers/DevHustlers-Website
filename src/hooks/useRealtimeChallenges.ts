@@ -27,8 +27,33 @@ export const useRealtimeChallenges = () => {
           schema: 'public',
           table: 'challenges',
         },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ['challenges'] });
+        (payload) => {
+          console.log('Realtime event received: challenge', payload.eventType);
+          
+          if (payload.eventType === 'INSERT') {
+            const newChallenge = payload.new as Tables<'challenges'>;
+            if (!newChallenge.is_deleted) {
+              queryClient.setQueryData(['challenges'], (old: Tables<'challenges'>[] | undefined) => {
+                const list = old || [];
+                if (list.some(c => c.id === newChallenge.id)) return list;
+                return [newChallenge, ...list];
+              });
+            }
+          } else if (payload.eventType === 'UPDATE') {
+            const updatedChallenge = payload.new as Tables<'challenges'>;
+            queryClient.setQueryData(['challenges'], (old: Tables<'challenges'>[] | undefined) => {
+              const list = old || [];
+              if (updatedChallenge.is_deleted) {
+                return list.filter(c => c.id !== updatedChallenge.id);
+              }
+              return list.map(c => c.id === updatedChallenge.id ? updatedChallenge : c);
+            });
+          } else if (payload.eventType === 'DELETE') {
+            const deletedId = payload.old.id;
+            queryClient.setQueryData(['challenges'], (old: Tables<'challenges'>[] | undefined) => {
+              return (old || []).filter(c => c.id !== deletedId);
+            });
+          }
         }
       )
       .subscribe();

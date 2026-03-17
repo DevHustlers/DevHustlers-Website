@@ -2,7 +2,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { useLanguage } from "@/i18n/LanguageContext";
 import hamsaImg from "@/assets/team-hamsa.png";
 import alaaImg from "@/assets/team-alaa.png";
-import omarImg from "@/assets/team-omar.webp";
+import omarImg from "@/assets/omar.jpg";
 
 const team = [
   { name: "Hamsa Mansour", role: "Founder & CEO", bio: "Software Engineer. Visionary builder leading DevHustlers from idea to impact.", image: hamsaImg },

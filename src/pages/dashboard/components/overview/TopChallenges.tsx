@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import { Trophy, Users, ArrowRight } from "lucide-react";
-import { getChallenges } from "@/services/challenges.service";
+import { useRealtimeChallenges } from "@/hooks/useRealtimeChallenges";
 
 interface ChallengeData {
   id: string;
@@ -20,24 +19,16 @@ const statusBadge = (status: string) => {
 };
 
 export const TopChallenges = () => {
-  const [challenges, setChallenges] = useState<ChallengeData[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetch = async () => {
-      const { data, error } = await getChallenges(4);
-      if (!error && data) {
-        setChallenges(data.map(c => ({
-          id: c.id,
-          title: c.title,
-          participants: 0, // Placeholder until joins are implemented
-          status: (c.status as any) || "live"
-        })));
-      }
-      setLoading(false);
-    };
-    fetch();
-  }, []);
+  const { challenges: dbChallenges, loading } = useRealtimeChallenges();
+  
+  const challenges: ChallengeData[] = dbChallenges
+    .slice(0, 4)
+    .map(c => ({
+      id: c.id,
+      title: c.title,
+      participants: 0, // Placeholder until joins are implemented
+      status: (c.status as any) || "live"
+    }));
   return (
     <div className="group bg-background/80 backdrop-blur-sm border border-border rounded-2xl hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
       <div className="px-3 sm:px-5 py-3 sm:py-4 border-b border-border flex items-center justify-between">

@@ -14,7 +14,7 @@ export const useRealtimeCompetitions = () => {
       if (error) throw new Error(error);
       return data || [];
     },
-    staleTime: 60000, // Cache for 60 seconds as requested
+    staleTime: 60000,
   });
 
   useEffect(() => {
@@ -27,8 +27,28 @@ export const useRealtimeCompetitions = () => {
           schema: 'public',
           table: 'competitions',
         },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ['competitions'] });
+        (payload) => {
+          console.log('Realtime event received: competition', payload.eventType);
+          
+          if (payload.eventType === 'INSERT') {
+            const newComp = payload.new as Tables<'competitions'>;
+            queryClient.setQueryData(['competitions'], (old: Tables<'competitions'>[] | undefined) => {
+              const list = old || [];
+              if (list.some(c => c.id === newComp.id)) return list;
+              return [newComp, ...list];
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            const updatedComp = payload.new as Tables<'competitions'>;
+            queryClient.setQueryData(['competitions'], (old: Tables<'competitions'>[] | undefined) => {
+              const list = old || [];
+              return list.map(c => c.id === updatedComp.id ? updatedComp : c);
+            });
+          } else if (payload.eventType === 'DELETE') {
+            const deletedId = payload.old.id;
+            queryClient.setQueryData(['competitions'], (old: Tables<'competitions'>[] | undefined) => {
+              return (old || []).filter(c => c.id !== deletedId);
+            });
+          }
         }
       )
       .subscribe();

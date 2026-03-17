@@ -18,7 +18,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useRealtimeChallenges } from "@/hooks/useRealtimeChallenges";
 import { useRealtimeCompetitions } from "@/hooks/useRealtimeCompetitions";
-import { getTracks } from "@/services/tracks.service";
+import { useRealtimeTracks } from "@/hooks/useRealtimeTracks";
 import type { Tables } from "@/types/database";
 
 const difficultyColor = (d: string) => {
@@ -57,19 +57,11 @@ const Challenges = () => {
   const { t } = useLanguage();
   const { challenges, loading: challengesLoading } = useRealtimeChallenges();
   const { competitions, loading: compsLoading } = useRealtimeCompetitions();
-  const [tracks, setTracks] = useState<string[]>(["All"]);
+  const { tracks: dbTracks, loading: tracksLoading } = useRealtimeTracks();
 
-  const loading = challengesLoading || compsLoading;
+  const loading = challengesLoading || compsLoading || tracksLoading;
 
-  useEffect(() => {
-    const fetchTracks = async () => {
-      const { data } = await getTracks();
-      if (data) {
-        setTracks(["All", ...data.map((t) => t.name)]);
-      }
-    };
-    fetchTracks();
-  }, []);
+  const tracks = ["All", ...dbTracks.map((t) => t.name)];
 
   const liveComp = competitions.find(c => c.status === "live");
 

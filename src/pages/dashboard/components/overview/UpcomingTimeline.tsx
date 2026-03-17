@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import { Calendar, ArrowRight } from "lucide-react";
-import { getUpcomingEvents } from "@/services/events.service";
+import { useRealtimeEvents } from "@/hooks/useRealtimeEvents";
 
 interface EventData {
   id: string;
@@ -24,24 +23,17 @@ const statusBadge = (status: string) => {
 };
 
 export const UpcomingTimeline = () => {
-  const [events, setEvents] = useState<EventData[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetch = async () => {
-      const { data, error } = await getUpcomingEvents(5);
-      if (!error && data) {
-        setEvents(data.map(e => ({
-          id: e.id,
-          title: e.title,
-          date: e.date || "",
-          status: (e.status as any) || "upcoming"
-        })));
-      }
-      setLoading(false);
-    };
-    fetch();
-  }, []);
+  const { events: dbEvents, loading } = useRealtimeEvents();
+  
+  const events: EventData[] = dbEvents
+    .filter(e => ["upcoming", "live", "scheduled", "draft"].includes(e.status || ""))
+    .map(e => ({
+      id: e.id,
+      title: e.title,
+      date: e.date || "",
+      status: (e.status as any) || "upcoming"
+    }))
+    .slice(0, 5);
   return (
     <div className="group bg-background/80 backdrop-blur-sm border border-border rounded-2xl hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
       <div className="px-3 sm:px-5 py-3 sm:py-4 border-b border-border flex items-center justify-between">

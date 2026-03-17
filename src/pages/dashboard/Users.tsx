@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Plus } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import { BottomDrawer } from "./components/BottomDrawer";
@@ -7,7 +7,8 @@ import { PrimaryBtn } from "./components/ui/PrimaryBtn";
 import { UserForm } from "./components/UserForm";
 import { UserCard } from "./components/UserCard";
 import { UserDetail } from "./components/UserDetail";
-import { getUsers, updateUserRoleAndPoints, deleteUser as deleteUserService } from "@/services/users.service";
+import { updateUserRoleAndPoints, deleteUser as deleteUserService } from "@/services/users.service";
+import { useRealtimeUsers } from "@/hooks/useRealtimeUsers";
 import type { Tables } from "@/types/database";
 
 interface UserData {
@@ -44,46 +45,28 @@ const mapUserDataToProfileUpdate = (user: UserData) => ({
 
 export default function Users() {
   const { t } = useLanguage();
-  const [users, setUsers] = useState<UserData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { users: dbUsers, loading } = useRealtimeUsers();
   const [userFormMode, setUserFormMode] = useState<"none" | "create" | "edit">("none");
   const [editingUser, setEditingUser] = useState<UserData | undefined>();
   const [viewingUser, setViewingUser] = useState<UserData | null>(null);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
-    setLoading(true);
-    const { data, error } = await getUsers();
-    if (!error && data) {
-      setUsers(data.map(mapProfileToUserData));
-    }
-    setLoading(false);
-  };
+  const users = dbUsers.map(mapProfileToUserData);
 
   const saveUser = async (user: UserData) => {
     if (userFormMode === "edit") {
       const { error } = await updateUserRoleAndPoints(user.id, mapUserDataToProfileUpdate(user));
-      if (!error) {
-        setUsers((prev) => prev.map((u) => (u.id === user.id ? user : u)));
-      }
+      // Realtime hook will handle the UI update
     } else {
       // In a real app, you'd call a createUserService here. 
-      // Profiles are usually created via Auth signup, so maybe we just update local state or log?
-      // For now, let's just update local state since createProfile might need an Auth user.
-      setUsers((prev) => [user, ...prev]);
+      // Profiles are usually created via Auth signup.
     }
     setUserFormMode("none");
     setEditingUser(undefined);
   };
 
   const deleteUser = async (id: string) => {
-    const { error } = await deleteUserService(id);
-    if (!error) {
-      setUsers((prev) => prev.filter((u) => u.id !== id));
-    }
+    await deleteUserService(id);
+    // Realtime hook will handle the UI update
   };
 
   return (

@@ -123,13 +123,15 @@ const Index = () => {
               className="flex flex-col sm:flex-row gap-3 animate-fade-up"
               style={{ animationDelay: "0.24s", opacity: 0 }}
             >
+              <a href="https://chat.whatsapp.com/Gm7LE9bGpFvLT8997CWEOP" target="_blank">
               <button className="inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:py-3 bg-foreground text-background font-medium hover:bg-foreground/90 transition-colors text-[16px] w-full sm:w-auto">
-                {t("hero.cta.join")}
+                 {t("hero.cta.join")}
                 <ArrowRight className="w-4 h-4 rtl:rotate-180" />
               </button>
-              <button className="inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:py-3 border border-border text-foreground font-medium hover:bg-accent transition-colors text-[16px] w-full sm:w-auto">
+              </a>
+              {/* <button className="inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:py-3 border border-border text-foreground font-medium hover:bg-accent transition-colors text-[16px] w-full sm:w-auto">
                 {t("hero.cta.explore")}
-              </button>
+              </button> */}
             </div>
           </div>
 

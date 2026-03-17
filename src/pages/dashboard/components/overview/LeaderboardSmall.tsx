@@ -1,30 +1,14 @@
-import { useEffect, useState } from "react";
 import { Flame, ArrowRight } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { useRealtimeLeaderboard } from "@/hooks/useRealtimeLeaderboard";
 
 export const LeaderboardSmall = () => {
-  const [users, setUsers] = useState<{ name: string; points: number; streak: number }[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchTopUsers = async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('full_name, points')
-        .order('points', { ascending: false })
-        .limit(4);
-
-      if (!error && data) {
-        setUsers(data.map(u => ({
-          name: u.full_name || "Anonymous",
-          points: u.points || 0,
-          streak: 0 // Placeholder
-        })));
-      }
-      setLoading(false);
-    };
-    fetchTopUsers();
-  }, []);
+  const { leaderboard: dbLeaderboard, loading } = useRealtimeLeaderboard(4);
+  
+  const users = dbLeaderboard.map(u => ({
+    name: u.full_name || u.name || "Anonymous",
+    points: u.points || 0,
+    streak: 0 // Placeholder
+  }));
   return (
     <div className="group bg-background/80 backdrop-blur-sm border border-border rounded-2xl hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
       <div className="px-3 sm:px-5 py-3 sm:py-4 border-b border-border flex items-center justify-between">
