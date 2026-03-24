@@ -415,18 +415,21 @@ export const hostStartQuestion = async (competitionId: string, index: number) =>
       .upsert({ 
           competition_id: competitionId, 
           current_question_index: index, 
-          status: 'question_live',
+          status: 'countdown',
           updated_at: new Date().toISOString()
       }, { onConflict: 'competition_id' })
       .select()
       .single();
 };
 
+export const hostTriggerQuestion = async (competitionId: string) => 
+  updateCompetitionState(competitionId, { status: 'question_live' });
+
 export const hostRevealAnswer = async (competitionId: string) => 
   updateCompetitionState(competitionId, { status: 'answer_revealed' });
 
 export const hostNextQuestion = async (competitionId: string, nextIndex: number, isLast: boolean) => {
-    const status = isLast ? 'results' : 'waiting';
+    const status = isLast ? 'results' : 'countdown';
     return updateCompetitionState(competitionId, { 
       current_question_index: nextIndex, 
       status 

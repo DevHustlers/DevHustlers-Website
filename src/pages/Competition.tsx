@@ -19,7 +19,7 @@ import Footer from "@/components/Footer";
 import PageLayout from "@/components/PageLayout";
 import SectionDivider from "@/components/SectionDivider";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { getCompetitionById, hostStartQuestion, hostRevealAnswer, hostNextQuestion, startCompetitionSession } from "@/services/competitions.service";
+import { getCompetitionById, hostStartQuestion, hostRevealAnswer, hostNextQuestion, startCompetitionSession, hostTriggerQuestion } from "@/services/competitions.service";
 import { useCompetitionSession } from "@/hooks/useCompetitionSession";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
@@ -134,8 +134,8 @@ const Competition = () => {
           setCompetition((prev) => (prev ? { ...prev, status: newStatus } : null));
 
           if (newStatus === 'live' && phase === 'lobby') {
-            toast.info("Competition session is active!");
-            startSession().then(() => setPhase('countdown'));
+            toast.info("Session initialized!");
+            startSession();
           } else if (newStatus === 'ended') {
             setPhase('results');
           }
@@ -151,9 +151,9 @@ const Competition = () => {
   useEffect(() => {
     if (!id) return;
     
-    // Initial Host State
-    import("@/services/competitions.service").then(s => {
-        s.getCompetitionState(id).then(res => setHostState(res.data));
+    // Initial Host State retrieval
+    supabase.from('competition_states').select('*').eq('competition_id', id).maybeSingle().then(res => {
+        if (res.data) setHostState(res.data);
     });
 
     const hostChan = supabase
@@ -177,17 +177,20 @@ const Competition = () => {
     };
   }, [id]);
 
+  // Phase Transition Management
   useEffect(() => {
     if (!hostState || loading || !isJoined) return;
 
-    // Sync current question index from host
+    // Index synchronization
     if (dbIndex !== hostState.current_question_index) {
         setCurrentIndex(hostState.current_question_index);
-        setSelectedAnswer(null); // Reset local selection for new question
+        setSelectedAnswer(null); 
     }
 
-    // Sync phase to host state
-    if (hostState.status === 'question_live') {
+    // Role-based state machine
+    if (hostState.status === 'countdown') {
+        if (phase !== 'countdown') setPhase('countdown');
+    } else if (hostState.status === 'question_live') {
         if (phase !== 'question') setPhase('question');
     } else if (hostState.status === 'answer_revealed') {
         if (phase !== 'reveal') setPhase("reveal");
@@ -198,15 +201,31 @@ const Competition = () => {
     }
   }, [hostState, phase, loading, isJoined, dbIndex, setCurrentIndex]);
 
+  // Countdown Logic (3-2-1)
+  useEffect(() => {
+    if (phase !== "countdown") return;
+    setCountdownVal(3);
+    const interval = setInterval(() => {
+      setCountdownVal((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          // If current user is host, push session to question_live state automatically
+          if (isAdmin) {
+             hostTriggerQuestion(id!);
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [phase, isAdmin, id]);
+
   useEffect(() => {
     if (loading || !competition) return;
 
     if (competition.status === 'live' && phase === 'lobby' && !isSessionCompleted && isJoined) {
-        const goLive = async () => {
-          await startSession();
-          // We WAIT for host state for question-specific phases
-        }
-        goLive();
+        startSession();
     }
   }, [competition, loading, phase, isSessionCompleted, startSession, isJoined]);
 
@@ -223,8 +242,6 @@ const Competition = () => {
     }
   }, [phase]);
 
-  // Automatic state changes are disabled. Everything is Host-driven.
-
   const handleAnswer = (index: number) => {
     if (selectedAnswer !== null || phase !== "question") return;
     setSelectedAnswer(index);
@@ -235,19 +252,12 @@ const Competition = () => {
     const points = isCorrect ? (q.points || 100) + timeBonus : 0;
     setScore((prev) => prev + points);
     handleNext(index.toString());
-    // We stay in "question" phase locally until hostState changes or we show a local wait
   };
 
   const handleTextSubmit = () => {
     if (!textAnswer.trim() || phase !== "question") return;
     handleNext(textAnswer);
     setTextAnswer("");
-  };
-
-  const nextPhase = () => {
-    if (isAdmin) {
-       // Admin triggers next via host control
-    }
   };
 
   const currentHostIndex = hostState?.current_question_index || 0;
@@ -311,11 +321,8 @@ const Competition = () => {
                          <button 
                            onClick={async () => {
                              const { error } = await startCompetitionSession(id!);
-                             if (error) {
-                               toast.error(error);
-                             } else {
-                               toast.success("Competition started successfully! You are the host.");
-                             }
+                             if (error) toast.error(error);
+                             else toast.success("Session activated.");
                            }}
                            className="px-8 py-3 bg-foreground text-background font-bold rounded-xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-foreground/20 uppercase tracking-widest text-[12px] flex items-center gap-2"
                          >
@@ -344,7 +351,7 @@ const Competition = () => {
                          <div className="text-center">
                            <p className="text-lg font-bold text-foreground mb-1">{isAdmin ? "Session Host Terminal" : "Connected to Host"}</p>
                            <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground animate-pulse">
-                              {isAdmin ? "Use the command bar below to start Question 1" : `Waiting for Host to transmit question ${(currentHostIndex || 0) + 1}...`}
+                              {isAdmin ? "Use the command bar below to transmit question #1" : `Waiting for Host to transmit question ${(currentHostIndex || 0) + 1}...`}
                            </p>
                          </div>
                       </div>
@@ -371,6 +378,15 @@ const Competition = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {phase === "countdown" && (
+           <div className="max-w-3xl mx-auto flex flex-col items-center justify-center py-40 animate-in fade-in zoom-in-95">
+              <div className="text-[120px] font-black text-primary font-mono tabular-nums animate-pulse drop-shadow-[0_0_30px_rgba(var(--primary),0.3)]">
+                {countdownVal}
+              </div>
+              <p className="text-muted-foreground font-mono uppercase tracking-[0.3em] font-bold">Synchronizing Question Stream...</p>
+           </div>
         )}
 
         {phase === "question" && (
@@ -504,6 +520,13 @@ const Competition = () => {
                </button>
              )}
              
+             {hostState?.status === 'countdown' && (
+               <div className="px-6 py-2.5 bg-accent/20 border border-primary/20 rounded-xl flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-primary animate-ping" />
+                  <span className="text-[10px] font-mono text-primary uppercase font-black">Question Stream Priming...</span>
+               </div>
+             )}
+
              {hostState?.status === 'question_live' && (
                <button 
                 onClick={() => hostRevealAnswer(id!)}
