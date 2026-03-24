@@ -71,20 +71,17 @@ export const createCompetition = async (
   data: TablesInsert<'competitions'>
 ): Promise<ServiceResponse<Tables<'competitions'>>> => {
   try {
-    // 1. Sanitize input
     const sanitizedData = {
       ...data,
       title: data.title?.trim(),
       description: data.description?.trim(),
     };
 
-    // 2. Validate with schema
     const validation = competitionSchema.safeParse(sanitizedData);
     if (!validation.success) {
       return { data: null, error: validation.error.errors[0].message };
     }
 
-    // 3. Prevent overlapping live competitions (if this one is live)
     if (sanitizedData.status === 'live') {
       const { data: liveComps } = await supabase
         .from('competitions')
@@ -104,6 +101,23 @@ export const createCompetition = async (
       .single();
 
     if (error) throw error;
+
+    // Sync questions table if provided in jsonb
+    if (sanitizedData.questions && Array.isArray(sanitizedData.questions)) {
+      const qRows = sanitizedData.questions.map((q: any, i: number) => ({
+        competition_id: result.id,
+        question: q.question,
+        options: q.options,
+        correct_answer: q.correctIndex?.toString(),
+        type: q.type || 'mcq',
+        time_limit: q.timeLimit || result.time_per_question,
+        points: q.points || 100,
+        order_index: i,
+        requires_manual_review: q.type === 'text' || q.requires_manual_review === true
+      }));
+      await supabase.from('questions').insert(qRows);
+    }
+
     return { data: result, error: null };
   } catch (error: any) {
     console.error('Error in createCompetition:', error.message);
@@ -116,26 +130,23 @@ export const updateCompetition = async (
   data: TablesUpdate<'competitions'>
 ): Promise<ServiceResponse<Tables<'competitions'>>> => {
   try {
-    // 1. Sanitize input
     const sanitizedData = {
       ...data,
       title: data.title?.trim(),
       description: data.description?.trim(),
     };
 
-    // 2. Validate partial data with schema
     const validation = competitionSchema.partial().safeParse(sanitizedData);
     if (!validation.success) {
       return { data: null, error: validation.error.errors[0].message };
     }
 
-    // 3. Prevent overlapping live competitions (if this one is updated to live)
     if (sanitizedData.status === 'live') {
       const { data: liveComps } = await supabase
         .from('competitions')
         .select('id')
         .eq('status', 'live')
-        .neq('id', id) // Exclude current competition
+        .neq('id', id)
         .maybeSingle();
 
       if (liveComps) {
@@ -151,6 +162,25 @@ export const updateCompetition = async (
       .single();
 
     if (error) throw error;
+
+    // Sync questions table if provided
+    if (sanitizedData.questions && Array.isArray(sanitizedData.questions)) {
+      // Delete old and insert new (simplest sync)
+      await supabase.from('questions').delete().eq('competition_id', id);
+      const qRows = sanitizedData.questions.map((q: any, i: number) => ({
+        competition_id: id,
+        question: q.question,
+        options: q.options,
+        correct_answer: q.correctIndex?.toString(),
+        type: q.type || 'mcq',
+        time_limit: q.timeLimit || result.time_per_question,
+        points: q.points || 100,
+        order_index: i,
+        requires_manual_review: q.type === 'text' || q.requires_manual_review === true
+      }));
+      await supabase.from('questions').insert(qRows);
+    }
+
     return { data: result, error: null };
   } catch (error: any) {
     console.error('Error in updateCompetition:', error.message);
@@ -164,6 +194,173 @@ export const deleteCompetition = async (id: string): Promise<ServiceResponse<nul
     return { data: null, error: null };
   } catch (error: any) {
     console.error('Error in deleteCompetition:', error.message);
+    return { data: null, error: error.message };
+  }
+};
+export const getCompetitionQuestions = async (competitionId: string): Promise<ServiceResponse<any[]>> => {
+  try {
+    const { data, error } = await supabase
+      .from('questions')
+      .select('*')
+      .eq('competition_id', competitionId)
+      .order('order_index', { ascending: true });
+
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error: any) {
+    console.error('Error in getCompetitionQuestions:', error.message);
+    return { data: null, error: error.message };
+  }
+};
+
+export const startCompetition = async (id: string): Promise<ServiceResponse<any>> => {
+  return updateCompetition(id, { 
+    status: 'live',
+    start_date: new Date().toISOString()
+  } as any);
+};
+
+export const endCompetition = async (id: string): Promise<ServiceResponse<any>> => {
+  return updateCompetition(id, { 
+    status: 'ended',
+    end_date: new Date().toISOString()
+  } as any);
+};
+
+export const joinCompetition = async (competitionId: string): Promise<ServiceResponse<any>> => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User not authenticated');
+
+    // Check if already attempted
+    const { data: existing } = await supabase
+      .from('submissions')
+      .select('id, completed_at')
+      .eq('competition_id', competitionId)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (existing) {
+      return { data: existing, error: 'You have already attempted this competition' };
+    }
+
+    const { data, error } = await supabase
+      .from('submissions')
+      .insert({
+        competition_id: competitionId,
+        user_id: user.id,
+        started_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error: any) {
+    console.error('Error in joinCompetition:', error.message);
+    return { data: null, error: error.message };
+  }
+};
+
+export const submitAnswer = async (payload: {
+  submission_id: string;
+  question_id: string;
+  answer: string;
+  is_correct?: boolean;
+  points_awarded?: number;
+}): Promise<ServiceResponse<any>> => {
+  try {
+    const { data, error } = await supabase
+      .from('answers')
+      .upsert({
+        ...payload,
+        is_reviewed: payload.is_correct !== undefined
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error: any) {
+    console.error('Error in submitAnswer:', error.message);
+    return { data: null, error: error.message };
+  }
+};
+
+export const completeSubmission = async (submissionId: string, finalScore: number): Promise<ServiceResponse<any>> => {
+  try {
+    const { data, error } = await supabase
+      .from('submissions')
+      .update({
+        completed_at: new Date().toISOString(),
+        score: finalScore
+      })
+      .eq('id', submissionId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error: any) {
+    console.error('Error in completeSubmission:', error.message);
+    return { data: null, error: error.message };
+  }
+};
+
+export const getReviewableAnswers = async (): Promise<ServiceResponse<any[]>> => {
+  try {
+    const { data, error } = await supabase
+      .from('answers')
+      .select('*, questions(*), submissions(profiles(full_name, username))')
+      .eq('is_reviewed', false)
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error: any) {
+    console.error('Error in getReviewableAnswers:', error.message);
+    return { data: null, error: error.message };
+  }
+};
+
+export const reviewAnswer = async (
+  answerId: string, 
+  isCorrect: boolean, 
+  points: number, 
+  feedback?: string
+): Promise<ServiceResponse<any>> => {
+  try {
+    // 1. Update the answer
+    const { data: answer, error: answerErr } = await supabase
+      .from('answers')
+      .update({
+        is_correct: isCorrect,
+        points_awarded: points,
+        feedback,
+        is_reviewed: true
+      })
+      .eq('id', answerId)
+      .select('submission_id')
+      .single();
+
+    if (answerErr) throw answerErr;
+
+    // 2. Recalculate submission score
+    const { data: allAnswers } = await supabase
+      .from('answers')
+      .select('points_awarded')
+      .eq('submission_id', answer?.submission_id);
+
+    const newTotal = (allAnswers || []).reduce((sum, a) => sum + (a.points_awarded || 0), 0);
+
+    await supabase
+      .from('submissions')
+      .update({ score: newTotal })
+      .eq('id', answer?.submission_id);
+
+    return { data: answer, error: null };
+  } catch (error: any) {
+    console.error('Error in reviewAnswer:', error.message);
     return { data: null, error: error.message };
   }
 };

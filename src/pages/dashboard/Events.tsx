@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import {
   Plus,
   Pencil,
@@ -40,19 +41,22 @@ interface EventData {
 }
 
 // Helper to map DB event to UI EventData
-const mapDBEventToEventData = (e: Tables<'events'>): EventData => ({
-  id: e.id,
-  title: e.title,
-  description: e.description || "",
-  date: e.date || "",
-  time: e.time || "",
-  location: e.location || "",
-  type: (e.type as any) || "workshop",
-  status: (e.status as any) || "upcoming",
-  capacity: e.capacity || 0,
-  registered: 0, // In a real app, you'd join with registrations
-  link: e.event_link || "",
-});
+const mapDBEventToEventData = (e: any, existingEvents: EventData[] = []): EventData => {
+  const existing = existingEvents.find(item => item.id === e.id);
+  return {
+    id: e.id,
+    title: e.title,
+    description: e.description || "",
+    date: e.date || "",
+    time: e.time || "",
+    location: e.location || "",
+    type: (e.type as any) || "workshop",
+    status: (e.status as any) || "upcoming",
+    capacity: e.capacity || 0,
+    registered: e.registered_count ?? existing?.registered ?? 0,
+    link: e.event_link || "",
+  };
+};
 
 const statusBadge = (status: string) => {
   const map: Record<string, string> = {
@@ -92,13 +96,32 @@ export default function Events() {
 
   useEffect(() => {
     fetchEvents();
+
+    // Real-time subscription for events and attendees
+    const eventsChannel = supabase
+      .channel('dashboard-events-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'events' },
+        () => fetchEvents()
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'event_attendees' },
+        () => fetchEvents()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(eventsChannel);
+    };
   }, []);
 
   const fetchEvents = async () => {
     setLoading(true);
     const { data, error } = await getEvents();
     if (!error && data) {
-      setEvents(data.map(mapDBEventToEventData));
+      setEvents(data.map((e) => mapDBEventToEventData(e)));
     }
     setLoading(false);
   };
@@ -135,7 +158,7 @@ export default function Events() {
       if (eventFormMode === "edit") {
         const { data, error } = await updateEvent(event.id, dbPayload);
         if (!error && data) {
-          setEvents((prev) => prev.map((e) => (e.id === event.id ? mapDBEventToEventData(data) : e)));
+          setEvents((prev) => prev.map((e) => (e.id === event.id ? mapDBEventToEventData(data, prev) : e)));
           toast.success("Event updated successfully");
           setEventFormMode("none");
           setEditingEvent(undefined);
@@ -145,7 +168,7 @@ export default function Events() {
       } else {
         const { data, error } = await createEvent(dbPayload as any);
         if (!error && data) {
-          setEvents((prev) => [mapDBEventToEventData(data), ...prev]);
+          setEvents((prev) => [mapDBEventToEventData(data, prev), ...prev]);
           toast.success("Event created successfully");
           setEventFormMode("none");
           setEditingEvent(undefined);
@@ -169,7 +192,7 @@ export default function Events() {
       const { data, error } = await updateEvent(id, { status: newStatus });
       if (!error && data) {
         setEvents((prev) =>
-          prev.map((e) => (e.id === id ? mapDBEventToEventData(data) : e)),
+          prev.map((e) => (e.id === id ? mapDBEventToEventData(data, prev) : e)),
         );
         toast.success(`Event status marked as ${newStatus}`);
       } else {

@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Play, Clock, Users, Trophy, Calendar, ArrowRight,
-  Flame, Zap, Star, ChevronRight, MapPin, Sparkles, Timer
+  ChevronRight, MapPin, Sparkles, Timer
 } from "lucide-react";
 import { useRealtimeCompetitions } from "@/hooks/useRealtimeCompetitions";
 import { useRealtimeEvents } from "@/hooks/useRealtimeEvents";
+import { useEventAttendance } from "@/hooks/useEventAttendance";
+import { useLanguage } from "@/i18n/LanguageContext";
 import type { Tables } from "@/types/database";
 
 const NEWS_FEED: any[] = [];
@@ -110,7 +112,44 @@ const CompetitionCard = ({ comp }: { comp: Tables<'competitions'> }) => {
   );
 };
 
+const EventItem = ({ event }: { event: Tables<'events'> }) => {
+  const { attending, count, toggleAttendance } = useEventAttendance(event.id);
+
+  return (
+    <div className="px-6 sm:px-7 py-5 hover:bg-accent/40 transition-colors duration-300 group/event">
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <h4 className="text-[15px] font-semibold text-foreground">{event.title}</h4>
+          <span className="text-[10px] font-mono px-1.5 py-0.5 border border-border text-muted-foreground uppercase tracking-wider">{event.type}</span>
+        </div>
+        <button
+          onClick={toggleAttendance}
+          className={`px-3 py-1.5 text-[11px] font-mono font-bold uppercase tracking-wider transition-all duration-300 ${
+            attending 
+              ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/40" 
+              : "bg-foreground text-background hover:bg-foreground/90"
+          }`}
+        >
+          {attending ? "Going ✅" : "Join Network"}
+        </button>
+      </div>
+      <div className="flex flex-wrap items-center gap-3 text-[13px] text-muted-foreground font-mono">
+        <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {event.date}</span>
+        <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {event.time}</span>
+      </div>
+      <div className="flex flex-wrap items-center gap-3 text-[13px] text-muted-foreground font-mono mt-1">
+        <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {event.location}</span>
+        <span className="flex items-center gap-1 text-foreground transition-colors">
+          <Users className={`w-3 h-3 ${attending ? "text-emerald-500" : ""}`} /> 
+          <span className="font-bold">{count}</span> developers are going
+        </span>
+      </div>
+    </div>
+  );
+};
+
 const LiveSection = () => {
+  const { t } = useLanguage();
   const { competitions, loading: compsLoading } = useRealtimeCompetitions();
   const { events, loading: eventsLoading } = useRealtimeEvents();
 
@@ -172,14 +211,6 @@ const LiveSection = () => {
                   <div
                     key={item.id}
                     className="group/feeditem px-6 sm:px-7 py-4 flex items-start gap-3 hover:bg-accent/40 transition-all duration-300"
-                    onMouseEnter={(e) => {
-                      const icon = e.currentTarget.querySelector('svg');
-                      if (icon) icon.style.color = item.hoverColor;
-                    }}
-                    onMouseLeave={(e) => {
-                      const icon = e.currentTarget.querySelector('svg');
-                      if (icon) icon.style.color = '';
-                    }}
                   >
                     <item.icon className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground transition-colors duration-300" strokeWidth={1.5} />
                     <div className="min-w-0">
@@ -211,20 +242,7 @@ const LiveSection = () => {
             <div className="divide-y divide-border">
               {upcomingEvents.length > 0 ? (
                 upcomingEvents.map(event => (
-                  <div key={event.id} className="px-6 sm:px-7 py-5 hover:bg-accent/40 transition-colors duration-300">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <h4 className="text-[15px] font-semibold text-foreground">{event.title}</h4>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 border border-border text-muted-foreground uppercase tracking-wider">{event.type}</span>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-3 text-[13px] text-muted-foreground font-mono">
-                      <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {event.date}</span>
-                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {event.time}</span>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-3 text-[13px] text-muted-foreground font-mono mt-1">
-                      <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {event.location}</span>
-                      <span className="flex items-center gap-1"><Users className="w-3 h-3" /> 0/{event.capacity}</span>
-                    </div>
-                  </div>
+                  <EventItem key={event.id} event={event} />
                 ))
               ) : (
                 <div className="p-12 text-center text-muted-foreground font-mono text-[12px]">NO_UPCOMING_EVENTS</div>

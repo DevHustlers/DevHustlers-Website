@@ -1,42 +1,37 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, Navigate } from "react-router-dom";
 import {
   Trophy,
   Users,
   Timer,
   ArrowRight,
-  Shield,
   Zap,
   CheckCircle2,
   XCircle,
-  Play,
   Award,
   Clock,
   Crown,
   Medal,
   Star,
-  ChevronRight,
 } from "lucide-react";
-import { Navigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageLayout from "@/components/PageLayout";
 import SectionDivider from "@/components/SectionDivider";
-import ScrollReveal from "@/components/ScrollReveal";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { getCompetitionById } from "@/services/competitions.service";
-import { useParams } from "react-router-dom";
+import { useCompetitionSession } from "@/hooks/useCompetitionSession";
 import type { Tables } from "@/types/database";
 
 type CompetitionType = Tables<"competitions">;
 
-// Fallback structures if DB is empty
 const DEFAULT_QUESTIONS = [
   {
-    id: 1,
-    question: "Select a competition from the dashboard to see questions.",
-    options: ["Option A", "Option B", "Option C", "Option D"],
-    correctIndex: 0,
+    id: "1",
+    question: "Loading competition questions...",
+    options: ["...", "...", "...", "..."],
+    correct_answer: "0",
+    points: 100,
   },
 ];
 
@@ -53,132 +48,119 @@ const Competition = () => {
   const [competition, setCompetition] = useState<CompetitionType | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const {
+    questions: dbQuestions,
+    currentQuestion: dbQuestion,
+    currentIndex: dbIndex,
+    submission,
+    loading: sessionLoading,
+    timeLeft,
+    completed: isSessionCompleted,
+    startSession,
+    handleNext,
+  } = useCompetitionSession(id || "");
+
   useEffect(() => {
     const fetchCompetition = async () => {
       if (!id) return;
       const { data } = await getCompetitionById(id);
-      if (data) {
-        setCompetition(data);
-      }
+      if (data) setCompetition(data);
       setLoading(false);
     };
     fetchCompetition();
   }, [id]);
 
-  const questions = (competition?.questions as any[]) || DEFAULT_QUESTIONS;
-  const timePerQuestion = competition?.time_per_question || 15;
-  const maxParticipants = 100; // Default if not in schema
-
   const [phase, setPhase] = useState<Phase>("lobby");
-  const [currentQ, setCurrentQ] = useState(0);
-  const [timer, setTimer] = useState(timePerQuestion);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [score, setScore] = useState(0);
-  const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [countdownVal, setCountdownVal] = useState(3);
   const [participants, setParticipants] = useState(DEFAULT_PARTICIPANTS);
   const [lobbyCount, setLobbyCount] = useState(1);
 
-  // Simulate lobby participants joining
+  const questions = dbQuestions.length > 0 ? dbQuestions : DEFAULT_QUESTIONS;
+  const timePerQuestion = dbQuestion?.time_limit || competition?.time_per_question || 15;
+  const maxParticipants = 100;
+
   useEffect(() => {
-    if (phase !== "lobby") return;
-    const interval = setInterval(() => {
-      setLobbyCount((prev) => Math.min(prev + Math.floor(Math.random() * 3) + 1, maxParticipants));
-    }, 1500);
-    return () => clearInterval(interval);
+    if (isSessionCompleted) setPhase("results");
+  }, [isSessionCompleted]);
+
+  useEffect(() => {
+    if (phase === "lobby") {
+      const interval = setInterval(() => {
+        setLobbyCount((prev) => Math.min(prev + Math.floor(Math.random() * 3) + 1, maxParticipants));
+      }, 1500);
+      return () => clearInterval(interval);
+    }
   }, [phase, maxParticipants]);
 
-  // Countdown phase
   useEffect(() => {
-    if (phase !== "countdown") return;
-    setCountdownVal(3);
-    const interval = setInterval(() => {
-      setCountdownVal((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          setPhase("question");
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
+    if (phase === "countdown") {
+      setCountdownVal(3);
+      const interval = setInterval(() => {
+        setCountdownVal((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setPhase("question");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    }
   }, [phase]);
 
-  // Question timer - handleTimeUp must be defined first
-  const handleTimeUp = useCallback(() => {
-    if (selectedAnswer === null) {
-      setAnswers((prev) => [...prev, null]);
-    }
-    // Simulate other participants' scores
-    setParticipants((prev) =>
-      prev.map((p) => ({
-        ...p,
-        score: p.isYou
-          ? p.score
-          : p.score + (Math.random() > 0.35 ? Math.floor(Math.random() * 80) + 50 : 0),
-      }))
-    );
-    setPhase("reveal");
-  }, [selectedAnswer]);
-
   useEffect(() => {
-    if (phase !== "question") return;
-    setTimer(timePerQuestion);
-    const interval = setInterval(() => {
-      setTimer((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          handleTimeUp();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [phase, currentQ, timePerQuestion, handleTimeUp]);
+    if (phase === "question" && timeLeft === 0 && !isSessionCompleted) {
+        setPhase("reveal");
+    }
+  }, [phase, timeLeft, isSessionCompleted]);
 
+  const [textAnswer, setTextAnswer] = useState("");
 
   const handleAnswer = (index: number) => {
     if (selectedAnswer !== null || phase !== "question") return;
     setSelectedAnswer(index);
-    const isCorrect = index === questions[currentQ].correctIndex;
-    const timeBonus = Math.floor(timer * 7);
-    const points = isCorrect ? 100 + timeBonus : 0;
+    const q = questions[dbIndex];
+    const isCorrect = index.toString() === q.correct_answer;
+    const timeBonus = Math.floor((timeLeft || 0) * 7);
+    const points = isCorrect ? (q.points || 100) + timeBonus : 0;
     setScore((prev) => prev + points);
-    setAnswers((prev) => [...prev, index]);
-    // Update your score in participants
-    setParticipants((prev) =>
-      prev.map((p) =>
-        p.isYou ? { ...p, score: p.score + points } : {
-          ...p,
-          score: p.score + (Math.random() > 0.35 ? Math.floor(Math.random() * 80) + 50 : 0),
-        }
-      )
-    );
+    handleNext(index.toString());
     setTimeout(() => setPhase("reveal"), 800);
   };
 
-  const nextQuestion = () => {
-    if (currentQ + 1 >= questions.length) {
+  const handleTextSubmit = () => {
+    if (!textAnswer.trim() || phase !== "question") return;
+    setScore((prev) => prev + 0); // No points yet for manual review
+    handleNext(textAnswer);
+    setTimeout(() => {
+        setPhase("reveal");
+        setTextAnswer("");
+    }, 800);
+  };
+
+  const nextPhase = () => {
+    if (dbIndex + 1 >= questions.length) {
       setPhase("results");
     } else {
-      setCurrentQ((prev) => prev + 1);
       setSelectedAnswer(null);
       setPhase("question");
     }
   };
 
-  const startCompetition = () => {
+  const startComp = async () => {
+    await startSession();
     setPhase("countdown");
   };
 
   const sortedParticipants = [...participants].sort((a, b) => b.score - a.score);
   const yourRank = sortedParticipants.findIndex((p) => p.isYou) + 1;
-  const question = questions[currentQ];
-  const timerPercent = (timer / timePerQuestion) * 100;
+  const question = questions[dbIndex] || DEFAULT_QUESTIONS[0];
+  const timerPercent = ((timeLeft || 0) / timePerQuestion) * 100;
 
-  if (loading) {
+  if (loading || sessionLoading) {
     return (
       <PageLayout>
         <Navbar />
@@ -190,19 +172,14 @@ const Competition = () => {
     );
   }
 
-  const currentComp = competition;
-  const currentQuestions = questions;
-
-  if (!currentComp) return <Navigate to="/challenges" replace />;
+  if (!competition) return <Navigate to="/challenges" replace />;
 
   return (
     <PageLayout>
       <Navbar />
-
       <div className="min-h-[80vh] pt-20">
-        {/* LOBBY */}
         {phase === "lobby" && (
-          <div className="max-w-3xl mx-auto px-4 sm:px-8 py-16">
+          <div className="max-w-3xl mx-auto px-4 py-16">
             <div className="text-center mb-12">
               <div className="inline-flex items-center gap-2 px-3 py-1 border border-border text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-6">
                 <span className="relative flex h-2 w-2">
@@ -211,479 +188,136 @@ const Competition = () => {
                 </span>
                 Live Competition
               </div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight mb-4">
-                {currentComp.title}
-              </h1>
-              <p className="text-muted-foreground text-[15px] max-w-lg mx-auto mb-8">
-                {currentComp.description}
-              </p>
-
-              <div className="grid grid-cols-3 gap-px bg-border border border-border max-w-md mx-auto mb-10">
-                <div className="bg-background p-4 text-center">
-                  <p className="font-mono font-bold text-foreground text-lg">{currentQuestions.length}</p>
-                  <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-wider">Questions</p>
-                </div>
-                <div className="bg-background p-4 text-center">
-                  <p className="font-mono font-bold text-foreground text-lg">{timePerQuestion}s</p>
-                  <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-wider">Per Question</p>
-                </div>
-                <div className="bg-background p-4 text-center">
-                  <p className="font-mono font-bold text-foreground text-lg">{currentComp.prize || "pts"}</p>
-                  <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-wider">Prize</p>
-                </div>
+              <h1 className="text-3xl font-bold text-foreground tracking-tight mb-4">{competition.title}</h1>
+              <p className="text-muted-foreground text-[15px] max-w-lg mx-auto mb-8">{competition.description}</p>
+              <div className="grid grid-cols-3 gap-px bg-border border border-border max-w-md mx-auto mb-10 text-center">
+                <div className="bg-background p-4"><p className="font-bold text-lg">{questions.length}</p><p className="text-[10px] uppercase font-mono text-muted-foreground">Questions</p></div>
+                <div className="bg-background p-4"><p className="font-bold text-lg">{timePerQuestion}s</p><p className="text-[10px] uppercase font-mono text-muted-foreground">Time Limit</p></div>
+                <div className="bg-background p-4"><p className="font-bold text-lg">{competition.prize || "pts"}</p><p className="text-[10px] uppercase font-mono text-muted-foreground">Prize</p></div>
               </div>
             </div>
-
-            {/* Waiting room */}
-            <div className="border border-border mb-8">
-              <div className="px-5 py-4 border-b border-border flex items-center justify-between">
-                <h3 className="text-[14px] font-bold text-foreground">Waiting Room</h3>
-                <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
-                  <Users className="w-4 h-4" />
-                  <span className="font-mono font-bold text-foreground">{lobbyCount}</span> / {maxParticipants}
-                </div>
+            <div className="border border-border mb-8 p-5">
+              <h3 className="text-[14px] font-bold mb-4">Waiting Room ({lobbyCount}/{maxParticipants})</h3>
+              <div className="flex flex-wrap gap-2">
+                {participants.map((p, i) => (
+                  <div key={i} className={`w-10 h-10 flex items-center justify-center border text-[11px] font-bold font-mono ${p.isYou ? "bg-foreground text-background" : "bg-accent text-muted-foreground"}`}>{p.avatar}</div>
+                ))}
               </div>
-              <div className="p-5">
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {participants.slice(0, 8).map((p, i) => (
-                    <div
-                      key={i}
-                      className={`w-10 h-10 flex items-center justify-center border text-[11px] font-bold font-mono ${
-                        p.isYou
-                          ? "border-foreground bg-foreground text-background"
-                          : "border-border bg-accent text-muted-foreground"
-                      }`}
-                    >
-                      {p.avatar}
-                    </div>
-                  ))}
-                  {lobbyCount > 8 && (
-                    <div className="w-10 h-10 flex items-center justify-center border border-border text-[10px] font-mono text-muted-foreground">
-                      +{lobbyCount - 8}
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Waiting for host to start...
-                </div>
-              </div>
+              <p className="text-[12px] text-muted-foreground mt-4 animate-pulse">Waiting for session to sync...</p>
             </div>
-
             <div className="text-center">
-              <button
-                onClick={startCompetition}
-                className="inline-flex items-center gap-3 px-8 py-3 bg-foreground text-background text-[14px] font-medium hover:bg-foreground/90 transition-colors"
-              >
+              <button onClick={startComp} className="px-8 py-3 bg-foreground text-background text-[14px] font-medium hover:bg-foreground/90 transition-all flex items-center gap-2 mx-auto">
                 <Zap className="w-4 h-4" /> Start Competition
               </button>
             </div>
           </div>
         )}
 
-        {/* COUNTDOWN */}
         {phase === "countdown" && (
           <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center">
-              <p className="text-[13px] text-muted-foreground font-mono uppercase tracking-widest mb-6">Get Ready!</p>
-              <div className="w-32 h-32 border-2 border-foreground flex items-center justify-center mx-auto mb-6">
-                <span className="text-6xl font-bold text-foreground font-mono animate-pulse">{countdownVal}</span>
-              </div>
-              <p className="text-[14px] text-muted-foreground">
-                Question {currentQ + 1} of {currentQuestions.length}
-              </p>
+            <div className="text-center font-mono">
+              <p className="text-[13px] text-muted-foreground uppercase tracking-widest mb-6">Get Ready!</p>
+              <div className="w-32 h-32 border-2 border-foreground flex items-center justify-center mx-auto mb-6 text-6xl font-bold animate-bounce">{countdownVal}</div>
+              <p className="text-muted-foreground">Question {dbIndex + 1} of {questions.length}</p>
             </div>
           </div>
         )}
 
-        {/* QUESTION */}
         {phase === "question" && (
-          <div className="max-w-3xl mx-auto px-4 sm:px-8 py-8">
-            {/* Header bar */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <span className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest">
-                  Q{currentQ + 1}/{currentQuestions.length}
-                </span>
-                <div className="flex items-center gap-1.5 text-[13px] font-mono">
-                  <Zap className="w-3.5 h-3.5 text-amber-500" />
-                  <span className="font-bold text-foreground">{score}</span>
-                  <span className="text-muted-foreground">pts</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Timer className={`w-4 h-4 ${timer <= 5 ? "text-red-500" : "text-muted-foreground"}`} />
-                <span className={`font-mono font-bold text-lg ${timer <= 5 ? "text-red-500" : "text-foreground"}`}>
-                  {timer}s
-                </span>
+          <div className="max-w-3xl mx-auto px-4 py-8">
+            <div className="flex items-center justify-between mb-6 font-mono">
+              <span className="text-[11px] text-muted-foreground uppercase tracking-widest">Q{dbIndex + 1}/{questions.length}</span>
+              <div className="flex items-center gap-4">
+                <span className="text-[13px] font-bold"><Zap className="inline w-3.5 h-3.5 text-amber-500 mr-1" />{score} pts</span>
+                <span className={`text-lg font-bold ${(timeLeft || 0) <= 5 ? "text-red-500 animate-pulse" : ""}`}><Timer className="inline w-4 h-4 mr-1" />{timeLeft}s</span>
               </div>
             </div>
-
-            {/* Timer bar */}
-            <div className="w-full h-1 bg-border mb-10">
-              <div
-                className={`h-full transition-all duration-1000 ease-linear ${
-                  timer <= 5 ? "bg-red-500" : timer <= 10 ? "bg-amber-500" : "bg-emerald-500"
-                }`}
-                style={{ width: `${timerPercent}%` }}
-              />
-            </div>
-
-            {/* Question */}
-            <div className="text-center mb-10">
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground leading-snug">
-                {question.question}
-              </h2>
-            </div>
-
-            {/* Options */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {question.options.map((option, i) => {
-                const labels = ["A", "B", "C", "D"];
-                const isSelected = selectedAnswer === i;
-                return (
-                  <button
-                    key={i}
-                    onClick={() => handleAnswer(i)}
-                    disabled={selectedAnswer !== null}
-                    className={`p-5 border text-left transition-all flex items-start gap-4 group ${
-                      isSelected
-                        ? "border-foreground bg-accent"
-                        : "border-border hover:border-foreground/40 hover:bg-accent/30"
-                    } ${selectedAnswer !== null && !isSelected ? "opacity-50" : ""}`}
-                  >
-                    <span className={`w-8 h-8 shrink-0 flex items-center justify-center border font-mono font-bold text-[13px] ${
-                      isSelected
-                        ? "border-foreground bg-foreground text-background"
-                        : "border-border text-muted-foreground group-hover:border-foreground/40"
-                    }`}>
-                      {labels[i]}
-                    </span>
-                    <span className={`text-[14px] font-medium pt-1 ${
-                      isSelected ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"
-                    }`}>
-                      {option}
-                    </span>
+            <div className="w-full h-1 bg-border mb-10 overflow-hidden"><div className={`h-full transition-all duration-1000 linear ${ (timeLeft || 0) <= 5 ? "bg-red-500" : "bg-emerald-500"}`} style={{ width: `${timerPercent}%` }} /></div>
+            <h2 className="text-xl sm:text-2xl font-bold text-center mb-10">{question.question}</h2>
+            {/* Options or Text Input */}
+            {question.type === "text" ? (
+              <div className="space-y-4 animate-in fade-in duration-500">
+                <textarea
+                  value={textAnswer}
+                  onChange={(e) => setTextAnswer(e.target.value)}
+                  placeholder="Type your answer here..."
+                  className="w-full h-40 bg-background border border-border rounded-xl p-4 text-[15px] focus:border-primary/50 focus:ring-1 focus:ring-primary/20 outline-none transition-all"
+                />
+                <button
+                  onClick={handleTextSubmit}
+                  disabled={!textAnswer.trim()}
+                  className="w-full py-4 bg-foreground text-background font-bold rounded-xl hover:bg-foreground/90 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                >
+                  Submit Answer <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {(question.options || []).map((opt: string, i: number) => (
+                  <button key={i} onClick={() => handleAnswer(i)} disabled={selectedAnswer !== null} className={`p-5 border text-left flex gap-4 transition-all ${selectedAnswer === i ? "border-foreground bg-accent" : "border-border hover:bg-accent/50 disabled:opacity-50"}`}>
+                    <span className="w-8 h-8 flex items-center justify-center border font-bold text-[13px]">{String.fromCharCode(65 + i)}</span>
+                    <span className="font-medium pt-1">{opt}</span>
                   </button>
-                );
-              })}
-            </div>
-
-            {/* Participants answering */}
-            <div className="mt-8 flex items-center justify-center gap-2 text-[12px] text-muted-foreground">
-              <Users className="w-3.5 h-3.5" />
-              <span>{Math.floor(lobbyCount * 0.7 + Math.random() * lobbyCount * 0.2)} answering...</span>
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
-        {/* REVEAL */}
         {phase === "reveal" && (
-          <div className="max-w-3xl mx-auto px-4 sm:px-8 py-8">
-            <div className="flex items-center justify-between mb-6">
-              <span className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest">
-                Q{currentQ + 1}/{currentQuestions.length} — Results
-              </span>
-              <div className="flex items-center gap-1.5 text-[13px] font-mono">
-                <Zap className="w-3.5 h-3.5 text-amber-500" />
-                <span className="font-bold text-foreground">{score}</span>
-                <span className="text-muted-foreground">pts</span>
+          <div className="max-w-3xl mx-auto px-4 py-8">
+            <h2 className="text-lg font-bold text-center mb-8">{question.question}</h2>
+            
+            {question.type === "text" ? (
+              <div className="bg-primary/5 border border-primary/20 rounded-2xl p-8 text-center mb-8 animate-in zoom-in-95 duration-500">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Clock className="w-8 h-8 text-primary animate-pulse" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-2">Manual Review Pending</h3>
+                <p className="text-muted-foreground text-[14px] max-w-sm mx-auto">
+                  Your answer has been submitted and will be reviewed by our judges soon. Points will be awarded after verification.
+                </p>
               </div>
-            </div>
-
-            <SectionDivider />
-
-            <div className="text-center my-8">
-              <h2 className="text-lg sm:text-xl font-bold text-foreground mb-4">
-                {question.question}
-              </h2>
-            </div>
-
-            {/* Options with correct/incorrect */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-              {question.options.map((option, i) => {
-                const labels = ["A", "B", "C", "D"];
-                const isCorrect = i === question.correctIndex;
-                const wasSelected = selectedAnswer === i;
-                const wasWrong = wasSelected && !isCorrect;
-
-                return (
-                  <div
-                    key={i}
-                    className={`p-5 border flex items-start gap-4 ${
-                      isCorrect
-                        ? "border-emerald-500 bg-emerald-500/5"
-                        : wasWrong
-                        ? "border-red-500 bg-red-500/5"
-                        : "border-border opacity-50"
-                    }`}
-                  >
-                    <span className={`w-8 h-8 shrink-0 flex items-center justify-center border font-mono font-bold text-[13px] ${
-                      isCorrect
-                        ? "border-emerald-500 bg-emerald-500 text-white"
-                        : wasWrong
-                        ? "border-red-500 bg-red-500 text-white"
-                        : "border-border text-muted-foreground"
-                    }`}>
-                      {isCorrect ? <CheckCircle2 className="w-4 h-4" /> : wasWrong ? <XCircle className="w-4 h-4" /> : labels[i]}
-                    </span>
-                    <span className={`text-[14px] font-medium pt-1 ${
-                      isCorrect ? "text-emerald-500" : wasWrong ? "text-red-500" : "text-muted-foreground"
-                    }`}>
-                      {option}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Result message */}
-            <div className="text-center mb-8">
-              {selectedAnswer === question.correctIndex ? (
-                <div className="inline-flex items-center gap-2 px-4 py-2 border border-emerald-500/30 bg-emerald-500/5 text-emerald-500 text-[14px] font-medium">
-                  <CheckCircle2 className="w-4 h-4" /> Correct! +{100 + Math.floor((answers.length > 0 ? timer : 0) * 7)} pts
-                </div>
-              ) : selectedAnswer === null ? (
-                <div className="inline-flex items-center gap-2 px-4 py-2 border border-border text-muted-foreground text-[14px] font-medium">
-                  <Clock className="w-4 h-4" /> Time's up! No answer selected
-                </div>
-              ) : (
-                <div className="inline-flex items-center gap-2 px-4 py-2 border border-red-500/30 bg-red-500/5 text-red-500 text-[14px] font-medium">
-                  <XCircle className="w-4 h-4" /> Incorrect! +0 pts
-                </div>
-              )}
-            </div>
-
-            {/* Quick standings */}
-            <div className="border border-border mb-8">
-              <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-                <h3 className="text-[13px] font-bold text-foreground">Current Standings</h3>
-                <span className="text-[11px] font-mono text-muted-foreground">Your rank: #{yourRank}</span>
-              </div>
-              <div className="divide-y divide-border">
-                {sortedParticipants.slice(0, 5).map((p, i) => (
-                  <div key={i} className={`px-5 py-3 flex items-center justify-between ${p.isYou ? "bg-accent/50" : ""}`}>
-                    <div className="flex items-center gap-3">
-                      <span className="text-[12px] font-mono font-bold text-muted-foreground w-6">{i + 1}</span>
-                      <div className={`w-7 h-7 flex items-center justify-center border text-[10px] font-bold font-mono ${
-                        p.isYou ? "border-foreground bg-foreground text-background" : "border-border text-muted-foreground"
-                      }`}>
-                        {p.avatar}
-                      </div>
-                      <span className={`text-[13px] font-medium ${p.isYou ? "text-foreground" : "text-muted-foreground"}`}>
-                        {p.name} {p.isYou && "(You)"}
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                {(question.options || []).map((opt: string, i: number) => {
+                  const isCorrect = i.toString() === question.correct_answer;
+                  const isSelected = selectedAnswer === i;
+                  return (
+                    <div key={i} className={`p-5 border flex gap-4 ${isCorrect ? "border-emerald-500 bg-emerald-500/5" : isSelected ? "border-red-500 bg-red-500/5 opacity-80" : "border-border opacity-50"}`}>
+                      <span className={`w-8 h-8 flex items-center justify-center border font-bold ${isCorrect ? "bg-emerald-500 text-white" : isSelected ? "bg-red-500 text-white" : ""}`}>
+                        {isCorrect ? <CheckCircle2 className="w-4 h-4" /> : isSelected ? <XCircle className="w-4 h-4" /> : String.fromCharCode(65 + i)}
                       </span>
+                      <span className={isCorrect ? "text-emerald-500 font-bold" : isSelected ? "text-red-500" : ""}>{opt}</span>
                     </div>
-                    <span className="font-mono font-bold text-[13px] text-foreground">{p.score}</span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
-            </div>
-
+            )}
             <div className="text-center">
-              <button
-                onClick={nextQuestion}
-                className="inline-flex items-center gap-3 px-8 py-3 bg-foreground text-background text-[14px] font-medium hover:bg-foreground/90 transition-colors"
-              >
-                {currentQ + 1 >= currentQuestions.length ? (
-                  <>
-                    <Trophy className="w-4 h-4" /> See Final Results
-                  </>
-                ) : (
-                  <>
-                    Next Question <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
+              <button onClick={nextPhase} className="px-8 py-3 bg-foreground text-background font-medium hover:bg-foreground/90 transition-all flex items-center gap-2 mx-auto uppercase tracking-wider text-[12px]">
+                {dbIndex + 1 >= questions.length ? "Finish Competition" : "Next Question"} <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
         )}
 
-        {/* RESULTS */}
         {phase === "results" && (
-          <div className="max-w-3xl mx-auto px-4 sm:px-8 py-12">
-            <div className="text-center mb-12">
-              <Trophy className="w-12 h-12 text-amber-500 mx-auto mb-4" />
-              <h1 className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight mb-2">
-                Competition Complete!
-              </h1>
-              <p className="text-muted-foreground text-[15px]">
-                {currentComp.title} — Final Results
-              </p>
+          <div className="max-w-3xl mx-auto px-4 py-12 text-center">
+            <Trophy className="w-16 h-16 text-amber-500 mx-auto mb-6" />
+            <h1 className="text-3xl font-bold mb-2">Competition Complete!</h1>
+            <p className="text-muted-foreground mb-8">Final Stats for {competition.title}</p>
+            <div className="border-2 border-foreground p-8 mb-10 flex justify-around font-mono">
+              <div><p className="text-muted-foreground text-[10px] uppercase mb-1">Score</p><p className="text-4xl font-bold">{score}</p></div>
+              <div><p className="text-muted-foreground text-[10px] uppercase mb-1">Rank</p><p className="text-4xl font-bold">#{yourRank}</p></div>
             </div>
-
-            {/* Your result card */}
-            <div className="border-2 border-foreground p-6 mb-8">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-2">
-                    Your Result
-                  </p>
-                  <p className="text-3xl font-bold text-foreground font-mono">
-                    {score}{" "}
-                    <span className="text-[14px] text-muted-foreground font-normal">
-                      points
-                    </span>
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest mb-2">
-                    Rank
-                  </p>
-                  <p className="text-3xl font-bold text-foreground font-mono">
-                    #{yourRank}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 pt-4 border-t border-border flex items-center gap-6 text-[13px] text-muted-foreground">
-                <span>
-                  <span className="font-mono font-bold text-emerald-500">
-                    {
-                      answers.filter(
-                        (a, i) => a === currentQuestions[i].correctIndex,
-                      ).length
-                    }
-                  </span>{" "}
-                  / {currentQuestions.length} correct
-                </span>
-                <span>
-                  Accuracy:{" "}
-                  <span className="font-mono font-bold text-foreground">
-                    {Math.round(
-                      (answers.filter(
-                        (a, i) => a === currentQuestions[i].correctIndex,
-                      ).length /
-                        currentQuestions.length) *
-                        100,
-                    )}
-                    %
-                  </span>
-                </span>
-              </div>
-            </div>
-
-            {/* Top 3 podium */}
-            <div className="grid grid-cols-3 gap-px bg-border border border-border mb-8">
-              {sortedParticipants.slice(0, 3).map((p, i) => {
-                const medals = [
-                  { icon: Crown, color: "text-amber-500", label: "1st Place" },
-                  { icon: Medal, color: "text-zinc-400", label: "2nd Place" },
-                  { icon: Medal, color: "text-amber-700", label: "3rd Place" },
-                ];
-                const m = medals[i];
-                return (
-                  <div
-                    key={i}
-                    className={`bg-background p-6 text-center ${
-                      p.isYou ? "bg-accent/30" : ""
-                    }`}
-                  >
-                    <m.icon className={`w-8 h-8 ${m.color} mx-auto mb-3`} />
-                    <div
-                      className={`w-12 h-12 mx-auto flex items-center justify-center border font-mono font-bold text-[14px] mb-3 ${
-                        p.isYou
-                          ? "border-foreground bg-foreground text-background"
-                          : "border-border text-muted-foreground bg-accent"
-                      }`}
-                    >
-                      {p.avatar}
-                    </div>
-                    <p className="text-[14px] font-bold text-foreground mb-1">
-                      {p.name} {p.isYou && "🎉"}
-                    </p>
-                    <p className="text-[11px] text-muted-foreground font-mono">
-                      {m.label}
-                    </p>
-                    <p className="font-mono font-bold text-foreground text-lg mt-2">
-                      {p.score}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground font-mono">
-                      points
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Full leaderboard */}
-            <div className="border border-border mb-8">
-              <div className="px-5 py-4 border-b border-border">
-                <h3 className="text-[14px] font-bold text-foreground">
-                  Full Leaderboard
-                </h3>
-              </div>
-              <div className="divide-y divide-border">
-                {sortedParticipants.map((p, i) => (
-                  <div
-                    key={i}
-                    className={`px-5 py-4 flex items-center justify-between ${
-                      p.isYou ? "bg-accent/30" : ""
-                    }`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <span
-                        className={`text-[14px] font-mono font-bold w-8 ${
-                          i === 0
-                            ? "text-amber-500"
-                            : i === 1
-                              ? "text-zinc-400"
-                              : i === 2
-                                ? "text-amber-700"
-                                : "text-muted-foreground"
-                        }`}
-                      >
-                        #{i + 1}
-                      </span>
-                      <div
-                        className={`w-9 h-9 flex items-center justify-center border text-[11px] font-bold font-mono ${
-                          p.isYou
-                            ? "border-foreground bg-foreground text-background"
-                            : "border-border text-muted-foreground bg-accent"
-                        }`}
-                      >
-                        {p.avatar}
-                      </div>
-                      <div>
-                        <p
-                          className={`text-[14px] font-medium ${
-                            p.isYou ? "text-foreground" : "text-muted-foreground"
-                          }`}
-                        >
-                          {p.name} {p.isYou && "(You)"}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="font-mono font-bold text-foreground text-[15px]">
-                        {p.score}
-                      </span>
-                      <span className="text-[11px] text-muted-foreground font-mono">
-                        pts
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center gap-4">
-              <button
-                onClick={() => navigate("/challenges")}
-                className="inline-flex items-center gap-2 px-6 py-3 border border-border text-[14px] font-medium text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
-              >
-                Back to Challenges
-              </button>
-              <button
-                onClick={() => navigate("/leaderboard")}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background text-[14px] font-medium hover:bg-foreground/90 transition-colors"
-              >
-                <Trophy className="w-4 h-4" /> View Leaderboard
-              </button>
+            <div className="flex justify-center gap-4">
+              <button onClick={() => navigate("/challenges")} className="px-8 py-3 border border-border text-muted-foreground hover:text-foreground">Exit</button>
+              <button onClick={() => navigate("/leaderboard")} className="px-8 py-3 bg-foreground text-background flex items-center gap-2"><Trophy className="w-4 h-4" /> Leaderboard</button>
             </div>
           </div>
         )}
       </div>
-
       <SectionDivider />
       <Footer />
     </PageLayout>

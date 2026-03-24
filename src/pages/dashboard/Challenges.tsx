@@ -4,7 +4,7 @@ import PageTransition from "@/components/PageTransition";
 import { ChallengeForm } from "./components/ChallengeForm";
 import { BottomDrawer } from "./components/BottomDrawer";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { getChallenges, createChallenge, updateChallenge } from "@/services/challenges.service";
+import { getChallenges, createChallenge, updateChallenge, deleteChallenge } from "@/services/challenges.service";
 import { toast } from "sonner";
 import type { Tables } from "@/types/database";
 
@@ -125,6 +125,24 @@ export default function Challenges() {
           prev.map((c) => (c.id === id ? mapDBChallengeToChallengeData(data) : c)),
         );
         toast.success(`Challenge marked as ${newStatus}`);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteChallenge = async (id: string, title: string) => {
+    if (isSubmitting) return;
+    if (!window.confirm(`Are you sure you want to delete "${title}"?`)) return;
+
+    setIsSubmitting(true);
+    try {
+      const { error } = await deleteChallenge(id);
+      if (!error) {
+        setChallenges((prev) => prev.filter((c) => c.id !== id));
+        toast.success("Challenge deleted successfully");
+      } else {
+        toast.error("Failed to delete challenge");
       }
     } finally {
       setIsSubmitting(false);
@@ -273,11 +291,13 @@ export default function Challenges() {
                     <Eye className="w-3.5 h-4 group-hover/btn:scale-110 transition-transform" />
                   </button>
                   <button
-                    onClick={() =>
-                      setChallenges((prev) => prev.filter((x) => x.id !== c.id))
-                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteChallenge(c.id, c.title);
+                    }}
                     disabled={isSubmitting}
                     className="p-1.5 sm:p-2 text-muted-foreground hover:text-red-500 transition-colors disabled:opacity-50"
+                    title="Delete Challenge"
                   >
                     <Trash2 className="w-3.5 h-4" />
                   </button>

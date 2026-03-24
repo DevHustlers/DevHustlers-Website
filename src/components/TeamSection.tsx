@@ -11,7 +11,7 @@ const team = [
     role: "Founder & CEO", 
     bio: "Frontend Developer. Visionary builder leading DevHustlers from idea to impact.", 
     image: hamsaImg,
-    socials: { github: "#", linkedin: "#", x: "#", instagram: "#", facebook: "#" }
+    socials: { github: "#", linkedin: "https://www.linkedin.com/in/hamsa-mansour?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app", x: "https://x.com/hamsamansour11?s=21&t=R1hLlWjZUJM8jzdAS0hTnA", instagram: "#", facebook: "https://www.facebook.com/share/1CSABrXx7A/?mibextid=wwXIfr" }
   },
   { 
     name: "Alaa El-Samouly", 
@@ -72,7 +72,6 @@ const TeamSection = () => {
                   <a href={team[0].socials.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-all duration-300 transform hover:scale-110" title="GitHub"><FaGithub className="w-3.5 h-3.5" /></a>
                   <a href={team[0].socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-[#0077b5] transition-all duration-300 transform hover:scale-110" title="LinkedIn"><FaLinkedin className="w-3.5 h-3.5" /></a>
                   <a href={team[0].socials.x} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-all duration-300 transform hover:scale-110" title="X (Formerly Twitter)"><FaXTwitter className="w-3.5 h-3.5" /></a>
-                  <a href={team[0].socials.instagram} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-[#e4405f] transition-all duration-300 transform hover:scale-110" title="Instagram"><FaInstagram className="w-3.5 h-3.5" /></a>
                   <a href={team[0].socials.facebook} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-[#1877f2] transition-all duration-300 transform hover:scale-110" title="Facebook"><FaFacebook className="w-3.5 h-3.5" /></a>
                 </div>
               </div>

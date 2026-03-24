@@ -12,10 +12,12 @@ import {
   Timer,
   Trophy,
   Users,
+  UserCheck,
 } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import { CompetitionForm } from "./components/CompetitionForm";
 import { BottomDrawer } from "./components/BottomDrawer";
+import { ManualReview } from "./components/ManualReview";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { getCompetitions, createCompetition, updateCompetition, deleteCompetition } from "@/services/competitions.service";
 import { toast } from "sonner";
@@ -89,6 +91,7 @@ export default function Competitions() {
   );
   const [editingComp, setEditingComp] = useState<CompetitionData | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReview, setShowReview] = useState(false);
 
   useEffect(() => {
     fetchCompetitions();
@@ -208,13 +211,21 @@ export default function Competitions() {
       <div className="space-y-6">
         <div className="bg-background/80 backdrop-blur-md border border-border/50 rounded-2xl p-4 md:p-6 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
-          <p className="text-[12px] sm:text-[13px] text-muted-foreground">
-            {t("dash.managing")}{" "}
-            <span className="text-foreground font-medium">
-              {competitions.length}
-            </span>{" "}
-            {t("dash.competitions")}
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-[12px] sm:text-[13px] text-muted-foreground">
+              {t("dash.managing")}{" "}
+              <span className="text-foreground font-medium">
+                {competitions.length}
+              </span>{" "}
+              {t("dash.competitions")}
+            </p>
+            <button 
+              onClick={() => setShowReview(true)}
+              className="px-3 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-xl text-[11px] font-bold uppercase tracking-wider hover:bg-primary hover:text-white transition-all flex items-center gap-1.5"
+            >
+              <UserCheck className="w-3.5 h-3.5" /> Review Submissions
+            </button>
+          </div>
           <PrimaryBtn
             onClick={() => {
               setCompFormMode("create");
@@ -334,6 +345,14 @@ export default function Competitions() {
             </div>
           ))}
         </div>
+
+        <BottomDrawer
+          open={showReview}
+          onClose={() => setShowReview(false)}
+          title="Manual Review Queue"
+        >
+          <ManualReview />
+        </BottomDrawer>
 
         <BottomDrawer
           open={compFormMode !== "none"}

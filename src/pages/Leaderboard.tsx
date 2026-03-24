@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Trophy,
   Medal,
@@ -66,27 +66,37 @@ const ChangeIndicator = ({ change }: { change: number }) => {
   );
 };
 
-const UserRow = ({ user }: { user: LeaderboardUser }) => {
+const UserRow = ({ user, isCurrentUser }: { user: LeaderboardUser; isCurrentUser?: boolean }) => {
   const { t } = useLanguage();
+  const hasFullName = !!user.full_name;
+  
   return (
     <div className="flex items-center gap-4 sm:gap-6">
-      <RankBadge rank={user.rank} />
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-3 mb-0.5">
-          <p className="font-semibold text-foreground text-[14px] sm:text-[15px] truncate">
-            {user.full_name || user.username || "Anonymous"}
-          </p>
-          <ChangeIndicator change={0} />
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <p className="text-[11px] sm:text-[12px] text-muted-foreground font-mono">
-            @{user.username || "user"}
-          </p>
-          <HonorBadge points={user.points || 0} size="sm" showLabel={true} />
+      <div className="flex-1 min-w-0 flex items-center gap-4 sm:gap-6">
+        <RankBadge rank={user.rank} />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-3 mb-0.5">
+            <p className="font-semibold text-foreground text-[14px] sm:text-[15px] truncate">
+              {user.full_name || user.username || "Anonymous"}
+              {isCurrentUser && (
+                <span className="ms-2 text-[10px] font-mono text-primary uppercase tracking-tighter">
+                  (YOU)
+                </span>
+              )}
+            </p>
+            <ChangeIndicator change={0} />
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            {hasFullName && (
+              <p className="text-[11px] sm:text-[12px] text-muted-foreground font-mono">
+                @{user.username || "user"}
+              </p>
+            )}
+            <HonorBadge points={user.points || 0} size="sm" showLabel={true} />
+          </div>
         </div>
       </div>
       <div className="hidden sm:flex items-center gap-1 flex-wrap justify-end max-w-[200px]">
-        {/* Mock tracks since not in schema */}
         <span className="text-[10px] font-mono px-2 py-0.5 border border-border text-muted-foreground">
           Member
         </span>
@@ -106,7 +116,16 @@ const UserRow = ({ user }: { user: LeaderboardUser }) => {
 const Leaderboard = () => {
   const [timeFilter, setTimeFilter] = useState("all_time");
   const { t } = useLanguage();
-  const { leaderboard, loading } = useRealtimeLeaderboard(50);
+  const { leaderboard, loading } = useRealtimeLeaderboard(20);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    import("@/lib/supabase").then(({ supabase }) => {
+      supabase.auth.getSession().then(({ data }) => {
+        setCurrentUserId(data.session?.user?.id || null);
+      });
+    });
+  }, []);
 
   const FILTERS = [
     { key: "all_time", label: t("leaderboard.all_time") },
@@ -195,9 +214,11 @@ const Leaderboard = () => {
                 <p className="font-semibold text-foreground text-[13px] sm:text-[15px] text-center truncate max-w-full">
                   {second?.full_name || second?.username || "---"}
                 </p>
-                <p className="text-[10px] sm:text-[11px] text-muted-foreground font-mono mt-0.5">
-                  @{second?.username || "user"}
-                </p>
+                {second?.full_name && (
+                  <p className="text-[10px] sm:text-[11px] text-muted-foreground font-mono mt-0.5">
+                    @{second?.username || "user"}
+                  </p>
+                )}
                 <p className="font-mono font-bold text-foreground text-[14px] sm:text-[16px] mt-2">
                   {(second?.points || 0).toLocaleString()}
                 </p>
@@ -227,9 +248,11 @@ const Leaderboard = () => {
                 <p className="font-semibold text-foreground text-[14px] sm:text-[16px] text-center truncate max-w-full">
                   {first?.full_name || first?.username || "---"}
                 </p>
-                <p className="text-[10px] sm:text-[11px] text-muted-foreground font-mono mt-0.5">
-                  @{first?.username || "user"}
-                </p>
+                {first?.full_name && (
+                  <p className="text-[10px] sm:text-[11px] text-muted-foreground font-mono mt-0.5">
+                    @{first?.username || "user"}
+                  </p>
+                )}
                 <p className="font-mono font-bold text-foreground text-[16px] sm:text-[18px] mt-2">
                   {(first?.points || 0).toLocaleString()}
                 </p>
@@ -256,9 +279,11 @@ const Leaderboard = () => {
                 <p className="font-semibold text-foreground text-[13px] sm:text-[15px] text-center truncate max-w-full">
                   {third?.full_name || third?.username || "---"}
                 </p>
-                <p className="text-[10px] sm:text-[11px] text-muted-foreground font-mono mt-0.5">
-                  @{third?.username || "user"}
-                </p>
+                {third?.full_name && (
+                  <p className="text-[10px] sm:text-[11px] text-muted-foreground font-mono mt-0.5">
+                    @{third?.username || "user"}
+                  </p>
+                )}
                 <p className="font-mono font-bold text-foreground text-[14px] sm:text-[16px] mt-2">
                   {(third?.points || 0).toLocaleString()}
                 </p>
@@ -319,16 +344,21 @@ const Leaderboard = () => {
 
       {/* Full Rankings (4th onward) */}
       <section className="pb-0">
-        {remaining.map((user, i) => (
-          <ScrollReveal key={user.id} delay={i * 30}>
-            <div className="group">
-              <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-6 py-5 sm:py-6 hover:bg-accent/30 transition-colors duration-300 cursor-pointer">
-                <UserRow user={user} />
+        {remaining.map((user, i) => {
+          const isMe = user.id === currentUserId;
+          return (
+            <ScrollReveal key={user.id} delay={i * 30}>
+              <div className="group">
+                <div className={`max-w-5xl mx-auto px-4 sm:px-8 lg:px-6 py-5 sm:py-6 transition-all duration-300 cursor-pointer hover:bg-accent/30 ${
+                  isMe ? "bg-primary/[0.03] border-s-2 border-primary/50" : ""
+                }`}>
+                  <UserRow user={user} isCurrentUser={isMe} />
+                </div>
+                {i < remaining.length - 1 && <SectionDivider />}
               </div>
-              {i < remaining.length - 1 && <SectionDivider />}
-            </div>
-          </ScrollReveal>
-        ))}
+            </ScrollReveal>
+          );
+        })}
       </section>
 
       <SectionDivider />
