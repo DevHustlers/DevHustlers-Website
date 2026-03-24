@@ -121,11 +121,22 @@ export default function Competitions() {
   const saveCompetition = async (comp: CompetitionData) => {
     if (isSubmitting) return;
 
+    let isoDate = null;
+    if (comp.scheduledDate && comp.scheduledDate !== "TBD") {
+        const parsed = new Date(comp.scheduledDate);
+        if (!isNaN(parsed.getTime())) {
+            isoDate = parsed.toISOString();
+        } else {
+            // If parsing failed but it looks like their placeholder, just set to null
+            isoDate = null;
+        }
+    }
+
     const dbPayload = {
       title: comp.title,
       description: comp.description,
       status: comp.status,
-      scheduled_date: comp.scheduledDate === "TBD" ? null : new Date(comp.scheduledDate).toISOString(),
+      scheduled_date: isoDate,
       time_per_question: comp.timePerQuestion,
       prize: comp.prize,
       questions: comp.questions as any,
@@ -154,6 +165,9 @@ export default function Competitions() {
           toast.error(error || "Failed to create competition");
         }
       }
+    } catch (err: any) {
+      console.error("Save error:", err);
+      toast.error(err.message || "An unexpected error occurred");
     } finally {
       setIsSubmitting(false);
     }
