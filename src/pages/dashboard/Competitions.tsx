@@ -30,12 +30,13 @@ const mapDBCompToCompData = (c: Tables<'competitions'>): CompetitionData => ({
   id: c.id,
   title: c.title,
   description: c.description || "",
-  status: (c.status as any) || "draft",
+  status: c.status === "upcoming" ? "scheduled" : (c.status === "completed" ? "ended" : (c.status as any || "draft")),
   scheduledDate: c.scheduled_date ? new Date(c.scheduled_date).toLocaleString() : "TBD",
   timePerQuestion: c.time_per_question || 20,
   prize: c.prize || "N/A",
   questions: (c.questions as any) || [],
-  participants: 0, // In a real app, you'd join with room_participants
+  participants: 0,
+  host_id: c.host_id || "",
 });
 
 const statusBadge = (status: string) => {
@@ -122,6 +123,7 @@ export default function Competitions() {
       time_per_question: comp.timePerQuestion,
       prize: comp.prize,
       questions: comp.questions as any,
+      host_id: comp.host_id,
     };
 
     setIsSubmitting(true);
@@ -275,24 +277,15 @@ export default function Competitions() {
                   </p>
                 </div>
                 <div className="flex items-center gap-0.5 sm:gap-1 mt-auto pt-3 border-t border-border group-hover:border-primary/20 transition-colors">
-                  {comp.status === "draft" && (
-                    <button
-                      onClick={() => toggleCompStatus(comp.id, "scheduled")}
-                      disabled={isSubmitting}
-                      className="p-1.5 sm:p-2 text-muted-foreground hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-all duration-200 group/btn disabled:opacity-50"
-                      title="Schedule"
-                    >
-                      <Calendar className="w-3.5 h-4 group-hover/btn:scale-110 transition-transform" />
-                    </button>
-                  )}
-                  {comp.status === "scheduled" && (
+                  {(comp.status === "draft" || comp.status === "scheduled") && (
                     <button
                       onClick={() => toggleCompStatus(comp.id, "live")}
                       disabled={isSubmitting}
-                      className="p-1.5 sm:p-2 text-muted-foreground hover:text-emerald-500 hover:bg-emerald-500/10 rounded-lg transition-all duration-200 group/btn disabled:opacity-50"
-                      title="Go Live"
+                      className="p-1.5 sm:p-2 text-emerald-500 hover:bg-emerald-500/10 rounded-lg transition-all duration-200 group/btn bg-emerald-500/5 border border-emerald-500/20"
+                      title="Go Live Now"
                     >
                       <Play className="w-3.5 h-4 group-hover/btn:scale-110 transition-transform" />
+                      <span className="ml-1.5 text-[10px] font-bold uppercase hidden sm:inline">Start Live</span>
                     </button>
                   )}
                   {comp.status === "live" && (

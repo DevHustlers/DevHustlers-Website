@@ -135,6 +135,7 @@ export const useCompetitionSession = (competitionId: string) => {
     timeLeft,
     completed,
     startSession,
-    handleNext
+    handleNext,
+    setCurrentIndex
   };
 };

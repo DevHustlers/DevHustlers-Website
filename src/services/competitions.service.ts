@@ -241,7 +241,7 @@ export const joinCompetition = async (competitionId: string): Promise<ServiceRes
       .maybeSingle();
 
     if (existing) {
-      return { data: existing, error: 'You have already attempted this competition' };
+      return { data: existing, error: null };
     }
 
     const { data, error } = await supabase
@@ -362,6 +362,97 @@ export const reviewAnswer = async (
     return { data: answer, error: null };
   } catch (error: any) {
     console.error('Error in reviewAnswer:', error.message);
+    return { data: null, error: error.message };
+  }
+};
+
+export const getCompetitionState = async (competitionId: string): Promise<ServiceResponse<any>> => {
+  try {
+    const { data, error } = await supabase
+      .from('competition_states')
+      .select('*')
+      .eq('competition_id', competitionId)
+      .maybeSingle();
+    
+    if (!data && !error) {
+       const { data: newData, error: createErr } = await supabase
+         .from('competition_states')
+         .insert({ competition_id: competitionId, status: 'waiting', current_question_index: 0 })
+         .select()
+         .single();
+       if (createErr) throw createErr;
+       return { data: newData, error: null };
+    }
+
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error: any) {
+    console.error('Error in getCompetitionState:', error.message);
+    return { data: null, error: error.message };
+  }
+};
+
+export const updateCompetitionState = async (competitionId: string, updates: any): Promise<ServiceResponse<any>> => {
+  try {
+    const { data, error } = await supabase
+      .from('competition_states')
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq('competition_id', competitionId)
+      .select()
+      .single();
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error: any) {
+    console.error('Error in updateCompetitionState:', error.message);
+    return { data: null, error: error.message };
+  }
+};
+
+export const hostStartQuestion = async (competitionId: string, index: number) => {
+    // Use upsert to ensure entry exists
+    return supabase
+      .from('competition_states')
+      .upsert({ 
+          competition_id: competitionId, 
+          current_question_index: index, 
+          status: 'question_live',
+          updated_at: new Date().toISOString()
+      }, { onConflict: 'competition_id' })
+      .select()
+      .single();
+};
+
+export const hostRevealAnswer = async (competitionId: string) => 
+  updateCompetitionState(competitionId, { status: 'answer_revealed' });
+
+export const hostNextQuestion = async (competitionId: string, nextIndex: number, isLast: boolean) => {
+    const status = isLast ? 'results' : 'waiting';
+    return updateCompetitionState(competitionId, { 
+      current_question_index: nextIndex, 
+      status 
+    });
+};
+
+export const startCompetitionSession = async (competitionId: string): Promise<ServiceResponse<any>> => {
+  try {
+    const { data, error } = await supabase
+      .from('competitions')
+      .update({ 
+        status: 'live', 
+        actual_start_time: new Date().toISOString() 
+      })
+      .eq('id', competitionId)
+      .select()
+      .single();
+    if (error) throw error;
+    
+    // Explicitly initialize session state if not already there
+    const { error: stateErr } = await hostStartQuestion(competitionId, 0);
+    if (stateErr) throw stateErr;
+    
+    return { data, error: null };
+  } catch (error: any) {
+    console.error('Error starting session:', error.message);
     return { data: null, error: error.message };
   }
 };

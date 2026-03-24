@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import { X, Check, CirclePlus } from "lucide-react";
 import { FieldLabel } from "./ui/FieldLabel";
 import { FieldInput } from "./ui/FieldInput";
@@ -36,6 +37,27 @@ export const CompetitionForm = ({
   const [status, setStatus] = useState<CompetitionData["status"]>(initial?.status || "draft");
   const [questions, setQuestions] = useState<CompetitionQuestion[]>(initial?.questions || []);
   const [showAddQ, setShowAddQ] = useState(false);
+  const [hosts, setHosts] = useState<{ id: string, name: string }[]>([]);
+  const [hostId, setHostId] = useState(initial?.host_id || "");
+
+  useEffect(() => {
+    const loadHosts = async () => {
+        const { data } = await supabase.from('profiles').select('id, full_name, name, email').eq('is_admin', true);
+        if (data) {
+            setHosts(data.map(u => ({ id: u.id, name: u.full_name || u.name || u.email || "Unknown Host" })));
+            if (!hostId && data.length > 0) {
+               // Default to current user if they are admin, else first host
+               const { data: { user } } = await supabase.auth.getUser();
+               if (user && data.some(h => h.id === user.id)) {
+                   setHostId(user.id);
+               } else {
+                   setHostId(data[0].id);
+               }
+            }
+        }
+    };
+    loadHosts();
+  }, []);
 
   const handleSave = () => {
     const dataToValidate = {
@@ -46,6 +68,7 @@ export const CompetitionForm = ({
       time_per_question: timePerQuestion,
       prize: prize.trim(),
       questions,
+      host_id: hostId,
     };
 
     const validation = competitionSchema.safeParse(dataToValidate);
@@ -60,8 +83,9 @@ export const CompetitionForm = ({
       ...dataToValidate,
       status, // Pass original status back for UI
       scheduledDate: dataToValidate.scheduled_date,
-      timePerQuestion: dataToValidate.time_per_question,
+       timePerQuestion: dataToValidate.time_per_question,
       participants: initial?.participants || 0,
+      host_id: hostId,
       questions,
     } as CompetitionData);
   };
@@ -88,6 +112,17 @@ export const CompetitionForm = ({
             <FieldLabel>Prize</FieldLabel>
             <FieldInput value={prize} onChange={e => setPrize(e.target.value)} placeholder="e.g. 500 pts + Gold Badge" />
           </div>
+        </div>
+
+        <div>
+          <FieldLabel>Competition Host</FieldLabel>
+          <FieldSelect value={hostId} onChange={e => setHostId(e.target.value)}>
+            <option value="">Select a host...</option>
+            {hosts.map(h => (
+              <option key={h.id} value={h.id}>{h.name}</option>
+            ))}
+          </FieldSelect>
+          <p className="text-[10px] text-muted-foreground mt-1">This user will have full administrative control over the live session.</p>
         </div>
         <div>
           <FieldLabel>Description</FieldLabel>

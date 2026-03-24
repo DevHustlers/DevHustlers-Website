@@ -91,8 +91,10 @@ export type Database = {
       }
       competitions: {
         Row: {
+          actual_start_time: string | null
           created_at: string
           created_by: string | null
+          host_id: string | null
           description: string | null
           end_date: string | null
           id: string
@@ -112,6 +114,8 @@ export type Database = {
           description?: string | null
           end_date?: string | null
           id?: string
+          host_id?: string | null
+          actual_start_time?: string | null
           prize?: string | null
           prize_pool?: number | null
           questions?: Json | null
@@ -128,6 +132,8 @@ export type Database = {
           description?: string | null
           end_date?: string | null
           id?: string
+          host_id?: string | null
+          actual_start_time?: string | null
           prize?: string | null
           prize_pool?: number | null
           questions?: Json | null

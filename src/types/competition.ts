@@ -18,4 +18,5 @@ export interface CompetitionData {
   prize: string;
   questions: CompetitionQuestion[];
   participants: number;
+  host_id?: string;
 }
