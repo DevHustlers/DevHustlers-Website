@@ -41,6 +41,8 @@ const DEFAULT_PARTICIPANTS = [
 
 type Phase = "lobby" | "countdown" | "question" | "reveal" | "results";
 
+import { supabase } from "@/lib/supabase";
+
 const Competition = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -64,11 +66,55 @@ const Competition = () => {
     const fetchCompetition = async () => {
       if (!id) return;
       const { data } = await getCompetitionById(id);
-      if (data) setCompetition(data);
+      if (data) {
+          setCompetition(data);
+          // If already live and session started, we might need to skip lobby
+          if (data.status === 'live' && submission) {
+              setPhase('question');
+          }
+      }
       setLoading(false);
     };
     fetchCompetition();
-  }, [id]);
+
+    // ─── Real-time Status Sync ───
+    if (!id) return;
+    const channel = supabase
+      .channel(`comp_status_${id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'competitions',
+          filter: `id=eq.${id}`,
+        },
+        (payload) => {
+          const newStatus = payload.new.status;
+          setCompetition((prev) => (prev ? { ...prev, status: newStatus } : null));
+
+          if (newStatus === 'live' && phase === 'lobby') {
+            toast.info("Competition is starting!");
+            startSession().then(() => setPhase('countdown'));
+          } else if (newStatus === 'ended') {
+            setPhase('results');
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [id, phase, submission, startSession]);
+
+  useEffect(() => {
+    if (loading || !competition) return;
+
+    if (competition.status === 'live' && phase === 'lobby' && !isSessionCompleted) {
+        startSession().then(() => setPhase('question'));
+    }
+  }, [competition, loading, phase, isSessionCompleted, startSession]);
 
   const [phase, setPhase] = useState<Phase>("lobby");
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -203,13 +249,16 @@ const Competition = () => {
                   <div key={i} className={`w-10 h-10 flex items-center justify-center border text-[11px] font-bold font-mono ${p.isYou ? "bg-foreground text-background" : "bg-accent text-muted-foreground"}`}>{p.avatar}</div>
                 ))}
               </div>
-              <p className="text-[12px] text-muted-foreground mt-4 animate-pulse">Waiting for session to sync...</p>
+              <div className="mt-8 p-6 border-2 border-dashed border-border rounded-2xl bg-accent/5">
+                <p className="text-[14px] font-medium text-foreground mb-1">
+                  {competition.status === 'live' ? "Synchronizing session..." : "Waiting for the protocol to begin..."}
+                </p>
+                <p className="text-[12px] text-muted-foreground animate-pulse">
+                  The competition will start immediately when the host goes live.
+                </p>
+              </div>
             </div>
-            <div className="text-center">
-              <button onClick={startComp} className="px-8 py-3 bg-foreground text-background text-[14px] font-medium hover:bg-foreground/90 transition-all flex items-center gap-2 mx-auto">
-                <Zap className="w-4 h-4" /> Start Competition
-              </button>
-            </div>
+            {/* The Start button was here - now removed for participants as it's admin-controlled via dashboard */}
           </div>
         )}
 
