@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Clock,
   Users,
@@ -65,17 +65,40 @@ const Challenges = () => {
 
   const liveComp = competitions.find(c => c.status === "live");
 
-  const filtered = challenges.filter((c) => {
-    const trackMatch = activeTrack === "All" || c.track === activeTrack;
-    const statusMatch = c.status === activeTab;
-    return trackMatch && statusMatch;
-  });
-
   const tabLabels: Record<string, string> = {
     live: t("challenges.live"),
     upcoming: t("challenges.upcoming"),
     ended: t("challenges.ended"),
   };
+
+  const combinedItems = useMemo(() => {
+    const list = [
+        ...challenges.map(c => ({
+            ...c,
+            isCompetition: false,
+            link: `/challenges/${c.id}`
+        })),
+        ...competitions.map(c => ({
+            id: c.id,
+            title: c.title,
+            description: c.description || "",
+            track: "Tournament",
+            difficulty: "Medium",
+            status: c.status === "scheduled" ? "upcoming" : (c.status === "ended" ? "ended" : c.status),
+            points: c.prize || "---",
+            duration: `${c.time_per_question}s/round`,
+            isCompetition: true,
+            link: `/competition/${c.id}`
+        }))
+    ];
+    return list;
+  }, [challenges, competitions]);
+
+  const filtered = combinedItems.filter((c) => {
+    const trackMatch = activeTrack === "All" || c.track === activeTrack;
+    const statusMatch = c.status === activeTab;
+    return trackMatch && statusMatch;
+  });
 
   if (loading) {
     return (
@@ -210,7 +233,7 @@ const Challenges = () => {
             ) : (
               <div>
                 {filtered.map((challenge) => (
-                  <Link key={challenge.id} to={`/challenges/${challenge.id}`}>
+                  <Link key={challenge.id} to={challenge.link}>
                     <div className="bg-background p-6 sm:p-8 hover:bg-accent/30 transition-colors group cursor-pointer">
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                         <div className="flex-1">

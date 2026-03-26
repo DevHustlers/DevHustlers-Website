@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { 
   getCompetitionQuestions, 
   joinCompetition, 
-  submitAnswer, 
   completeSubmission 
 } from '@/services/competitions.service';
+import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
 
 export const useCompetitionSession = (competitionId: string) => {
@@ -15,21 +15,19 @@ export const useCompetitionSession = (competitionId: string) => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [completed, setCompleted] = useState(false);
 
+  // Initialize Session
   useEffect(() => {
     const initSession = async () => {
       if (!competitionId) return;
       setLoading(true);
       try {
-        // Just check if questions exist
         const { data: qData } = await getCompetitionQuestions(competitionId);
         if (qData) setQuestions(qData);
 
-        // Check if user already joined
         const { data: sub } = await joinCompetition(competitionId);
-        // We don't toast error here because they might not have joined yet (which is fine)
         if (sub) {
             setSubmission(sub);
-            setCompleted(sub.score !== null);
+            setCompleted(sub.completed_at !== null);
         }
       } catch (err) {
         console.error("Session init error:", err);
@@ -40,8 +38,7 @@ export const useCompetitionSession = (competitionId: string) => {
     initSession();
   }, [competitionId]);
 
-  const startSession = useCallback(async () => {
-    // If already have submission, just set loading false and return
+  const startSession = useCallback(async (entryType: 'live' | 'practice' = 'live') => {
     if (submission) {
         setLoading(false);
         return;
@@ -49,12 +46,13 @@ export const useCompetitionSession = (competitionId: string) => {
 
     setLoading(true);
     try {
-      const { data: sub, error: subErr } = await joinCompetition(competitionId);
+      const { data: sub, error: subErr } = await joinCompetition(competitionId, entryType);
       if (subErr) {
-        toast.error(subErr);
         if (sub) {
             setSubmission(sub);
-            setCompleted(sub.score !== null);
+            setCompleted(sub.completed_at !== null);
+        } else {
+            toast.error(subErr);
         }
         return;
       }
@@ -63,10 +61,6 @@ export const useCompetitionSession = (competitionId: string) => {
       const { data: qData, error: qErr } = await getCompetitionQuestions(competitionId);
       if (qErr) throw new Error(qErr);
       setQuestions(qData || []);
-
-      if (qData?.[0]?.time_limit) {
-        setTimeLeft(qData[0].time_limit);
-      }
     } catch (err: any) {
       toast.error(err.message);
     } finally {
@@ -74,57 +68,67 @@ export const useCompetitionSession = (competitionId: string) => {
     }
   }, [competitionId, submission]);
 
+  // Synchronize Timer with Backend Timestamp
+  const syncTimer = useCallback((startedAt: string | null, duration: number) => {
+    if (!startedAt) {
+      setTimeLeft(duration);
+      return;
+    }
+
+    const start = new Date(startedAt).getTime();
+    const now = new Date().getTime();
+    const elapsed = Math.floor((now - start) / 1000);
+    const remaining = Math.max(0, duration - elapsed);
+    
+    setTimeLeft(remaining);
+  }, []);
+
   const handleNext = useCallback(async (answer: string) => {
     if (!submission || completed) return;
 
     const currentQuestion = questions[currentIndex];
     
-    // Auto-check MCQ
-    let isCorrect = undefined;
-    let points = 0;
-    if (currentQuestion.type === 'mcq') {
-      isCorrect = answer === currentQuestion.correct_answer;
-      points = isCorrect ? currentQuestion.points : 0;
-    }
-
-    // Submit answer
-    await submitAnswer({
-      submission_id: submission.id,
-      question_id: currentQuestion.id,
-      answer,
-      is_correct: isCorrect,
-      points_awarded: points
+    // SERVER-SIDE SCORING VIA RPC
+    const { data: result, error: rpcErr } = await supabase.rpc('process_answer', {
+        p_submission_id: submission.id,
+        p_question_id: currentQuestion.id,
+        p_answer: answer,
+        p_time_left: timeLeft || 0
     });
 
-    if (currentIndex < questions.length - 1) {
-      const nextIdx = currentIndex + 1;
-      setCurrentIndex(nextIdx);
-      setTimeLeft(questions[nextIdx].time_limit || null);
-    } else {
-       // Finish
-       const totalScore = 0; // In real app, re-fetch or calc locally
-       await completeSubmission(submission.id, totalScore);
-       setCompleted(true);
-       toast.success("Competition completed!");
-    }
-  }, [submission, questions, currentIndex, completed]);
-
-  // Timer Effect
-  useEffect(() => {
-    if (timeLeft === null || timeLeft <= 0 || completed) {
-        if (timeLeft === 0 && !completed) {
-            toast.warning("Time's up for this question!");
-            handleNext(""); // Auto-submit empty
-        }
+    if (rpcErr) {
+        console.error("RPC Error:", rpcErr);
+        toast.error("Failed to solve challenge stage.");
         return;
     }
 
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev ? prev - 1 : 0));
+    if (currentIndex >= questions.length - 1) {
+       // Finish Match - don't pass score to preserve the one calculated by the RPC
+       if (submission?.id) {
+           await completeSubmission(submission.id); 
+       }
+       setCompleted(true);
+       toast.success("Challenge completed!");
+    }
+  }, [submission, questions, currentIndex, completed, timeLeft]);
+
+  // Local tick for smoothness
+  useEffect(() => {
+    if (timeLeft === null || timeLeft < 0 || completed) return;
+
+    const interval = setInterval(() => {
+        setTimeLeft(prev => {
+            if (prev === null) return null;
+            if (prev <= 0) {
+                clearInterval(interval);
+                return 0;
+            }
+            return prev - 1;
+        });
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [timeLeft, completed, handleNext]);
+    return () => clearInterval(interval);
+  }, [timeLeft, completed]);
 
   return {
     questions,
@@ -134,8 +138,10 @@ export const useCompetitionSession = (competitionId: string) => {
     loading,
     timeLeft,
     completed,
-    startSession,
+    startSession: (type?: 'live' | 'practice') => startSession(type),
     handleNext,
-    setCurrentIndex
+    setCurrentIndex,
+    syncTimer,
+    setTimeLeft
   };
 };

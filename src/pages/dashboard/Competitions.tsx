@@ -26,7 +26,7 @@ import type { Tables } from "@/types/database";
 import { CompetitionData, CompetitionQuestion } from "@/types/competition";
 
 // Helper to map DB competition to UI CompetitionData
-const mapDBCompToCompData = (c: Tables<'competitions'>): CompetitionData => ({
+const mapDBCompToCompData = (c: any): CompetitionData => ({
   id: c.id,
   title: c.title,
   description: c.description || "",
@@ -35,7 +35,7 @@ const mapDBCompToCompData = (c: Tables<'competitions'>): CompetitionData => ({
   timePerQuestion: c.time_per_question || 20,
   prize: c.prize || "N/A",
   questions: (c.questions as any) || [],
-  participants: 0,
+  participants: c.participants_count || 0,
   host_id: c.host_id || "",
 });
 

@@ -10,6 +10,7 @@ interface UserData {
   status: "active" | "inactive" | "banned";
   role: "member" | "moderator" | "admin";
   bio: string;
+  attendanceCount: number;
 }
 
 export const UserDetail = ({ user }: { user: UserData }) => {
@@ -44,8 +45,8 @@ export const UserDetail = ({ user }: { user: UserData }) => {
               <p className="text-[12px] sm:text-[14px] font-medium text-foreground">{user.joined}</p>
             </div>
             <div className="border border-border p-2 sm:p-3">
-              <p className="text-[10px] sm:text-[11px] text-muted-foreground font-mono uppercase">Role</p>
-              <p className="text-[12px] sm:text-[14px] font-medium text-foreground capitalize">{user.role}</p>
+              <p className="text-[10px] sm:text-[11px] text-muted-foreground font-mono uppercase">Attended</p>
+              <p className="text-[12px] sm:text-[15px] font-bold text-primary font-mono tabular-nums">{user.attendanceCount || 0}</p>
             </div>
           </div>
           {user.bio && (

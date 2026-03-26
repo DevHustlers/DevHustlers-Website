@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Zap } from "lucide-react";
 import { FieldLabel } from "./ui/FieldLabel";
 import { FieldInput } from "./ui/FieldInput";
@@ -40,6 +40,13 @@ export const AwardPointsForm = ({
   const [selectedUser, setSelectedUser] = useState(users[0]?.id || "");
   const [points, setPoints] = useState(100);
   const [reason, setReason] = useState("");
+
+  // Sync selected user when users list loads
+  useEffect(() => {
+    if (users.length > 0 && !selectedUser) {
+      setSelectedUser(users[0].id);
+    }
+  }, [users, selectedUser]);
 
   return (
     <div className="space-y-4">

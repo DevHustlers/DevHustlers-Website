@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import type { Tables, TablesUpdate, ServiceResponse } from '@/types/database';
 
-export const getUsers = async (includeDeleted: boolean = false): Promise<ServiceResponse<Tables<'profiles'>[]>> => {
+export const getUsers = async (includeDeleted: boolean = false): Promise<ServiceResponse<any[]>> => {
   try {
     let query = supabase
       .from('profiles')
@@ -15,7 +15,14 @@ export const getUsers = async (includeDeleted: boolean = false): Promise<Service
     const { data, error } = await query;
 
     if (error) throw error;
-    return { data, error: null };
+    
+    // Map counts - attendance count will be handled separately if needed
+    const mapped = (data || []).map(p => ({
+        ...p,
+        attendance_count: p.streak_count || 0 // Use streak as placeholder for now, or just 0
+    }));
+
+    return { data: mapped, error: null };
   } catch (error: any) {
     console.error('Error in getUsers:', error.message);
     return { data: null, error: error.message };

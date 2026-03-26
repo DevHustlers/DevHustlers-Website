@@ -292,7 +292,7 @@ export default function Points() {
               </span>
             </div>
             <div className="divide-y divide-border">
-              {pointRules.slice(0, 13).map((rule) => (
+              {pointRules.map((rule) => (
                 <div
                   key={rule.id}
                   className="px-4 sm:px-5 py-3 flex items-center justify-between group/item hover:bg-accent/30 transition-colors"

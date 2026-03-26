@@ -7,7 +7,29 @@ export const awardPoints = async (
   reason: string
 ): Promise<ServiceResponse<void>> => {
   try {
-    // 1. Log the points awarded
+    // 1. Call the award_points RPC
+    // This RPC handles logging AND updating profiles. 
+    // It also contains logic to prevent duplicate awards for the same reason
+    // from the same user within 5 seconds.
+    const { data: rpcData, error: funcError } = await supabase.rpc('award_points', {
+      user_id: userId,
+      amount,
+      reason
+    });
+    
+    // 2. If the RPC call succeeds, return success
+    if (!funcError) {
+      return { data: null, error: null };
+    }
+    
+    // 3. Fallback: If RPC is not available or failed for non-duplicate reasons,
+    // we should manually simulate the award if it's safe.
+    // However, if the error is "Duplicate points award detected", we bubble it up.
+    if (funcError.message?.includes('Duplicate')) {
+      throw funcError;
+    }
+    
+    // Manual fallback: Manually Update Points and Insert into logs
     const { error: logError } = await supabase
       .from('points_log')
       .insert({
@@ -18,34 +40,23 @@ export const awardPoints = async (
 
     if (logError) throw logError;
 
-    // 2. Update profiles.points using the award_points function if it exists,
-    // or manually if it doesn't. 
-    // The previous schema inspection showed an `award_points` function in public.
-    const { error: funcError } = await supabase.rpc('award_points', {
-      user_id: userId,
-      amount,
-      reason
-    });
-
-    if (funcError) {
-      // Fallback: manually update if RPC fails
-      const { data: profile, error: fetchError } = await supabase
-        .from('profiles')
-        .select('points')
-        .eq('id', userId)
-        .single();
+    // Manually fetch and update
+    const { data: profile, error: fetchError } = await supabase
+      .from('profiles')
+      .select('points')
+      .eq('id', userId)
+      .single();
+    
+    if (fetchError) throw fetchError;
+    
+    const newPoints = (profile.points || 0) + amount;
+    
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ points: newPoints })
+      .eq('id', userId);
       
-      if (fetchError) throw fetchError;
-      
-      const newPoints = (profile.points || 0) + amount;
-      
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({ points: newPoints })
-        .eq('id', userId);
-        
-      if (updateError) throw updateError;
-    }
+    if (updateError) throw updateError;
 
     // 3. Check badge eligibility
     await checkBadgeEligibility(userId);

@@ -6,6 +6,7 @@ export interface CompetitionQuestion {
   timeLimit: number;
   type: "mcq" | "text" | "code";
   points?: number;
+  modelAnswer?: string;
 }
 
 export interface CompetitionData {

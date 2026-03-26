@@ -7,7 +7,7 @@ export const LeaderboardSmall = () => {
   const users = dbLeaderboard.map(u => ({
     name: u.full_name || u.name || "Anonymous",
     points: u.points || 0,
-    streak: 0 // Placeholder
+    streak: (u as any).streak_count || 0
   }));
   return (
     <div className="group bg-background/80 backdrop-blur-sm border border-border rounded-2xl hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">

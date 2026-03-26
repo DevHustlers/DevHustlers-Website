@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Check } from "lucide-react";
 import { FieldLabel } from "./ui/FieldLabel";
 import { FieldInput } from "./ui/FieldInput";
+import { FieldSelect } from "./ui/FieldSelect";
 import { PrimaryBtn } from "./ui/PrimaryBtn";
 import { SecondaryBtn } from "./ui/SecondaryBtn";
 
@@ -21,10 +22,11 @@ export const QuestionForm = ({
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", "", "", ""]);
   const [correctIdx, setCorrectIdx] = useState(0);
+  const [modelAnswer, setModelAnswer] = useState("");
   const [timeLimit, setTimeLimit] = useState(defaultTimeLimit);
   const [points, setPoints] = useState(100);
 
-  const canAdd = type === "mcq" ? (question.trim() && options.every(o => o.trim())) : question.trim();
+  const canAdd = type === "mcq" ? (question.trim() && options.every(o => o.trim())) : (question.trim() && (type !== 'text' || modelAnswer.trim()));
 
   return (
     <div className="p-4 bg-accent/20 space-y-3 border-t border-border">
@@ -35,15 +37,14 @@ export const QuestionForm = ({
       <div className="grid grid-cols-2 gap-4">
         <div>
           <FieldLabel>Question Type</FieldLabel>
-          <select 
+          <FieldSelect 
             value={type} 
             onChange={(e) => setType(e.target.value as any)}
-            className="w-full bg-background border border-border rounded-xl px-3 py-2 text-[13px] font-medium"
           >
             <option value="mcq">Multiple Choice (MCQ)</option>
             <option value="text">Open-Ended (Manual Review)</option>
             <option value="code">Code Challenge</option>
-          </select>
+          </FieldSelect>
         </div>
         <div>
           <FieldLabel>Points</FieldLabel>
@@ -78,9 +79,17 @@ export const QuestionForm = ({
           ))}
         </div>
       ) : (
-        <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl animate-in slide-in-from-top-2 duration-300">
-          <p className="text-[12px] text-primary font-medium flex items-center gap-2">
-            <Check className="w-4 h-4" /> This question will require manual review by an administrator.
+        <div className="space-y-3 animate-in slide-in-from-top-2 duration-300">
+          <div>
+            <FieldLabel>Model Target Sequence / Correct Answer</FieldLabel>
+            <FieldInput 
+              value={modelAnswer} 
+              onChange={e => setModelAnswer(e.target.value)} 
+              placeholder="Enter the expected official solve..." 
+            />
+          </div>
+          <p className="text-[11px] text-primary/70 font-medium flex items-center gap-2 bg-primary/5 p-3 rounded-lg border border-primary/10">
+            <Check className="w-4 h-4" /> This solve will require match authority verification during the live session.
           </p>
         </div>
       )}
@@ -92,8 +101,8 @@ export const QuestionForm = ({
         <p className="text-[10px] text-muted-foreground mt-4">Click A/B/C/D to mark correct answer (green = correct)</p>
       </div>
       <div className="flex items-center gap-2">
-        <PrimaryBtn onClick={() => { if (canAdd) onAdd({ id: Date.now(), question, options: type === "mcq" ? [...options] : [], correctIndex: type === "mcq" ? correctIdx : -1, timeLimit, type, points }); }} disabled={!canAdd}>
-          <Check className="w-3 h-3" /> Add
+        <PrimaryBtn onClick={() => { if (canAdd) onAdd({ id: Date.now(), question, options: type === "mcq" ? [...options] : [], correctIndex: type === "mcq" ? correctIdx : -1, modelAnswer: type === 'mcq' ? options[correctIdx] : modelAnswer, timeLimit, type, points }); }} disabled={!canAdd}>
+          <Check className="w-4 h-4" /> Add Round Solve
         </PrimaryBtn>
         <SecondaryBtn onClick={onCancel}>Cancel</SecondaryBtn>
       </div>

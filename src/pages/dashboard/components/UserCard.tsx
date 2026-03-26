@@ -10,6 +10,8 @@ interface UserData {
   status: "active" | "inactive" | "banned";
   role: "member" | "moderator" | "admin";
   bio: string;
+  attendanceCount: number;
+  streak: number;
   isDeleted: boolean;
 }
 
@@ -54,11 +56,19 @@ export const UserCard = ({ user, onView, onEdit, onDelete }: UserCardProps) => {
       </div>
 
       <div className="flex items-center justify-between pt-2.5 sm:pt-3 border-t border-border group-hover:border-primary/20 transition-colors">
-        <div>
-          <p className="text-[10px] sm:text-[11px] text-muted-foreground font-mono">Points</p>
-          <p className="text-[14px] sm:text-[16px] font-bold font-mono text-foreground group-hover:text-primary transition-colors">
-            {user.points.toLocaleString()}
-          </p>
+        <div className="flex gap-4">
+          <div>
+            <p className="text-[10px] sm:text-[11px] text-muted-foreground font-mono">Points</p>
+            <p className="text-[14px] sm:text-[16px] font-bold font-mono text-foreground group-hover:text-primary transition-colors">
+              {user.points.toLocaleString()}
+            </p>
+          </div>
+          <div>
+            <p className="text-[10px] sm:text-[11px] text-muted-foreground font-mono">Matches</p>
+            <p className="text-[14px] sm:text-[16px] font-bold font-mono text-foreground group-hover:text-primary transition-colors">
+              {user.attendanceCount || 0}
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-0.5 sm:gap-1">
           <button onClick={() => onView(user)} className="p-1.5 sm:p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all duration-200 group/btn" title="View">

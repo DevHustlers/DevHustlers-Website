@@ -32,11 +32,13 @@ interface UserData {
   status: "active" | "inactive" | "banned";
   role: "member" | "moderator" | "admin";
   bio: string;
+  attendanceCount: number;
+  streak: number;
   isDeleted: boolean;
 }
 
 // Helper to map DB profile to UI UserData
-const mapProfileToUserData = (profile: Tables<'profiles'>): UserData => ({
+const mapProfileToUserData = (profile: any): UserData => ({
   id: profile.id,
   name: profile.full_name || profile.name || "Unknown User",
   email: profile.email || "",
@@ -45,6 +47,8 @@ const mapProfileToUserData = (profile: Tables<'profiles'>): UserData => ({
   status: (profile.status as any) || "active",
   role: profile.role === "admin" ? "admin" : profile.role === "mod" ? "moderator" : "member",
   bio: profile.bio || "",
+  attendanceCount: profile.attendance_count || 0,
+  streak: profile.streak_count || 0,
   isDeleted: profile.is_deleted || false,
 });
 
