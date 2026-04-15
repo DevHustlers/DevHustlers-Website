@@ -87,6 +87,7 @@ export const useCompetitionSession = (competitionId: string) => {
     if (!submission || completed) return;
 
     const currentQuestion = questions[currentIndex];
+    const startTime = Date.now();
     
     // SERVER-SIDE SCORING VIA RPC
     const { data: result, error: rpcErr } = await supabase.rpc('process_answer', {
@@ -98,19 +99,24 @@ export const useCompetitionSession = (competitionId: string) => {
 
     if (rpcErr) {
         console.error("RPC Error:", rpcErr);
-        toast.error("Failed to solve challenge stage.");
+        toast.error("Match link interrupted. Retrying solve sequence...");
         return;
     }
 
-    if (currentIndex >= questions.length - 1) {
-       // Finish Match - don't pass score to preserve the one calculated by the RPC
-       if (submission?.id) {
-           await completeSubmission(submission.id); 
-       }
-       setCompleted(true);
-       toast.success("Challenge completed!");
-    }
-  }, [submission, questions, currentIndex, completed, timeLeft]);
+    // Broadcast score change to others via Presence or Broadcast
+    const channel = supabase.channel(`comp_realtime_${competitionId}`);
+    channel.send({
+      type: 'broadcast',
+      event: 'score_update',
+      payload: { 
+        user_id: submission.user_id, 
+        new_score: result.total_score,
+        is_correct: result.is_correct
+      }
+    });
+
+    return result; // Return result for UI animation (XP popup)
+  }, [submission, questions, currentIndex, completed, timeLeft, competitionId]);
 
   // Local tick for smoothness
   useEffect(() => {

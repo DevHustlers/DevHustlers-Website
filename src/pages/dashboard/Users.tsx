@@ -64,6 +64,7 @@ const mapUserDataToProfileUpdate = (user: UserData) => ({
 export default function Users() {
   const { t } = useLanguage();
   const [showDeleted, setShowDeleted] = useState(false);
+  const [showPioneers, setShowPioneers] = useState(false);
   const { users: dbUsers, loading } = useRealtimeUsers(showDeleted);
   const [userFormMode, setUserFormMode] = useState<"none" | "create" | "edit">("none");
   const [editingUser, setEditingUser] = useState<UserData | undefined>();
@@ -72,7 +73,21 @@ export default function Users() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const users = dbUsers.map(mapProfileToUserData);
+  // Custom sorting and filtering for Pioneers
+  const users = dbUsers
+    .map(mapProfileToUserData)
+    .sort((a, b) => {
+      if (showPioneers) {
+        // Sort by joined date ascending for pioneers
+        return new Date(a.joined).getTime() - new Date(b.joined).getTime();
+      }
+      // Default to what came from DB (likely newest first)
+      return 0;
+    })
+    .filter((_, index) => {
+      if (showPioneers) return index < 100;
+      return true;
+    });
 
   const saveUser = async (user: UserData) => {
     setIsSaving(true);
@@ -132,6 +147,17 @@ export default function Users() {
                 />
                 <span className="text-[11px] sm:text-[12px] font-mono uppercase tracking-wider text-muted-foreground group-hover:text-foreground transition-colors">
                   Show Deleted
+                </span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer group px-3 py-1.5 bg-accent/30 rounded-lg border border-border/50 hover:border-primary/30 transition-all">
+                <input 
+                  type="checkbox" 
+                  checked={showPioneers} 
+                  onChange={(e) => setShowPioneers(e.target.checked)}
+                  className="w-3.5 h-3.5 rounded border-border text-primary focus:ring-primary/20 cursor-pointer"
+                />
+                <span className="text-[11px] sm:text-[12px] font-mono uppercase tracking-wider text-muted-foreground group-hover:text-foreground transition-colors">
+                  {t("dash.first_100")}
                 </span>
               </label>
               <PrimaryBtn
